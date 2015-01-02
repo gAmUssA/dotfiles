@@ -79,4 +79,4 @@ function gi() { curl -L -s https://www.gitignore.io/api/$@ ;}
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
-source "/Users/apple/.gvm/bin/gvm-init.sh"
+source "$HOME/.gvm/bin/gvm-init.sh"
