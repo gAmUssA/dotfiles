@@ -50,6 +50,44 @@
 	sync = !legit sync \"$@\"
 	publish = !legit publish \"$@\"
 	graft = !legit graft \"$@\"
+	br = branch -a
+	s = status -u -s
+	cl = log --stat -C -2
+	c = commit
+	d = diff --color-words
+	dh = diff HEAD
+	dc = diff --staged
+	dw = diff --word-diff
+	dcw = diff --color-words
+	dm = !git diff | mate
+	dv = !git diff | vim
+	who = shortlog -s --
+	ph = push
+	pl = pull
+	lp = log -p
+	lod = log --oneline --decorate
+	lg = log --graph
+	lpo = log --pretty=oneline --abbrev-commit --graph --decorate --all
+	l1 = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+	l2 = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	l3 = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	spull = !git-svn fetch && git-svn rebase
+	spush = !git-svn dcommit
+	sync = !git pull && git push
+	es = !git pull --rebase && git push
+	lf = log --pretty=fuller
+	ignorechanges = update-index --assume-unchanged
+	noticechanges = update-index --no-assume-unchanged
+	gc-ap = gc --aggressive --prune
+	listconf = config --global --list
+	cam = commit -a -m
+	lsm = log -M --stat
+	hse = log --stat -5
+	diffall = diff HEAD
+	logr = log -M
+	logr2 = log --stat -M -2
+	logit = log --stat -M
+	scrub = !git reset --hard && git clean -fd
 [credential]
 	helper = osxkeychain
 [filter "media"]
