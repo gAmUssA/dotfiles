@@ -6,6 +6,7 @@ rm ~/.gitconfig
 rm ~/.gitignore
 rm ~/.jshintrc
 rm ~/.inputrc
+rm ~/.tigrc
 
 ln -s ~/projects/dotfiles/.zshrc ~/.zshrc
 ln -s ~/projects/dotfiles/zsh_custom ~/.oh-my-zsh/custom
@@ -14,6 +15,7 @@ ln -s ~/projects/dotfiles/.gitconfig ~/.gitconfig
 ln -s ~/projects/dotfiles/.gitignore ~/.gitignore
 ln -s ~/projects/dotfiles/.jshintrc ~/.jshintrc
 ln -s ~/projects/dotfiles/.inputrc ~/.inputrc
+ln -s ~/projects/dotfiles/.tigrc ~/.tigrc
 
 ls -lah ~/.zshrc
 ls -lah ~/.oh-my-zsh/custom
@@ -22,3 +24,4 @@ ls -lah ~/.gitconfig
 ls -lah ~/.gitignore
 ls -lah ~/.jshintrc
 ls -lah ~/.inputrc
+ls -lah ~/.tigrc

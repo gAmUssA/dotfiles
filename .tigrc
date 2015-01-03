@@ -1,0 +1,15 @@
+set main-view = id:yes,width=6 date:relative author:full,width=16 commit-title:graph=yes,refs=yes
+
+# Show file sizes as units
+set tree-view = id:yes line-number:no,interval=5 mode author:full file-size:units date:default file-name
+
+set line-graphics = default
+set tab-size = 4
+# set mouse = true
+# set mouse-scroll = 3
+set wrap-lines = yes
+
+# keybindings
+# bind generic F !git fetch
+# bind generic c !git checkout %(commit)
+# bind generic p !%(commit) | pbcopy
