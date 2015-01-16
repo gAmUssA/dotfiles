@@ -55,6 +55,13 @@ export PATH=$PATH:$NODE_PATH/bin
 export PATH="$HOME/.rbenv/bin:$PATH"
 #export PATH="$AVATAR_HOME/bin:$PATH"
 
+PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+test -e ~/.dircolors && eval `gdircolors -b ~/.dircolors`
+alias ls="ls --color=always"
+alias grep="grep --color=always"
+alias egrep="egrep --color=always"
+
 # Terminal 256 colors
 export TERM="xterm-256color"
 
