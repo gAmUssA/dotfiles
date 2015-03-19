@@ -67,7 +67,7 @@ prompt_git() {
     else
       prompt_segment green black
     fi
-    echo -n "${ref/refs\/heads\//\ue0a0 }$dirty"
+    echo -n "${ref/refs\/heads\//\ue0a0 }$dirty $(work_in_progress)"
   fi
 }
 
