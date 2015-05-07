@@ -53,6 +53,8 @@ export NODE_PATH=`brew --prefix node`
 export NODE_PATH=$NODE_PATH:/usr/local/share/npm/lib/node_modules
 export PATH=$PATH:$NODE_PATH/bin
 export PATH="$HOME/.rbenv/bin:$PATH"
+export SIMULATOR_HOME=~/hazelcast-simulator
+PATH=$SIMULATOR_HOME/bin:$PATH
 #export PATH="$AVATAR_HOME/bin:$PATH"
 
 PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
