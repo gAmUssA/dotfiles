@@ -13,15 +13,11 @@ bindkey "\e\[dw" backward-kill-word
 #ZSH_THEME="robbyrussell"
 ZSH_THEME="gamussa_skwp"
 
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
 
 # Comment this out to disable weekly auto-update checks
-# DISABLE_AUTO_UPDATE="true"
+DISABLE_AUTO_UPDATE="true"
 
 # Uncomment following line if you want to disable colors in ls
 # DISABLE_LS_COLORS="true"
@@ -81,7 +77,7 @@ eval "$(fasd --init auto)"
 
 setjdk17
 
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+if which rbenv > /dev/null; then eval "$(rbenv init - --no-rehash)"; fi
 
 function gi() { curl -L -s https://www.gitignore.io/api/$@ ;}
 
