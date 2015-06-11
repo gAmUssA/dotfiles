@@ -72,5 +72,6 @@ function gitwatch(){
 
 alias jjs='rlwrap $(/usr/libexec/java_home -v 1.8)/bin/jjs'
 
+alias appleinfo="archey"
 alias zshconfig="st ~/.zshrc"
 alias ohmyzsh="st ~/.oh-my-zsh"
