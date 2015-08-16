@@ -8,6 +8,7 @@ rm ~/.jshintrc
 rm ~/.inputrc
 rm ~/.tigrc
 rm ~/.ssh/config
+rm ~/Library/Preferences/com.google.iterm2.plist
 
 ln -s ~/projects/dotfiles/.zshrc ~/.zshrc
 ln -s ~/projects/dotfiles/zsh_custom ~/.oh-my-zsh/custom
@@ -18,6 +19,7 @@ ln -s ~/projects/dotfiles/.jshintrc ~/.jshintrc
 ln -s ~/projects/dotfiles/.inputrc ~/.inputrc
 ln -s ~/projects/dotfiles/.tigrc ~/.tigrc
 ln -s ~/projects/dotfiles/.ssh/config ~/.ssh/config
+ln -s ~/Dropbox/Apps/iTerm2/com.googlecode.iterm2.plist ~/Library/Preferences/com.google.iterm2.plist
 
 ls -lah ~/.zshrc
 ls -lah ~/.oh-my-zsh/custom
@@ -28,3 +30,4 @@ ls -lah ~/.jshintrc
 ls -lah ~/.inputrc
 ls -lah ~/.tigrc
 ls -lah ~/.ssh/config
+ls -lah ~/Library/Preferences/com.google.iterm2.plist
