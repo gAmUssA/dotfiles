@@ -11,7 +11,8 @@ bindkey "\e\[dw" backward-kill-word
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 #ZSH_THEME="robbyrussell"
-ZSH_THEME="gamussa_skwp"
+#ZSH_THEME="gamussa_skwp"
+ZSH_THEME="bullet-train"
 
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
@@ -82,6 +83,8 @@ if which rbenv > /dev/null; then eval "$(rbenv init - --no-rehash)"; fi
 function gi() { curl -L -s https://www.gitignore.io/api/$@ ;}
 
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+[[ -s "${HOME}/.iterm2_shell_integration.zsh" ]] && source ${HOME}/.iterm2_shell_integration.zsh
 
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
 [[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh"
