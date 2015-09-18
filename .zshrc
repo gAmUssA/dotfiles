@@ -34,7 +34,7 @@ HISTCONTROL=ignoredups:ignorespace
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(ant atom battery bower brew compleat dash encode64 Forklift gem git-extras gitfast glassfish gradle grails grunt heroku httpie jsontools marked2 mercurial mvn node npm osx rake rbenv sublime svn web-search xcode z)
+plugins=(ant atom battery bower brew compleat dash encode64 Forklift gem git-extras gitfast glassfish gradle grails grunt heroku httpie jsontools marked2 mercurial mvn node npm osx rake rbenv sublime svn sudo web-search xcode z)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -88,3 +88,6 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
 export SDKMAN_DIR="${HOME}/.sdkman" && source "${HOME}/.sdkman/bin/sdkman-init.sh"
+
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
