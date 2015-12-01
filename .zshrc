@@ -10,8 +10,6 @@ bindkey "\e\[dw" backward-kill-word
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-#ZSH_THEME="robbyrussell"
-#ZSH_THEME="gamussa_skwp"
 ZSH_THEME="bullet-train"
 
 # Set to this to use case-sensitive completion
@@ -34,25 +32,20 @@ HISTCONTROL=ignoredups:ignorespace
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(ant atom battery bower brew compleat dash encode64 Forklift gem git-extras gitfast glassfish gradle grails grunt heroku httpie jsontools marked2 mercurial mvn node npm osx rake rbenv sublime svn sudo web-search xcode z)
+plugins=(ant atom battery bower bgnotify brew brew-cask compleat colorize dash docker encode64 fasd Forklift gem git-extras gitfast gitignore glassfish gradle grails grunt gulp httpie jsontools marked2 mercurial mvn node npm osx rake rbenv sublime svn web-search xcode z)
 
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
-#export NODE_PATH=/usr/local/lib/node
-#AWESTRUCT_BIN=/Users/apple/projects/awestruct
-#AVATAR_HOME=//Users/apple/projects/glassfish-4.0-release/glassfish
 SENCHA_CMD_VERSION=4.0.4.84
 DART_SDK=/Developer/dart/dart-sdk/
 SENCHA_CMD_HOME=/Developer/Sencha/Cmd/$SENCHA_CMD_VERSION
 export PATH=$DART_SDK/bin:/usr/local/bin:/opt/local/bin:/opt/local/sbin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin:/usr/local/sbin:/usr/bin:$SENCHA_CMD_HOME:/usr/local/share/npm/bin:$JAVA_HOME/bin
-export NODE_PATH=`brew --prefix node`
-export NODE_PATH=$NODE_PATH:/usr/local/share/npm/lib/node_modules
-export PATH=$PATH:$NODE_PATH/bin
 export PATH="$HOME/.rbenv/bin:$PATH"
+
+# Hazelcast Simulator
 export SIMULATOR_HOME=~/hazelcast-simulator
 PATH=$SIMULATOR_HOME/bin:$PATH
-#export PATH="$AVATAR_HOME/bin:$PATH"
 
 PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
@@ -73,14 +66,11 @@ export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
 export JRUBY_OPTS="-Xcompat.version=RUBY1_9 -Xcompile.mode=OFF -J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -J-Xverify:none -Xcext.enabled=true"
 
-. `brew --prefix`/etc/profile.d/z.sh
 eval "$(fasd --init auto)"
 
-setjdk17
+setjdk18
 
 if which rbenv > /dev/null; then eval "$(rbenv init - --no-rehash)"; fi
-
-function gi() { curl -L -s https://www.gitignore.io/api/$@ ;}
 
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
@@ -91,3 +81,6 @@ export SDKMAN_DIR="${HOME}/.sdkman" && source "${HOME}/.sdkman/bin/sdkman-init.s
 
 export NVM_DIR=~/.nvm
 source $(brew --prefix nvm)/nvm.sh
+
+# added by travis gem
+[ -f /Users/apple/.travis/travis.sh ] && source /Users/apple/.travis/travis.sh
