@@ -32,7 +32,7 @@ HISTCONTROL=ignoredups:ignorespace
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(ant atom battery bower bgnotify brew brew-cask compleat colorize dash docker encode64 fasd Forklift gem git-extras gitfast gitignore glassfish gradle grails grunt gulp httpie jsontools marked2 mercurial mvn node npm osx rake rbenv sublime svn web-search xcode z)
+plugins=(ant atom battery bower bgnotify brew brew-cask compleat colorize dash docker encode64 fasd Forklift gem git-extras gitfast gitignore glassfish gradle grails grunt gulp httpie jsontools marked2 mercurial mvn node npm osx rake rbenv sublime thefuck svn web-search xcode z)
 
 source $ZSH/oh-my-zsh.sh
 
