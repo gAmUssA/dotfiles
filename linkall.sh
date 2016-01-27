@@ -34,3 +34,6 @@ ls -lah ~/.inputrc
 ls -lah ~/.tigrc
 ls -lah ~/.ssh/config
 ls -lah ~/.dircolors
+
+rm -r ~/.atom
+ln -s ~/Dropbox/Apps/Atom ~/.atom
