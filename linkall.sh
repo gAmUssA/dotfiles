@@ -37,3 +37,4 @@ ls -lah ~/.dircolors
 
 rm -r ~/.atom
 ln -s ~/Dropbox/Apps/Atom ~/.atom
+ls -lah ~/.atom
