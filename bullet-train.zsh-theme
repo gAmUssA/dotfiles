@@ -148,8 +148,11 @@ fi
 if [ ! -n "${BULLETTRAIN_GIT_COLORIZE_DIRTY+1}" ]; then
   BULLETTRAIN_GIT_COLORIZE_DIRTY=false
 fi
-if [ ! -n "${BULLETTRAIN_GIT_COLORIZE_DIRTY_COLOR+1}" ]; then
-  BULLETTRAIN_GIT_COLORIZE_DIRTY_COLOR=yellow
+if [ ! -n "${BULLETTRAIN_GIT_COLORIZE_DIRTY_FG_COLOR+1}" ]; then
+  BULLETTRAIN_GIT_COLORIZE_DIRTY_FG_COLOR=black
+fi
+if [ ! -n "${BULLETTRAIN_GIT_COLORIZE_DIRTY_BG_COLOR+1}" ]; then
+  BULLETTRAIN_GIT_COLORIZE_DIRTY_BG_COLOR=yellow
 fi
 if [ ! -n "${BULLETTRAIN_GIT_BG+1}" ]; then
   BULLETTRAIN_GIT_BG=white
@@ -159,6 +162,23 @@ if [ ! -n "${BULLETTRAIN_GIT_FG+1}" ]; then
 fi
 if [ ! -n "${BULLETTRAIN_GIT_EXTENDED+1}" ]; then
   BULLETTRAIN_GIT_EXTENDED=true
+fi
+if [ ! -n "${BULLETTRAIN_GIT_PROMPT_CMD+1}" ]; then
+  BULLETTRAIN_GIT_PROMPT_CMD="\$(git_prompt_info)"
+fi
+
+# PERL
+if [ ! -n "${BULLETTRAIN_PERL_SHOW+1}" ]; then
+  BULLETTRAIN_PERL_SHOW=false
+fi
+if [ ! -n "${BULLETTRAIN_PERL_BG+1}" ]; then
+  BULLETTRAIN_PERL_BG=yellow
+fi
+if [ ! -n "${BULLETTRAIN_PERL_FG+1}" ]; then
+  BULLETTRAIN_PERL_FG=black
+fi
+if [ ! -n "${BULLETTRAIN_PERL_PREFIX+1}" ]; then
+  BULLETTRAIN_PERL_PREFIX=🐪
 fi
 
 # HG
@@ -179,7 +199,7 @@ fi
 
 # GIT PROMPT
 if [ ! -n "${BULLETTRAIN_GIT_PREFIX+1}" ]; then
-  ZSH_THEME_GIT_PROMPT_PREFIX=" \ue0a0 "
+  ZSH_THEME_GIT_PROMPT_PREFIX="\ue0a0 "
 else
   ZSH_THEME_GIT_PROMPT_PREFIX=$BULLETTRAIN_GIT_PREFIX
 fi
@@ -189,12 +209,12 @@ else
   ZSH_THEME_GIT_PROMPT_SUFFIX=$BULLETTRAIN_GIT_SUFFIX
 fi
 if [ ! -n "${BULLETTRAIN_GIT_DIRTY+1}" ]; then
-  ZSH_THEME_GIT_PROMPT_DIRTY=" ✘"
+  ZSH_THEME_GIT_PROMPT_DIRTY=" %F{red}✘%F{black}"
 else
   ZSH_THEME_GIT_PROMPT_DIRTY=$BULLETTRAIN_GIT_DIRTY
 fi
 if [ ! -n "${BULLETTRAIN_GIT_CLEAN+1}" ]; then
-  ZSH_THEME_GIT_PROMPT_CLEAN=" ✔"
+  ZSH_THEME_GIT_PROMPT_CLEAN=" %F{green}✔%F{black}"
 else
   ZSH_THEME_GIT_PROMPT_CLEAN=$BULLETTRAIN_GIT_CLEAN
 fi
@@ -343,19 +363,21 @@ prompt_git() {
     return
   fi
 
-  local ref dirty mode repo_path
+  local ref dirty mode repo_path git_prompt
   repo_path=$(git rev-parse --git-dir 2>/dev/null)
 
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
     if [[ $BULLETTRAIN_GIT_COLORIZE_DIRTY == true && -n $(git status --porcelain --ignore-submodules) ]]; then
-      BULLETTRAIN_GIT_BG=$BULLETTRAIN_GIT_COLORIZE_DIRTY_COLOR
+      BULLETTRAIN_GIT_BG=$BULLETTRAIN_GIT_COLORIZE_DIRTY_BG_COLOR
+      BULLETTRAIN_GIT_FG=$BULLETTRAIN_GIT_COLORIZE_DIRTY_FG_COLOR
     fi
     prompt_segment $BULLETTRAIN_GIT_BG $BULLETTRAIN_GIT_FG
 
+    eval git_prompt=${BULLETTRAIN_GIT_PROMPT_CMD}
     if [[ $BULLETTRAIN_GIT_EXTENDED == true ]]; then
-      echo -n $(git_prompt_info)$(git_prompt_status)
+      echo -n ${git_prompt}$(git_prompt_status)
     else
-      echo -n $(git_prompt_info)
+      echo -n ${git_prompt}
     fi
   fi
 }
@@ -441,6 +463,18 @@ prompt_ruby() {
     prompt_segment $BULLETTRAIN_RUBY_BG $BULLETTRAIN_RUBY_FG $BULLETTRAIN_RUBY_PREFIX"  $(chruby | sed -n -e 's/ \* //p')"
   elif command -v rbenv > /dev/null 2>&1; then
     prompt_segment $BULLETTRAIN_RUBY_BG $BULLETTRAIN_RUBY_FG $BULLETTRAIN_RUBY_PREFIX" $(rbenv version | sed -e 's/ (set.*$//')"
+  fi
+}
+
+# PERL
+# PLENV: shows current PERL version active in the shell
+prompt_perl() {
+  if [[ $BULLETTRAIN_PERL_SHOW == false ]]; then
+    return
+  fi
+
+  if command -v plenv > /dev/null 2>&1; then
+    prompt_segment $BULLETTRAIN_PERL_BG $BULLETTRAIN_PERL_FG $BULLETTRAIN_PERL_PREFIX" $(plenv version | sed -e 's/ (set.*$//')"
   fi
 }
 
@@ -536,8 +570,8 @@ prompt_char() {
     bt_prompt_char="%(!.%F{red}#.%F{green}${bt_prompt_char}%f)"
   fi
 
-  if [[ $BULLETTRAIN_PROMPT_SEPARATE_LINE == false  ]]; then
-    bt_prompt_char=" ${bt_prompt_char}"
+  if [[ $BULLETTRAIN_PROMPT_SEPARATE_LINE == false ]]; then
+    bt_prompt_char="${bt_prompt_char}"
   fi
 
   echo -n $bt_prompt_char
@@ -563,6 +597,7 @@ build_prompt() {
   prompt_custom
   prompt_context
   prompt_dir
+  prompt_perl
   prompt_ruby
   prompt_virtualenv
   prompt_nvm
