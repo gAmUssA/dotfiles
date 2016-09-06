@@ -93,7 +93,7 @@ color_maven() {
   skipped=${c_white}
   downloading=${c_magenta}
 
-  `brew --prefix maven`/bin/mvn "$@" | sed -E -e "s/(\[INFO\]) Building( .*)/${info}\1${projectname}\2${c_end}/g" \
+  `brew --prefix`/bin/mvn "$@" | sed -E -e "s/(\[INFO\]) Building( .*)/${info}\1${projectname}\2${c_end}/g" \
     -e "s/(Time elapsed: )([0-9]+[.]*[0-9]*.sec)/${c_cyan}\1${c_white}\2${c_end}/g" \
     -e "s/(Downloading: .*)/${downloading}\1${c_end}/g" \
     -e "s/BUILD FAILURE/${error}BUILD FAILURE${c_end}/g" \
