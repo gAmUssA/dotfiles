@@ -101,3 +101,7 @@ alias zshconfig="st ~/.zshrc"
 alias ohmyzsh="st ~/.oh-my-zsh"
 
 alias fuck='eval $(thefuck $(fc -ln -1 | tail -n 1)); fc -R'
+alias copypath='pwd|pbcopy'
+alias ls="ls --color=always"
+alias grep="grep --color=always"
+alias egrep="egrep --color=always"

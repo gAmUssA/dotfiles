@@ -1,95 +1,68 @@
-skip_global_compinit=1
-# Path to your oh-my-zsh configuration.
-ZSH=$HOME/.oh-my-zsh
+# Terminal 256 colors
+export TERM="xterm-256color"
 
 # http://mrjoelkemp.com/2013/06/remapping-iterm2-option-keys-for-fish-terminal/
 bindkey "\e\[1\;9C" forward-word
 bindkey "\e\[1\;9D" backward-word
 bindkey "\e\[dw" backward-kill-word
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-ZSH_THEME="bullet-train"
-
-BULLETTRAIN_TIME_SHOW=false
-BULLETTRAIN_RUBY_SHOW=false
-BULLETTRAIN_VIRTUALENV_SHOW=false
-BULLETTRAIN_GIT_COLORIZE_DIRTY=true
-
-# Set to this to use case-sensitive completion
-# CASE_SENSITIVE="true"
-
-# Comment this out to disable weekly auto-update checks
-DISABLE_AUTO_UPDATE="true"
-
-# Uncomment following line if you want to disable colors in ls
-# DISABLE_LS_COLORS="true"
-
-# Uncomment following line if you want to disable autosetting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment following line if you want red dots to be displayed while waiting for completion
-COMPLETION_WAITING_DOTS="true"
-
-HISTCONTROL=ignoredups:ignorespace
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(ant atom battery bower bgnotify brew brew-cask compleat colorize dash docker encode64 fasd Forklift gem git-extras gitfast gitignore glassfish gradle grails grunt gulp httpie jsontools marked2 mercurial mvn node npm osx rake rbenv sublime spring thefuck svn vagrant xcode z)
-
-source $ZSH/oh-my-zsh.sh
-
-# Customize to your needs...
-SENCHA_CMD_VERSION=4.0.4.84
-DART_SDK=/Developer/dart/dart-sdk/
-SENCHA_CMD_HOME=/Developer/Sencha/Cmd/$SENCHA_CMD_VERSION
-export PATH=$DART_SDK/bin:/usr/local/bin:/opt/local/bin:/opt/local/sbin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin:/usr/local/sbin:/usr/bin:$SENCHA_CMD_HOME:/usr/local/share/npm/bin:$JAVA_HOME/bin
-export PATH="$HOME/.rbenv/bin:$PATH"
-
-# Hazelcast Simulator
-export SIMULATOR_HOME=~/hazelcast-simulator
-PATH=$SIMULATOR_HOME/bin:$PATH
-
-PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 test -e ~/.dircolors && eval `gdircolors -b ~/.dircolors`
-alias ls="ls --color=always"
-alias grep="grep --color=always"
-alias egrep="egrep --color=always"
 
-# Terminal 256 colors
-export TERM="xterm-256color"
+# init antigen
+source ~/.antigen.zsh
 
-export EDITOR="subl -w"
+antigen use oh-my-zsh
 
-#xmlcatalog
+# slooow
+# antigen bundle zsh-users/zsh-autosuggestions
 
-export XML_CATALOG_FILES="`brew --prefix`/etc/xml/catalog"
-export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+# antigen bundle rupa/z
+antigen bundles <<EOBUNDLES
+    git
+    zsh-users/zsh-syntax-highlighting
+    command-not-found
 
-export JRUBY_OPTS="-Xcompat.version=RUBY1_9 -Xcompile.mode=OFF -J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -J-Xverify:none -Xcext.enabled=true"
+    # The heroku tool helper plugin.
+    heroku
+    # fzf-z plugin ctrl+G
+    andrewferrier/fzf-z
+    robbyrussell/oh-my-zsh plugins/sublime
+    robbyrussell/oh-my-zsh plugins/z
+    robbyrussell/oh-my-zsh plugins/rake
+    robbyrussell/oh-my-zsh plugins/rbenv
+    robbyrussell/oh-my-zsh plugins/gitignore
 
-eval "$(fasd --init auto)"
+    # command autocorrection with thefuck script
+    robbyrussell/oh-my-zsh plugins/thefuck
+
+    # custom aliases
+    $HOME/projects/dotfiles/zsh_custom
+EOBUNDLES
+
+# pure prompt
+antigen bundle mafredri/zsh-async
+antigen bundle sindresorhus/pure
+
+# OS specific plugins
+if [[ $CURRENT_OS == 'OS X' ]]; then
+    antigen bundle brew
+    antigen bundle brew-cask
+    antigen bundle gem
+    antigen bundle osx
+elif [[ $CURRENT_OS == 'Linux' ]]; then
+    # None so far...
+
+    if [[ $DISTRO == 'CentOS' ]]; then
+        antigen bundle centos
+    fi
+elif [[ $CURRENT_OS == 'Cygwin' ]]; then
+    antigen bundle cygwin
+fi
+
+# Tell Antigen that you're done.
+antigen apply
 
 setjdk18
-
-if which rbenv > /dev/null; then eval "$(rbenv init - --no-rehash)"; fi
-
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-[[ -s "${HOME}/.iterm2_shell_integration.zsh" ]] && source ${HOME}/.iterm2_shell_integration.zsh
-
-#THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
-export SDKMAN_DIR="${HOME}/.sdkman" && source "${HOME}/.sdkman/bin/sdkman-init.sh"
-
-export NVM_DIR=~/.nvm
-source $(brew --prefix nvm)/nvm.sh
-
-# added by travis gem
-[ -f /Users/apple/.travis/travis.sh ] && source /Users/apple/.travis/travis.sh
 
 export FZF_DEFAULT_OPTS='
   --bind ctrl-f:page-down,ctrl-b:page-up
@@ -98,3 +71,19 @@ export FZF_DEFAULT_OPTS='
 '
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# tmux
+alias tmux="TERM=screen-256color-bce tmux -u"
+DISABLE_AUTO_TITLE=true
+
+# Brew
+export PATH="/usr/local/bin:$PATH"
+
+# rbenv
+export PATH="$HOME/.rbenv/bin:$PATH"
+if type "rbenv" > /dev/null; then
+  eval "$(rbenv init -)"
+fi
+
+#THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
+export SDKMAN_DIR="${HOME}/.sdkman" && source "${HOME}/.sdkman/bin/sdkman-init.sh"
