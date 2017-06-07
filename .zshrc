@@ -33,7 +33,7 @@ antigen bundles <<EOBUNDLES
     robbyrussell/oh-my-zsh plugins/gitignore
 
     # command autocorrection with thefuck script
-    robbyrussell/oh-my-zsh plugins/thefuck
+    # robbyrussell/oh-my-zsh plugins/thefuck
 
     # custom aliases
     $HOME/projects/dotfiles/zsh_custom
@@ -85,9 +85,15 @@ if type "rbenv" > /dev/null; then
   eval "$(rbenv init -)"
 fi
 
+# Hazelcast Simulator
+export SIMULATOR_HOME=~/hazelcast-simulator
+PATH=$SIMULATOR_HOME/bin:$PATH
+
+#thefuck
+#eval "$(thefuck --alias)"
+
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
 export SDKMAN_DIR="${HOME}/.sdkman" && source "${HOME}/.sdkman/bin/sdkman-init.sh"
-
 export NVM_LAZY_LOAD=true
 antigen bundle lukechilds/zsh-nvm
 # tabtab source for jhipster package
