@@ -14,7 +14,7 @@ rm ~/.mackup.cfg
 rm ~/.antigen.zsh
 
 ln -s ~/projects/dotfiles/antigen.zsh ~/.antigen.zsh
-# ln -s ~/projects/dotfiles/.zshrc ~/.zshrc
+ln -s ~/projects/dotfiles/.zshrc ~/.zshrc
 # ln -s ~/projects/dotfiles/zsh_custom ~/.oh-my-zsh/custom
 # ln -s ~/projects/dotfiles/gamussa_skwp.zsh-theme ~/.oh-my-zsh/themes/gamussa_skwp.zsh-theme
 # ln -s ~/projects/dotfiles/bullet-train.zsh-theme ~/.oh-my-zsh/themes/bullet-train.zsh-theme
