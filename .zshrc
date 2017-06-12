@@ -92,14 +92,13 @@ PATH=$SIMULATOR_HOME/bin:$PATH
 #thefuck
 #eval "$(thefuck --alias)"
 
-#THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
-export SDKMAN_DIR="${HOME}/.sdkman" && source "${HOME}/.sdkman/bin/sdkman-init.sh"
+# NVM integration
 export NVM_LAZY_LOAD=true
 antigen bundle lukechilds/zsh-nvm
+
 # tabtab source for jhipster package
 # uninstall by removing these lines or running `tabtab uninstall jhipster`
 [[ -f /Users/apple/.config/yarn/global/node_modules/tabtab/.completions/jhipster.zsh ]] && . /Users/apple/.config/yarn/global/node_modules/tabtab/.completions/jhipster.zsh
 
-# Hazelcast Simulator
-export SIMULATOR_HOME=~/hazelcast-simulator
-PATH=$SIMULATOR_HOME/bin:$PATH
+#THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
+export SDKMAN_DIR="${HOME}/.sdkman" && source "${HOME}/.sdkman/bin/sdkman-init.sh"
