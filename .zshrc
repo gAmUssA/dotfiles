@@ -31,6 +31,7 @@ antigen bundles <<EOBUNDLES
     robbyrussell/oh-my-zsh plugins/rake
     robbyrussell/oh-my-zsh plugins/rbenv
     robbyrussell/oh-my-zsh plugins/gitignore
+    robbyrussell/oh-my-zsh plugins/kubectl
 
     # command autocorrection with thefuck script
     # robbyrussell/oh-my-zsh plugins/thefuck
