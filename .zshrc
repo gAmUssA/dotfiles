@@ -32,6 +32,7 @@ antigen bundles <<EOBUNDLES
     robbyrussell/oh-my-zsh plugins/rbenv
     robbyrussell/oh-my-zsh plugins/gitignore
     robbyrussell/oh-my-zsh plugins/kubectl
+    robbyrussell/oh-my-zsh plugins/docker
 
     # command autocorrection with thefuck script
     # robbyrussell/oh-my-zsh plugins/thefuck
@@ -103,3 +104,9 @@ antigen bundle lukechilds/zsh-nvm
 
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
 export SDKMAN_DIR="${HOME}/.sdkman" && source "${HOME}/.sdkman/bin/sdkman-init.sh"
+
+# confluent platform
+# TEMP - figure out way to switch different versions - oss vs ent, 3.3, 3.4, etc
+# symlink
+export CONFLUENT_HOME=~/projects/confluent/confluent-oss/3.3.0
+export PATH=$CONFLUENT_HOME/bin:$PATH
