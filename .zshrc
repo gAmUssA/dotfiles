@@ -33,6 +33,8 @@ antigen bundles <<EOBUNDLES
     robbyrussell/oh-my-zsh plugins/gitignore
     robbyrussell/oh-my-zsh plugins/kubectl
     robbyrussell/oh-my-zsh plugins/docker
+    robbyrussell/oh-my-zsh plugins/docker-compose
+    robbyrussell/oh-my-zsh plugins/helm
 
     # command autocorrection with thefuck script
     # robbyrussell/oh-my-zsh plugins/thefuck
@@ -63,8 +65,6 @@ fi
 
 # Tell Antigen that you're done.
 antigen apply
-
-setjdk18
 
 export FZF_DEFAULT_OPTS='
   --bind ctrl-f:page-down,ctrl-b:page-up
@@ -108,5 +108,10 @@ export SDKMAN_DIR="${HOME}/.sdkman" && source "${HOME}/.sdkman/bin/sdkman-init.s
 # confluent platform
 # TEMP - figure out way to switch different versions - oss vs ent, 3.3, 3.4, etc
 # symlink
-export CONFLUENT_HOME=~/projects/confluent/confluent-oss/3.3.0
+export CONFLUENT_PLATFORM_VERSION=4.1.0
+export CONFLUENT_HOME=~/projects/confluent/confluent-oss/$CONFLUENT_PLATFORM_VERSION
 export PATH=$CONFLUENT_HOME/bin:$PATH
+# GCP completion
+source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
+source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc'
+export PATH=$PATH:~/.fabric8/bin

@@ -93,6 +93,15 @@ fshow() {
   done
 }
 
+# alias / function for atom editor - am in short
+function am(){
+  if [ "$1" != "" ]
+  then
+    atom "$1"
+  else
+    atom
+  fi
+}
 
 alias jjs='rlwrap $(/usr/libexec/java_home -v 1.8)/bin/jjs'
 
