@@ -17,7 +17,6 @@ alias j="jobs"
 
 alias sys_info='sw_vers'
 alias reload!='. ~/.zshrc'
-alias c='pygmentize -O style=tomorrownighteighties -f console256 -g'
 # Count files in subdirs
 alias lll='for i in *; do echo "`ls -1aRi "$i" | awk "/^[0-9]+ / { print $1 }" | sort -u | wc -l` $i" ; done | sort -n'
 alias grep='grep --color=auto'
@@ -114,3 +113,24 @@ alias copypath='pwd|pbcopy'
 alias ls="ls --color=always"
 alias grep="grep --color=always"
 alias egrep="egrep --color=always"
+
+# hub alias for pull requests
+alias github-pull-request="hub fork;git push -u gAmUssA HEAD;hub pull-request"
+
+# new and awesome stuff
+# brew install bat
+#alias cat='bat'
+alias preview="fzf --preview 'bat --color \"always\" {}'"
+alias c='bat'
+alias cyml=c -l yaml
+#alias c='pygmentize -O style=tomorrownighteighties -f console256 -g'
+alias watch='watch '
+
+# brew install prettyping
+alias ping='prettyping --nolegend'
+
+#brew install htop
+alias top="sudo htop"
+
+#brew install fd
+alias du="ncdu --color dark -rr -x --exclude .git --exclude node_modules"
