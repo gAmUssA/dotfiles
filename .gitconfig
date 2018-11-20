@@ -8,7 +8,12 @@
 	autocrlf = input
 	whitespace = trailing-space,space-before-tab
 	quotepath = false
+	ignorecase = false
+	editor = subl -n -w
 	# pager = less -FXR
+[pager]
+    diff = diff-so-fancy | less --tabs=1,5 -RFX
+    show = diff-so-fancy | less --tabs=1,5 -RFXd
 [color]
 	ui = auto
 	status = auto
