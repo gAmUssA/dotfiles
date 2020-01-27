@@ -1,0 +1,144 @@
+# profile zsh startup
+# zmodload zsh/zprof
+# Terminal 256 colors
+export TERM="xterm-256color"
+export HISTCONTROL=ignoredups
+
+# Speeds up load time
+DISABLE_UPDATE_PROMPT=true
+
+# http://mrjoelkemp.com/2013/06/remapping-iterm2-option-keys-for-fish-terminal/
+bindkey "\e\[1\;9C" forward-word
+bindkey "\e\[1\;9D" backward-word
+bindkey "\e\[dw" backward-kill-word
+
+test -e ~/.dircolors && eval `gdircolors -b ~/.dircolors`
+
+# install zgen
+# git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
+# load zgen
+source "${HOME}/.zgen/zgen.zsh"
+
+# if the init scipt doesn't exist
+if ! zgen saved; then
+    echo "Creating a zgen save"
+
+    zgen oh-my-zsh
+    zgen oh-my-zsh plugins/sudo
+    zgen oh-my-zsh plugins/git
+    zgen oh-my-zsh plugins/sublime
+    zgen oh-my-zsh plugins/z
+    zgen oh-my-zsh plugins/rake
+    zgen oh-my-zsh plugins/rbenv
+    zgen oh-my-zsh plugins/gitignore
+    zgen oh-my-zsh plugins/kubectl
+    zgen oh-my-zsh plugins/docker
+    zgen oh-my-zsh plugins/docker-compose
+    # zgen oh-my-zsh plugins/helm
+    zgen oh-my-zsh plugins/command-not-found
+    zgen oh-my-zsh plugins/github
+
+    # NVM integration
+    #export NVM_LAZY_LOAD=true
+    #zgen load lukechilds/zsh-nvm
+
+    # OS specific plugins
+    if [[ $CURRENT_OS == 'OS X' ]]; then
+        zgen oh-my-zsh plugins/brew
+        zgen oh-my-zsh plugins/brew-cask
+        zgen oh-my-zsh plugins/gem
+        zgen oh-my-zsh plugins/osx
+    elif [[ $CURRENT_OS == 'Linux' ]]; then
+        # None so far...
+
+        if [[ $DISTRO == 'CentOS' ]]; then
+            zgen oh-my-zsh plugins/centos
+        fi
+    elif [[ $CURRENT_OS == 'Cygwin' ]]; then
+        zgen oh-my-zsh plugins/cygwin
+    fi
+
+    # bulk load
+    # Pure theme
+    # sindresorhus/pure
+    zgen loadall <<EOPLUGINS
+        zsh-users/zsh-syntax-highlighting
+        andrewferrier/fzf-z
+        $HOME/projects/dotfiles/zsh_custom
+        mafredri/zsh-async
+        iam4x/zsh-iterm-touchbar
+EOPLUGINS
+    # ^ can't indent this EOPLUGINS
+    zgen load denysdovhan/spaceship-prompt spaceship
+    zgen save
+fi
+
+export FZF_DEFAULT_OPTS="
+  --bind 'ctrl-f:page-down,ctrl-b:page-up,ctrl-o:execute(code {})+abort'
+  --color fg:102,bg:233,hl:65,fg+:15,bg+:234,hl+:108
+  --color info:108,prompt:109,spinner:108,pointer:168,marker:168
+"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# tmux
+alias tmux="TERM=screen-256color-bce tmux -u"
+DISABLE_AUTO_TITLE=true
+
+# Brew
+export PATH="/usr/local/bin:$PATH"
+
+# rbenv
+export PATH="$HOME/.rbenv/bin:$PATH"
+if type "rbenv" > /dev/null; then
+  eval "$(rbenv init -)"
+fi
+
+#thefuck
+#eval "$(thefuck --alias)"
+
+#THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
+export SDKMAN_DIR="${HOME}/.sdkman" && source "${HOME}/.sdkman/bin/sdkman-init.sh"
+
+# confluent platform
+# TEMP - figure out way to switch different versions - oss vs ent, 3.3, 3.4, etc
+# symlink
+export CONFLUENT_PLATFORM_VERSION=5.2.0-SNAPSHOT
+export CONFLUENT_HOME=~/projects/confluent/confluent-ent/$CONFLUENT_PLATFORM_VERSION
+#export CONFLUENT_HOME=~/projects/confluent/confluent-oss/$CONFLUENT_PLATFORM_VERSION
+export PATH=$CONFLUENT_HOME/bin:$PATH
+alias cnfl="confluent"
+
+# GCP completion
+source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
+source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc'
+
+# Go development
+export GOPATH="${HOME}/.go"
+export GOROOT="$(brew --prefix golang)/libexec"
+export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+
+test -d "${GOPATH}" || mkdir "${GOPATH}"
+test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
+# end Go developement
+
+source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
+PROMPT='$(kube_ps1)'$PROMPT
+kubeoff
+
+# Perform compinit only once a day.
+autoload -Uz compinit
+
+setopt EXTENDEDGLOB
+for dump in $ZSH_COMPDUMP(#qN.m1); do
+  compinit
+  if [[ -s "$dump" && (! -s "$dump.zwc" || "$dump" -nt "$dump.zwc") ]]; then
+    zcompile "$dump"
+  fi
+  echo "Initializing Completions..."
+done
+unsetopt EXTENDEDGLOB
+compinit -C
+
+# end profiling
+# zprof

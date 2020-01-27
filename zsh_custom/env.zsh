@@ -1,1 +1,2 @@
-export EDITOR='subl'
+export EDITOR='micro'
+#export EDITOR='subl'

@@ -111,4 +111,4 @@ color_maven() {
       -e "s/Tests run: ([0-9]*), Failures: ([0-9]*), Errors: ([0-9]*), Skipped: ([0-9]*)/${c_green}Tests run: \1 ${c_end}, Failures: ${warn}\2 ${c_end}, Errors: ${error}\3 ${c_end}, Skipped:  ${skipped}\4 ${c_end}/g"
 }
 
-alias mvn=color_maven
+# alias mvn=color_maven

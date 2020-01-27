@@ -1,8 +1,8 @@
 #!/bin/sh
 rm ~/.zshrc
 rm -rf ~/.oh-my-zsh/custom
-rm ~/.oh-my-zsh/themes/gamussa_skwp.zsh-theme
-rm ~/.oh-my-zsh/themes/bullet-train.zsh-theme
+# rm ~/.oh-my-zsh/themes/gamussa_skwp.zsh-theme
+# rm ~/.oh-my-zsh/themes/bullet-train.zsh-theme
 rm ~/.gitconfig
 rm ~/.gitignore
 rm ~/.jshintrc
@@ -12,6 +12,7 @@ rm ~/.ssh/config
 rm ~/.dircolors
 rm ~/.mackup.cfg
 rm ~/.antigen.zsh
+rm ~/.tmux.conf
 
 ln -s ~/projects/dotfiles/antigen.zsh ~/.antigen.zsh
 ln -s ~/projects/dotfiles/.zshrc ~/.zshrc
@@ -26,6 +27,7 @@ ln -s ~/projects/dotfiles/.tigrc ~/.tigrc
 ln -s ~/projects/dotfiles/.ssh/config ~/.ssh/config
 ln -s ~/projects/dotfiles/.dircolors ~/.dircolors
 ln -s ~/projects/dotfiles/.mackup.cfg ~/.mackup.cfg
+ln -s ~/projects/dotfiles/.tmux.conf ~/.tmux.conf
 
 
 # ls -lah ~/.zshrc
@@ -41,6 +43,7 @@ ls -lah ~/.ssh/config
 ls -lah ~/.dircolors
 ls -lah ~/.mackup.cfg
 ls -lah ~/.antigen.zsh
+ls -lah ~/.tmux.conf
 
 rm -r ~/.atom
 ln -s ~/Dropbox/Apps/Atom ~/.atom
