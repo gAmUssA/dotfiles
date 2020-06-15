@@ -57,7 +57,7 @@ if type "rbenv" > /dev/null; then
 fi
 
 #thefuck
-#eval "$(thefuck --alias)"
+eval "$(thefuck --alias)"
 
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
 export SDKMAN_DIR="${HOME}/.sdkman" && source "${HOME}/.sdkman/bin/sdkman-init.sh"
@@ -65,9 +65,7 @@ export SDKMAN_DIR="${HOME}/.sdkman" && source "${HOME}/.sdkman/bin/sdkman-init.s
 # confluent platform
 # TEMP - figure out way to switch different versions - oss vs ent, 3.3, 3.4, etc
 # symlink
-#export CONFLUENT_PLATFORM_VERSION=5.2.1
-export CONFLUENT_PLATFORM_VERSION=5.4.0
-#export CONFLUENT_PLATFORM_VERSION=5.3.0-beta190715193212
+export CONFLUENT_PLATFORM_VERSION=5.5.0
 export CONFLUENT_HOME=~/projects/confluent/confluent-ent/$CONFLUENT_PLATFORM_VERSION
 #export CONFLUENT_HOME=~/projects/confluent/confluent-oss/$CONFLUENT_PLATFORM_VERSION
 export PATH=$CONFLUENT_HOME/bin:~/bin:$PATH
@@ -128,6 +126,7 @@ elif [[ $CURRENT_OS == 'Cygwin' ]]; then
 fi
 
 zplug "zsh-users/zsh-syntax-highlighting"
+zplug "zsh-users/zsh-apple-touchbar"
 
 zplug "zsh-users/zsh-history-substring-search"
 if zplug check zsh-users/zsh-history-substring-search; then
@@ -136,10 +135,13 @@ if zplug check zsh-users/zsh-history-substring-search; then
   bindkey "^[[B" history-substring-search-down
 fi
 
+# commented for screencasts
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_USE_ASYNC=true
 zplug "zsh-users/zsh-autosuggestions"
 if zplug check zsh-users/zsh-autosuggestions; then
-  ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-substring-search-up history-substring-search-down) # Add history-substring-search-* widgets to list of widgets that clear the autosuggestion
-  ZSH_AUTOSUGGEST_CLEAR_WIDGETS=("${(@)ZSH_AUTOSUGGEST_CLEAR_WIDGETS:#(up|down)-line-or-history}") # Remove *-line-or-history widgets from list of widgets that clear the autosuggestion to avoid conflict with history-substring-search-* widgets
+   ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-substring-search-up history-substring-search-down) # Add history-substring-search-* widgets to list of widgets that clear the autosuggestion
+   ZSH_AUTOSUGGEST_CLEAR_WIDGETS=("${(@)ZSH_AUTOSUGGEST_CLEAR_WIDGETS:#(up|down)-line-or-history}") # Remove *-line-or-history widgets from list of widgets that clear the autosuggestion to avoid conflict with history-substring-search-* widgets
 fi
 
 zplug iam4x/zsh-iterm-touchbar
@@ -153,25 +155,30 @@ zplug sindresorhus/pure, use:pure.zsh, from:github, as:theme
 # zplug denysdovhan/spaceship-prompt, use:spaceship.zsh, from:github, as:theme
 
 
-# zplug b4b4r07/enhancd, use:init.sh
-#
+zplug b4b4r07/enhancd, use:init.sh
 # # zplug check returns true if the given repository exists
-# # if zplug check b4b4r07/enhancd; then
+if zplug check b4b4r07/enhancd; then
 #       # setting if enhancd is available
-#      export ENHANCD_FILTER=fzf
-# fi
+  export ENHANCD_FILTER=fzf
+fi
 
 zplug "rupa/z", use:z.sh
 
 # k
 # Directory listings for zsh with git features.
 # https://github.com/supercrabtree/k
-zplug 'supercrabtree/k'
+# zplug 'supercrabtree/k'
 
 # alias-tips
 # Reminds you of aliases you have already.
 # https://github.com/djui/alias-tips
 zplug 'djui/alias-tips'
+
+export NVM_LAZY_LOAD=true
+zplug "lukechilds/zsh-nvm", from:github
+zplug "lukechilds/zsh-better-npm-completion", from:github, defer:2
+
+# zplug "dabz/kafka-zsh-completions"
 
 if ! zplug check --verbose; then
     printf "Install? [y/N]: "
@@ -180,18 +187,25 @@ if ! zplug check --verbose; then
     fi
 fi
 
-export NVM_LAZY_LOAD=true
-zplug "lukechilds/zsh-nvm"
-zplug "lukechilds/zsh-better-npm-completion", defer:2
-
-# zplug load --verbose
 zplug load
+# zplug load --verbose
 
+function get_cluster_short() {
+  echo "$1" | cut -d . -f1
+}
+function get_namespace_upper() {
+    echo "$1" | tr '[:lower:]' '[:upper:]'
+  }
+KUBE_PS1_BINARY=kubectl
+KUBE_PS1_SYMBOL_USE_IMG=true
+#KUBE_PS1_NAMESPACE_FUNCTION=get_namespace_upper
+#KUBE_PS1_CLUSTER_FUNCTION=get_cluster_short
 source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
 PROMPT='$(kube_ps1)'$PROMPT
+
 kubeoff
+
+export PATH="${PATH}:${HOME}/.krew/bin"
 
 # end profiling
 # zprof
-
-export KUBECONFIG=~/.kube/config:~/.kube/pksSpringOne.yml
