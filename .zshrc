@@ -50,17 +50,19 @@ export FZF_DEFAULT_OPTS="
 alias tmux="TERM=screen-256color-bce tmux -u"
 DISABLE_AUTO_TITLE=true
 
+# chruby 
+source /usr/local/opt/chruby/share/chruby/chruby.sh
+source /usr/local/opt/chruby/share/chruby/auto.sh
+RUBIES+=(~/.rbenv/versions/*)
+
 # rbenv
-export PATH="$HOME/.rbenv/bin:$PATH"
-if type "rbenv" > /dev/null; then
-  eval "$(rbenv init -)"
-fi
+#export PATH="$HOME/.rbenv/bin:$PATH"
+#if type "rbenv" > /dev/null; then
+#  eval "$(rbenv init -)"
+#fi
 
 #thefuck
 eval "$(thefuck --alias)"
-
-#THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
-export SDKMAN_DIR="${HOME}/.sdkman" && source "${HOME}/.sdkman/bin/sdkman-init.sh"
 
 # confluent platform
 # TEMP - figure out way to switch different versions - oss vs ent, 3.3, 3.4, etc
@@ -77,7 +79,9 @@ source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.
 
 ## Go development
 export GOPATH="${HOME}/.go"
-export GOROOT="$(brew --prefix golang)/libexec"
+# brew --prefix is slow
+#export GOROOT="$(brew --prefix golang)/libexec"
+export GOROOT="/usr/local/opt/go/libexec"
 export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 
 test -d "${GOPATH}" || mkdir "${GOPATH}"
@@ -89,12 +93,15 @@ test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
 export ZPLUG_HOME=/usr/local/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+
 zplug "lib/history", from:oh-my-zsh
 # Load completion library for those sweet [tab] squares
 zplug "lib/completion", from:oh-my-zsh
 
 zplug plugins/sudo, from:oh-my-zsh
 zplug plugins/git, from:oh-my-zsh
+zplug plugins/git-extras, from:oh-my-zsh
 zplug plugins/sublime, from:oh-my-zsh
 zplug plugins/z, from:oh-my-zsh
 zplug plugins/rake, from:oh-my-zsh
@@ -125,7 +132,6 @@ elif [[ $CURRENT_OS == 'Cygwin' ]]; then
     zplug plugins/cygwin, from:oh-my-zsh
 fi
 
-zplug "zsh-users/zsh-syntax-highlighting"
 zplug "zsh-users/zsh-apple-touchbar"
 
 zplug "zsh-users/zsh-history-substring-search"
@@ -162,7 +168,7 @@ if zplug check b4b4r07/enhancd; then
   export ENHANCD_FILTER=fzf
 fi
 
-zplug "rupa/z", use:z.sh
+#zplug "rupa/z", use:z.sh
 
 # k
 # Directory listings for zsh with git features.
@@ -178,14 +184,18 @@ export NVM_LAZY_LOAD=true
 zplug "lukechilds/zsh-nvm", from:github
 zplug "lukechilds/zsh-better-npm-completion", from:github, defer:2
 
-# zplug "dabz/kafka-zsh-completions"
+zplug "dabz/kafka-zsh-completions", use:kafka.plugin.zsh
 
+zplug "zsh-users/zsh-syntax-highlighting"
 if ! zplug check --verbose; then
     printf "Install? [y/N]: "
     if read -q; then
         echo; zplug install
     fi
 fi
+
+zplug "changyuheng/fz", defer:1
+zplug "skywind3000/z.lua", use:z.lua.plugin.zsh
 
 zplug load
 # zplug load --verbose
@@ -207,5 +217,7 @@ kubeoff
 
 export PATH="${PATH}:${HOME}/.krew/bin"
 
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+[[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"
 # end profiling
 # zprof
