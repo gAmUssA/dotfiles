@@ -14,6 +14,7 @@ rm ~/.mackup.cfg
 rm ~/.antigen.zsh
 rm ~/.tmux.conf
 rm ~/.vimrc
+rm ~/.p10k.zsh
 
 ln -s ~/projects/dotfiles/antigen.zsh ~/.antigen.zsh
 ln -s ~/projects/dotfiles/.zshrc ~/.zshrc
@@ -30,7 +31,7 @@ ln -s ~/projects/dotfiles/.ssh/config ~/.ssh/config
 ln -s ~/projects/dotfiles/.dircolors ~/.dircolors
 ln -s ~/projects/dotfiles/.mackup.cfg ~/.mackup.cfg
 ln -s ~/projects/dotfiles/.tmux.conf ~/.tmux.conf
-
+ln -s ~/projects/dotfiles/.p10k.zsh ~/.p10k.zsh
 
 # ls -lah ~/.zshrc
 # ls -lah ~/.oh-my-zsh/custom
@@ -47,6 +48,7 @@ ls -lah ~/.dircolors
 ls -lah ~/.mackup.cfg
 ls -lah ~/.antigen.zsh
 ls -lah ~/.tmux.conf
+ls -lah ~/.p10k.zsh
 
 rm -r ~/.atom
 ln -s ~/Dropbox/Apps/Atom ~/.atom

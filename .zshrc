@@ -1,5 +1,11 @@
 # profile zsh startup
 # zmodload zsh/zprof
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 # Terminal 256 colors
 export TERM="xterm-256color"
 
@@ -99,13 +105,13 @@ zplug "lib/history", from:oh-my-zsh
 # Load completion library for those sweet [tab] squares
 zplug "lib/completion", from:oh-my-zsh
 
-zplug plugins/sudo, from:oh-my-zsh
+#zplug plugins/sudo, from:oh-my-zsh
 zplug plugins/git, from:oh-my-zsh
 zplug plugins/git-extras, from:oh-my-zsh
 zplug plugins/sublime, from:oh-my-zsh
 zplug plugins/z, from:oh-my-zsh
 zplug plugins/rake, from:oh-my-zsh
-zplug plugins/rbenv, from:oh-my-zsh
+#zplug plugins/rbenv, from:oh-my-zsh
 zplug plugins/gitignore, from:oh-my-zsh
 zplug plugins/kubectl, from:oh-my-zsh
 zplug plugins/docker, from:oh-my-zsh
@@ -114,7 +120,7 @@ zplug plugins/helm, from:oh-my-zsh
 zplug plugins/command-not-found, from:oh-my-zsh
 zplug plugins/github, from:oh-my-zsh
 
-zplug "~/projects/dotfiles/zsh_custom/", from:local
+zplug "~/projects/dotfiles/zsh_custom", from:local
 
 #     # OS specific plugins
 if [[ $CURRENT_OS == 'OS X' ]]; then
@@ -151,9 +157,10 @@ if zplug check zsh-users/zsh-autosuggestions; then
 fi
 
 zplug iam4x/zsh-iterm-touchbar
+
 ### Pure prompt
-zplug mafredri/zsh-async, from:github
-zplug sindresorhus/pure, use:pure.zsh, from:github, as:theme
+# zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
+# zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
 
 ## Spaceship prompt
 # SPACESHIP_BATTERY_SHOW=false
@@ -167,8 +174,6 @@ if zplug check b4b4r07/enhancd; then
 #       # setting if enhancd is available
   export ENHANCD_FILTER=fzf
 fi
-
-#zplug "rupa/z", use:z.sh
 
 # k
 # Directory listings for zsh with git features.
@@ -186,19 +191,23 @@ zplug "lukechilds/zsh-better-npm-completion", from:github, defer:2
 
 zplug "dabz/kafka-zsh-completions", use:kafka.plugin.zsh
 
+zplug "changyuheng/fz", defer:1
+zplug "skywind3000/z.lua", use:z.lua.plugin.zsh
+
 zplug "zsh-users/zsh-syntax-highlighting"
+
+zplug romkatv/powerlevel10k, as:theme, depth:1
+
+zplug plugins/thefuck, from:oh-my-zsh
 if ! zplug check --verbose; then
     printf "Install? [y/N]: "
     if read -q; then
         echo; zplug install
     fi
 fi
-
-zplug "changyuheng/fz", defer:1
-zplug "skywind3000/z.lua", use:z.lua.plugin.zsh
-
 zplug load
 # zplug load --verbose
+source /usr/local/opt/zplug/repos/dabz/kafka-zsh-completions/kafka.plugin.zsh
 
 function get_cluster_short() {
   echo "$1" | cut -d . -f1
@@ -210,10 +219,6 @@ KUBE_PS1_BINARY=kubectl
 KUBE_PS1_SYMBOL_USE_IMG=true
 #KUBE_PS1_NAMESPACE_FUNCTION=get_namespace_upper
 #KUBE_PS1_CLUSTER_FUNCTION=get_cluster_short
-source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
-PROMPT='$(kube_ps1)'$PROMPT
-
-kubeoff
 
 export PATH="${PATH}:${HOME}/.krew/bin"
 
@@ -221,3 +226,10 @@ export PATH="${PATH}:${HOME}/.krew/bin"
 [[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"
 # end profiling
 # zprof
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
+PROMPT='$(kube_ps1)'$PROMPT
+
+kubeoff
