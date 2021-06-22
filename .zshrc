@@ -73,7 +73,7 @@ eval "$(thefuck --alias)"
 # confluent platform
 # TEMP - figure out way to switch different versions - oss vs ent, 3.3, 3.4, etc
 # symlink
-export CONFLUENT_PLATFORM_VERSION=5.5.0
+export CONFLUENT_PLATFORM_VERSION=6.2.0-0
 export CONFLUENT_HOME=~/projects/confluent/confluent-ent/$CONFLUENT_PLATFORM_VERSION
 #export CONFLUENT_HOME=~/projects/confluent/confluent-oss/$CONFLUENT_PLATFORM_VERSION
 export PATH=$CONFLUENT_HOME/bin:~/bin:$PATH
@@ -229,7 +229,19 @@ export PATH="${PATH}:${HOME}/.krew/bin"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
-PROMPT='$(kube_ps1)'$PROMPT
 
-kubeoff
+function kube-toggle() {
+  if (( ${+POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND} )); then
+    unset POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND
+  else
+    POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND='kubectl|helm|kubens|kubectx|oc|istioctl|kogito|k9s|helmfile'
+  fi
+  p10k reload
+  if zle; then
+    zle push-input
+    zle accept-line
+  fi
+}
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/local/bin/terraform terraform
+unalias gm

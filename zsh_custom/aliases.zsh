@@ -120,9 +120,13 @@ alias github-pull-request="hub fork;git push -u gAmUssA HEAD;hub pull-request"
 # new and awesome stuff
 # brew install bat
 #alias cat='bat'
+#export BAT_THEME="GitHub"
+#export BAT_THEME="OneHalfLight"
+#export BAT_THEME="Solarized (light)"
+export BAT_THEME="base16-256"
 alias preview="fzf --preview 'bat --color \"always\" {}'"
 alias c='bat'
-alias cyml=c -l yaml
+alias cyml=c -lyaml
 #alias c='pygmentize -O style=tomorrownighteighties -f console256 -g'
 alias watch='watch '
 
@@ -134,3 +138,4 @@ alias top="sudo htop"
 
 #brew install fd
 alias du="ncdu --color dark -rr -x --exclude .git --exclude node_modules"
+
