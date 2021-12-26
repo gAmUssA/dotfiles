@@ -48,6 +48,12 @@ function mkcd () {
     cd "$*"
 }
 
+# mkdir and touch file there (via https://unix.stackexchange.com/questions/305844/how-to-create-a-file-and-parent-directories-in-one-command#305850)
+function mktouch() { 
+  mkdir -p $(dirname $1)
+  touch $1; 
+}
+
 # Based on http://schneems.com/post/41104255619/use-gifs-in-your-pull-request-for-good-not-evil
 function convert-video-to-gif() {
   TMPFILE=$(mktemp -t gifvideo)
@@ -92,16 +98,6 @@ fshow() {
   done
 }
 
-# alias / function for atom editor - am in short
-function am(){
-  if [ "$1" != "" ]
-  then
-    atom "$1"
-  else
-    atom
-  fi
-}
-
 alias jjs='rlwrap $(/usr/libexec/java_home -v 1.8)/bin/jjs'
 
 alias appleinfo="archey"
@@ -138,4 +134,12 @@ alias top="sudo htop"
 
 #brew install fd
 alias du="ncdu --color dark -rr -x --exclude .git --exclude node_modules"
+
+# brew install lsd
+alias ls='lsd'
+
+alias ll='ls -l'
+alias la='ls -a'
+alias lla='ls -la'
+alias lt='ls --tree'
 

@@ -9,6 +9,8 @@ fi
 # Terminal 256 colors
 export TERM="xterm-256color"
 
+export EDITOR='micro'
+
 # history
 export HISTFILE=~/.zsh_history # Where it gets saved
 export HISTSIZE=10000
@@ -68,16 +70,18 @@ RUBIES+=(~/.rbenv/versions/*)
 #fi
 
 #thefuck
-eval "$(thefuck --alias)"
+# doens't work 🤷
+#eval "$(thefuck --alias)"
 
 # confluent platform
 # TEMP - figure out way to switch different versions - oss vs ent, 3.3, 3.4, etc
 # symlink
-export CONFLUENT_PLATFORM_VERSION=6.2.0-0
+export CONFLUENT_PLATFORM_VERSION=6.1.1
 export CONFLUENT_HOME=~/projects/confluent/confluent-ent/$CONFLUENT_PLATFORM_VERSION
 #export CONFLUENT_HOME=~/projects/confluent/confluent-oss/$CONFLUENT_PLATFORM_VERSION
 export PATH=$CONFLUENT_HOME/bin:~/bin:$PATH
-alias cnfl="confluent"
+confluent completion zsh > ${fpath[1]}/_confluent
+alias cflt="confluent"
 
 ## GCP completion
 source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
@@ -113,14 +117,12 @@ zplug plugins/z, from:oh-my-zsh
 zplug plugins/rake, from:oh-my-zsh
 #zplug plugins/rbenv, from:oh-my-zsh
 zplug plugins/gitignore, from:oh-my-zsh
-zplug plugins/kubectl, from:oh-my-zsh
+zplug plugins/kubectl, from:oh-my-zsh, defer:2
 zplug plugins/docker, from:oh-my-zsh
 zplug plugins/docker-compose, from:oh-my-zsh
 zplug plugins/helm, from:oh-my-zsh
 zplug plugins/command-not-found, from:oh-my-zsh
 zplug plugins/github, from:oh-my-zsh
-
-zplug "~/projects/dotfiles/zsh_custom", from:local
 
 #     # OS specific plugins
 if [[ $CURRENT_OS == 'OS X' ]]; then
@@ -148,7 +150,8 @@ if zplug check zsh-users/zsh-history-substring-search; then
 fi
 
 # commented for screencasts
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+#ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+#ZSH_AUTOSUGGEST_STRATEGY=(completion)
 ZSH_AUTOSUGGEST_USE_ASYNC=true
 zplug "zsh-users/zsh-autosuggestions"
 if zplug check zsh-users/zsh-autosuggestions; then
@@ -197,8 +200,13 @@ zplug "skywind3000/z.lua", use:z.lua.plugin.zsh
 zplug "zsh-users/zsh-syntax-highlighting"
 
 zplug romkatv/powerlevel10k, as:theme, depth:1
+zplug "nnao45/zsh-kubectl-completion"
 
-zplug plugins/thefuck, from:oh-my-zsh
+#zplug plugins/thefuck, from:oh-my-zsh
+zplug "laggardkernel/zsh-thefuck", as:plugin, use:"zsh-thefuck.plugin.zsh"
+
+zplug "~/projects/dotfiles/zsh_custom", from:local
+
 if ! zplug check --verbose; then
     printf "Install? [y/N]: "
     if read -q; then
@@ -242,6 +250,7 @@ function kube-toggle() {
     zle accept-line
   fi
 }
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /usr/local/bin/terraform terraform
+
 unalias gm
+source ~/.minikube-completion
+export PATH="/usr/local/sbin:$PATH"
