@@ -15,7 +15,7 @@ export EDITOR='micro'
 export HISTFILE=~/.zsh_history # Where it gets saved
 export HISTSIZE=10000
 export SAVEHIST=10000
-export HISTCONTROL=ignoredups
+export HISTCONTROL=ignorespace:ignoredups
 setopt append_history # Don't overwrite, append!
 setopt INC_APPEND_HISTORY # Write after each command
 setopt hist_expire_dups_first # Expire duplicate entries first when trimming history.
@@ -26,9 +26,23 @@ setopt hist_reduce_blanks # Remove superfluous blanks before recording entry.
 setopt hist_save_no_dups # Don't write duplicate entries in the history file.
 setopt share_history # share history between multiple shells
 setopt HIST_IGNORE_SPACE # Don't record an entry starting with a space.
+setopt hist_reduce_blanks # remove superfluous blanks from history items
+setopt inc_append_history # save history entries as soon as they are entered
+setopt share_history # share history between different instances of the shell
+setopt auto_cd # cd by typing directory name if it's not a command
+#setopt correct_all # autocorrect commands
+setopt auto_list # automatically list choices on ambiguous completion
+setopt auto_menu # automatically use menu completion
+setopt always_to_end # move cursor to end if word had one match
 
 # Brew
-export PATH="/usr/local/bin:$PATH"
+export BREW_HOME=/opt/homebrew
+export PATH="$BREW_HOME/bin:$BREW_HOME/sbin:$PATH"
+
+# install zplug
+# brew install zplug
+export ZPLUG_HOME=$BREW_HOME/opt/zplug
+source $ZPLUG_HOME/init.zsh
 
 # Speeds up load time
 DISABLE_UPDATE_PROMPT=true
@@ -59,8 +73,8 @@ alias tmux="TERM=screen-256color-bce tmux -u"
 DISABLE_AUTO_TITLE=true
 
 # chruby 
-source /usr/local/opt/chruby/share/chruby/chruby.sh
-source /usr/local/opt/chruby/share/chruby/auto.sh
+source $BREW_HOME/opt/chruby/share/chruby/chruby.sh
+source $BREW_HOME/opt/chruby/share/chruby/auto.sh
 RUBIES+=(~/.rbenv/versions/*)
 
 # rbenv
@@ -73,35 +87,21 @@ RUBIES+=(~/.rbenv/versions/*)
 # doens't work 🤷
 #eval "$(thefuck --alias)"
 
-# confluent platform
-# TEMP - figure out way to switch different versions - oss vs ent, 3.3, 3.4, etc
-# symlink
-export CONFLUENT_PLATFORM_VERSION=6.1.1
-export CONFLUENT_HOME=~/projects/confluent/confluent-ent/$CONFLUENT_PLATFORM_VERSION
-#export CONFLUENT_HOME=~/projects/confluent/confluent-oss/$CONFLUENT_PLATFORM_VERSION
-export PATH=$CONFLUENT_HOME/bin:~/bin:$PATH
-confluent completion zsh > ${fpath[1]}/_confluent
-alias cflt="confluent"
-
 ## GCP completion
-source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
-source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc'
+source "$BREW_HOME/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+source "$BREW_HOME/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 
 ## Go development
 export GOPATH="${HOME}/.go"
 # brew --prefix is slow
 #export GOROOT="$(brew --prefix golang)/libexec"
-export GOROOT="/usr/local/opt/go/libexec"
+export GOROOT="$BREW_HOME/opt/go/libexec"
 export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 
 test -d "${GOPATH}" || mkdir "${GOPATH}"
 test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
 ## end Go developement
-
-# install zplug
-# brew install zplug
-export ZPLUG_HOME=/usr/local/opt/zplug
-source $ZPLUG_HOME/init.zsh
 
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
@@ -125,22 +125,23 @@ zplug plugins/command-not-found, from:oh-my-zsh
 zplug plugins/github, from:oh-my-zsh
 
 #     # OS specific plugins
-if [[ $CURRENT_OS == 'OS X' ]]; then
+# What OS are we running?
+if [[ `uname` == "Darwin" ]]; then
     zplug plugins/brew, from:oh-my-zsh
     zplug plugins/brew-cask, from:oh-my-zsh
     zplug plugins/gem, from:oh-my-zsh
-    zplug plugins/osx, from:oh-my-zsh
+    zplug plugins/macos, from:oh-my-zsh
+# TODO: test on rPI
 elif [[ $CURRENT_OS == 'Linux' ]]; then
     # None so far...
-
     if [[ $DISTRO == 'CentOS' ]]; then
         zplug plugins/centos, from:oh-my-zsh
     fi
 elif [[ $CURRENT_OS == 'Cygwin' ]]; then
     zplug plugins/cygwin, from:oh-my-zsh
+else
+    echo 'Unknown OS!'
 fi
-
-zplug "zsh-users/zsh-apple-touchbar"
 
 zplug "zsh-users/zsh-history-substring-search"
 if zplug check zsh-users/zsh-history-substring-search; then
@@ -158,18 +159,6 @@ if zplug check zsh-users/zsh-autosuggestions; then
    ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-substring-search-up history-substring-search-down) # Add history-substring-search-* widgets to list of widgets that clear the autosuggestion
    ZSH_AUTOSUGGEST_CLEAR_WIDGETS=("${(@)ZSH_AUTOSUGGEST_CLEAR_WIDGETS:#(up|down)-line-or-history}") # Remove *-line-or-history widgets from list of widgets that clear the autosuggestion to avoid conflict with history-substring-search-* widgets
 fi
-
-zplug iam4x/zsh-iterm-touchbar
-
-### Pure prompt
-# zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
-# zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
-
-## Spaceship prompt
-# SPACESHIP_BATTERY_SHOW=false
-# SPACESHIP_KUBECONTEXT_SHOW=false
-# zplug denysdovhan/spaceship-prompt, use:spaceship.zsh, from:github, as:theme
-
 
 zplug b4b4r07/enhancd, use:init.sh
 # # zplug check returns true if the given repository exists
@@ -207,6 +196,7 @@ zplug "laggardkernel/zsh-thefuck", as:plugin, use:"zsh-thefuck.plugin.zsh"
 
 zplug "~/projects/dotfiles/zsh_custom", from:local
 
+
 if ! zplug check --verbose; then
     printf "Install? [y/N]: "
     if read -q; then
@@ -215,7 +205,6 @@ if ! zplug check --verbose; then
 fi
 zplug load
 # zplug load --verbose
-source /usr/local/opt/zplug/repos/dabz/kafka-zsh-completions/kafka.plugin.zsh
 
 function get_cluster_short() {
   echo "$1" | cut -d . -f1
@@ -238,6 +227,9 @@ export PATH="${PATH}:${HOME}/.krew/bin"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+source $BREW_HOME/opt/zplug/repos/dabz/kafka-zsh-completions/kafka.plugin.zsh
+source $BREW_HOME/etc/grc.zsh
+
 function kube-toggle() {
   if (( ${+POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND} )); then
     unset POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND
@@ -253,4 +245,36 @@ function kube-toggle() {
 
 unalias gm
 source ~/.minikube-completion
-export PATH="/usr/local/sbin:$PATH"
+source ~/.skaffold-completion
+source ~/.kind-completion
+source ~/.kuma-completion
+source ~/.deck-completion
+
+export PATH=~/bin:$PATH
+
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+  autoload -Uz compinit
+  compinit
+fi
+
+# adding shhist to PATH, so we can use it from Terminal
+PATH="${PATH}:/Applications/ShellHistory.app/Contents/Helpers"
+
+# creating an unique session id for each terminal session
+__shhist_session="${RANDOM}"
+
+# prompt function to record the history
+__shhist_prompt() {
+    local __exit_code="${?:-1}"
+    \history -D -t "%s" -1 | sudo --preserve-env --user ${SUDO_USER:-${LOGNAME}} shhist insert --session ${TERM_SESSION_ID:-${__shhist_session}} --username ${LOGNAME} --hostname $(hostname) --exit-code ${__exit_code} --shell zsh
+    return ${__exit_code}
+}
+
+# integrating prompt function in prompt
+precmd_functions=(__shhist_prompt $precmd_functions)
+
+#awscli completion 
+complete -C '/opt/homebrew/bin/aws_completer' aws
