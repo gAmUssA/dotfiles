@@ -28,6 +28,7 @@
 	quotepath = false
 	ignorecase = false
 	editor = micro
+	sshCommand = "ssh -F ~/.ssh/config"
 	# pager = less -FXR
 #[pager]
 #    diff = diff-so-fancy | less --tabs=1,5 -RFX
@@ -111,8 +112,8 @@
 	logr2 = log --stat -M -2
 	logit = log --stat -M
 	scrub = !git reset --hard && git clean -fd
-[credential]
-	helper = osxkeychain
+#[credential]
+#	helper = osxkeychain
 [filter "media"]
 	required = true
 	clean = git media clean %f

@@ -4,3 +4,4 @@ kind completion zsh > ~/.kind-completion
 kumactl completion zsh > ~/.kuma-completion
 minikube completion zsh > ~/.minikube-completion
 skaffold completion zsh > ~/.skaffold-completion
+confluent completion zsh > ~/.confluent-completion

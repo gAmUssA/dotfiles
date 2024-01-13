@@ -60,14 +60,6 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 
 test -e ~/.dircolors && eval `gdircolors -b ~/.dircolors`
 
-export FZF_DEFAULT_OPTS="
-  --bind 'ctrl-f:page-down,ctrl-b:page-up,ctrl-o:execute(code {})+abort'
-  --color fg:102,bg:233,hl:65,fg+:15,bg+:234,hl+:108
-  --color info:108,prompt:109,spinner:108,pointer:168,marker:168
-"
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 # tmux
 alias tmux="TERM=screen-256color-bce tmux -u"
 DISABLE_AUTO_TITLE=true
@@ -113,7 +105,8 @@ zplug "lib/completion", from:oh-my-zsh
 zplug plugins/git, from:oh-my-zsh
 zplug plugins/git-extras, from:oh-my-zsh
 zplug plugins/sublime, from:oh-my-zsh
-zplug plugins/z, from:oh-my-zsh
+#zplug plugins/z, from:oh-my-zsh
+#zplug "agkozak/zsh-z"
 zplug plugins/rake, from:oh-my-zsh
 #zplug plugins/rbenv, from:oh-my-zsh
 zplug plugins/gitignore, from:oh-my-zsh
@@ -151,7 +144,7 @@ if zplug check zsh-users/zsh-history-substring-search; then
 fi
 
 # commented for screencasts
-#ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 #ZSH_AUTOSUGGEST_STRATEGY=(completion)
 ZSH_AUTOSUGGEST_USE_ASYNC=true
 zplug "zsh-users/zsh-autosuggestions"
@@ -183,8 +176,18 @@ zplug "lukechilds/zsh-better-npm-completion", from:github, defer:2
 
 zplug "dabz/kafka-zsh-completions", use:kafka.plugin.zsh
 
-zplug "changyuheng/fz", defer:1
+#zplug "changyuheng/fz", defer:1
 zplug "skywind3000/z.lua", use:z.lua.plugin.zsh
+#zplug "rupa/z", use:z.sh
+
+export FZF_DEFAULT_OPTS="
+  --bind 'ctrl-f:page-down,ctrl-b:page-up,ctrl-o:execute(code {})+abort'
+  --color fg:102,bg:233,hl:65,fg+:15,bg+:234,hl+:108
+  --color info:108,prompt:109,spinner:108,pointer:168,marker:168
+"
+
+FZ_HISTORY_CD_CMD=_zlua
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 zplug "zsh-users/zsh-syntax-highlighting"
 
@@ -249,6 +252,9 @@ source ~/.skaffold-completion
 source ~/.kind-completion
 source ~/.kuma-completion
 source ~/.deck-completion
+source ~/.confluent-completion
+fpath+=~/.zfunc
+fpath=($HOME/.zsh/gradle-completion $fpath)
 
 export PATH=~/bin:$PATH
 
@@ -278,3 +284,4 @@ precmd_functions=(__shhist_prompt $precmd_functions)
 
 #awscli completion 
 complete -C '/opt/homebrew/bin/aws_completer' aws
+#[[ -s "/Users/vikgamov/.gvm/scripts/gvm" ]] && source "/Users/vikgamov/.gvm/scripts/gvm"
