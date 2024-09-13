@@ -170,8 +170,8 @@ fi
 # https://github.com/djui/alias-tips
 zplug 'djui/alias-tips'
 
-export NVM_LAZY_LOAD=true
-zplug "lukechilds/zsh-nvm", from:github
+#export NVM_LAZY_LOAD=true
+#zplug "lukechilds/zsh-nvm", from:github
 zplug "lukechilds/zsh-better-npm-completion", from:github, defer:2
 
 zplug "dabz/kafka-zsh-completions", use:kafka.plugin.zsh
@@ -285,3 +285,13 @@ precmd_functions=(__shhist_prompt $precmd_functions)
 #awscli completion 
 complete -C '/opt/homebrew/bin/aws_completer' aws
 #[[ -s "/Users/vikgamov/.gvm/scripts/gvm" ]] && source "/Users/vikgamov/.gvm/scripts/gvm"
+
+# fnm
+FNM_PATH="$BREW_HOME/bin/fnm"
+if [ -d "$FNM_PATH" ]; then
+  eval "$(fnm env --use-on-cd)"
+fi
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
