@@ -1,11 +1,13 @@
 # profile zsh startup
 # zmodload zsh/zprof
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+
 # Terminal 256 colors
 export TERM="xterm-256color"
 
@@ -39,18 +41,8 @@ setopt always_to_end # move cursor to end if word had one match
 export BREW_HOME=/opt/homebrew
 export PATH="$BREW_HOME/bin:$BREW_HOME/sbin:$PATH"
 
-# install zplug
-# brew install zplug
-export ZPLUG_HOME=$BREW_HOME/opt/zplug
-source $ZPLUG_HOME/init.zsh
-
 # Speeds up load time
 DISABLE_UPDATE_PROMPT=true
-
-# http://mrjoelkemp.com/2013/06/remapping-iterm2-option-keys-for-fish-terminal/
-# bindkey "\e\[1\;9C" forward-word
-# bindkey "\e\[1\;9D" backward-word
-# bindkey "\e\[dw" backward-kill-word
 
 # Base16 Shell
 BASE16_SHELL="$HOME/.config/base16-shell/"
@@ -69,117 +61,65 @@ source $BREW_HOME/opt/chruby/share/chruby/chruby.sh
 source $BREW_HOME/opt/chruby/share/chruby/auto.sh
 RUBIES+=(~/.rbenv/versions/*)
 
-# rbenv
-#export PATH="$HOME/.rbenv/bin:$PATH"
-#if type "rbenv" > /dev/null; then
-#  eval "$(rbenv init -)"
-#fi
-
-#thefuck
-# doens't work 🤷
-#eval "$(thefuck --alias)"
-
-## GCP completion
-source "$BREW_HOME/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
-source "$BREW_HOME/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
-export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-
-## Go development
+# Go development
 export GOPATH="${HOME}/.go"
-# brew --prefix is slow
-#export GOROOT="$(brew --prefix golang)/libexec"
 export GOROOT="$BREW_HOME/opt/go/libexec"
 export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 
 test -d "${GOPATH}" || mkdir "${GOPATH}"
 test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
-## end Go developement
 
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+# ===== ZINIT INITIALIZATION =====
+# Set the directory we want to store zinit and plugins
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
-zplug "lib/history", from:oh-my-zsh
-# Load completion library for those sweet [tab] squares
-zplug "lib/completion", from:oh-my-zsh
-
-#zplug plugins/sudo, from:oh-my-zsh
-zplug plugins/git, from:oh-my-zsh
-zplug plugins/git-extras, from:oh-my-zsh
-zplug plugins/sublime, from:oh-my-zsh
-#zplug plugins/z, from:oh-my-zsh
-#zplug "agkozak/zsh-z"
-zplug plugins/rake, from:oh-my-zsh
-#zplug plugins/rbenv, from:oh-my-zsh
-zplug plugins/gitignore, from:oh-my-zsh
-zplug plugins/kubectl, from:oh-my-zsh, defer:2
-zplug plugins/docker, from:oh-my-zsh
-zplug plugins/docker-compose, from:oh-my-zsh
-zplug plugins/helm, from:oh-my-zsh
-zplug plugins/command-not-found, from:oh-my-zsh
-zplug plugins/github, from:oh-my-zsh
-
-#     # OS specific plugins
-# What OS are we running?
-if [[ `uname` == "Darwin" ]]; then
-    zplug plugins/brew, from:oh-my-zsh
-    zplug plugins/brew-cask, from:oh-my-zsh
-    zplug plugins/gem, from:oh-my-zsh
-    zplug plugins/macos, from:oh-my-zsh
-# TODO: test on rPI
-elif [[ $CURRENT_OS == 'Linux' ]]; then
-    # None so far...
-    if [[ $DISTRO == 'CentOS' ]]; then
-        zplug plugins/centos, from:oh-my-zsh
-    fi
-elif [[ $CURRENT_OS == 'Cygwin' ]]; then
-    zplug plugins/cygwin, from:oh-my-zsh
-else
-    echo 'Unknown OS!'
+# Download Zinit, if it's not there yet
+if [ ! -d "$ZINIT_HOME" ]; then
+   mkdir -p "$(dirname $ZINIT_HOME)"
+   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
-zplug "zsh-users/zsh-history-substring-search"
-if zplug check zsh-users/zsh-history-substring-search; then
-  # zmodload zsh/terminfo
-  bindkey "^[[A" history-substring-search-up
-  bindkey "^[[B" history-substring-search-down
-fi
+# Source/Load zinit
+source "${ZINIT_HOME}/zinit.zsh"
 
-# commented for screencasts
+# ===== ESSENTIAL PLUGINS (loaded immediately) =====
+# Theme - load first for instant prompt
+zinit ice depth=1; zinit light romkatv/powerlevel10k
+
+# Core functionality
+zinit light "zsh-users/zsh-autosuggestions"
+zinit light "zsh-users/zsh-syntax-highlighting"
+zinit light "zsh-users/zsh-history-substring-search"
+
+# Auto suggestions config
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-#ZSH_AUTOSUGGEST_STRATEGY=(completion)
 ZSH_AUTOSUGGEST_USE_ASYNC=true
-zplug "zsh-users/zsh-autosuggestions"
-if zplug check zsh-users/zsh-autosuggestions; then
-   ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-substring-search-up history-substring-search-down) # Add history-substring-search-* widgets to list of widgets that clear the autosuggestion
-   ZSH_AUTOSUGGEST_CLEAR_WIDGETS=("${(@)ZSH_AUTOSUGGEST_CLEAR_WIDGETS:#(up|down)-line-or-history}") # Remove *-line-or-history widgets from list of widgets that clear the autosuggestion to avoid conflict with history-substring-search-* widgets
-fi
 
-zplug b4b4r07/enhancd, use:init.sh
-# # zplug check returns true if the given repository exists
-if zplug check b4b4r07/enhancd; then
-#       # setting if enhancd is available
-  export ENHANCD_FILTER=fzf
-fi
+# History substring search bindings
+bindkey "^[[A" history-substring-search-up
+bindkey "^[[B" history-substring-search-down
 
-# k
-# Directory listings for zsh with git features.
-# https://github.com/supercrabtree/k
-# zplug 'supercrabtree/k'
+# ===== LAZY LOADED PLUGINS =====
+# Smart cd replacement with frecency algorithm  
+# Initialize zoxide but don't let it override zi (keep zi for zinit)
+eval "$(zoxide init zsh --no-cmd)"
+function z() { __zoxide_z "$@" }
+function zz() { __zoxide_zi "$@" }  # Interactive mode for zoxide
+alias cd='z'
 
-# alias-tips
-# Reminds you of aliases you have already.
-# https://github.com/djui/alias-tips
-zplug 'djui/alias-tips'
+# Better npm completion
+zinit ice wait'1' lucid; zinit light "lukechilds/zsh-better-npm-completion"
 
-#export NVM_LAZY_LOAD=true
-#zplug "lukechilds/zsh-nvm", from:github
-zplug "lukechilds/zsh-better-npm-completion", from:github, defer:2
+# Alias tips
+zinit ice wait'1' lucid; zinit light "djui/alias-tips"
 
-zplug "dabz/kafka-zsh-completions", use:kafka.plugin.zsh
+# thefuck
+zinit ice wait'2' lucid; zinit light "laggardkernel/zsh-thefuck"
 
-#zplug "changyuheng/fz", defer:1
-zplug "skywind3000/z.lua", use:z.lua.plugin.zsh
-#zplug "rupa/z", use:z.sh
+# Load custom aliases and functions
+source ~/projects/dotfiles/zsh_custom/aliases.zsh
 
+# fzf configuration
 export FZF_DEFAULT_OPTS="
   --bind 'ctrl-f:page-down,ctrl-b:page-up,ctrl-o:execute(code {})+abort'
   --color fg:102,bg:233,hl:65,fg+:15,bg+:234,hl+:108
@@ -189,50 +129,69 @@ export FZF_DEFAULT_OPTS="
 FZ_HISTORY_CD_CMD=_zlua
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-zplug "zsh-users/zsh-syntax-highlighting"
-
-zplug romkatv/powerlevel10k, as:theme, depth:1
-zplug "nnao45/zsh-kubectl-completion"
-
-#zplug plugins/thefuck, from:oh-my-zsh
-zplug "laggardkernel/zsh-thefuck", as:plugin, use:"zsh-thefuck.plugin.zsh"
-
-zplug "~/projects/dotfiles/zsh_custom", from:local
-
-
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
+# ===== LAZY LOADED HEAVY SERVICES =====
+# Lazy load GCP SDK
+gcp_lazy_load() {
+    if [ ! -f "$HOME/.gcp_loaded" ]; then
+        echo "Loading GCP SDK..."
+        if [ -f "$BREW_HOME/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc" ]; then
+            source "$BREW_HOME/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+        fi
+        if [ -f "$BREW_HOME/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc" ]; then
+            source "$BREW_HOME/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+        fi
+        export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+        touch "$HOME/.gcp_loaded"
     fi
-fi
-zplug load
-# zplug load --verbose
+}
 
+# Override gcloud command to lazy load
+gcloud() {
+    unfunction gcloud
+    gcp_lazy_load
+    command gcloud "$@"
+}
+
+# Lazy load SDKMAN
+sdk_lazy_load() {
+    if [ ! -f "$HOME/.sdkman_loaded" ] && [[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]]; then
+        echo "Loading SDKMAN..."
+        source "${HOME}/.sdkman/bin/sdkman-init.sh"
+        touch "$HOME/.sdkman_loaded"
+    fi
+}
+
+# Override sdk command to lazy load
+sdk() {
+    unfunction sdk
+    sdk_lazy_load
+    command sdk "$@"
+}
+
+# Lazy load NVM for faster startup
+export NVM_DIR="$HOME/.nvm"
+nvm() {
+    unset -f nvm
+    [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+    [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+    nvm "$@"
+}
+
+# Kubernetes functions
 function get_cluster_short() {
   echo "$1" | cut -d . -f1
 }
+
 function get_namespace_upper() {
     echo "$1" | tr '[:lower:]' '[:upper:]'
-  }
+}
+
 KUBE_PS1_BINARY=kubectl
 KUBE_PS1_SYMBOL_USE_IMG=true
-#KUBE_PS1_NAMESPACE_FUNCTION=get_namespace_upper
-#KUBE_PS1_CLUSTER_FUNCTION=get_cluster_short
 
 export PATH="${PATH}:${HOME}/.krew/bin"
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-[[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"
-# end profiling
-# zprof
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-source $BREW_HOME/opt/zplug/repos/dabz/kafka-zsh-completions/kafka.plugin.zsh
-source $BREW_HOME/etc/grc.zsh
-
+# Kubernetes toggle function
 function kube-toggle() {
   if (( ${+POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND} )); then
     unset POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND
@@ -246,52 +205,105 @@ function kube-toggle() {
   fi
 }
 
-unalias gm
-source ~/.minikube-completion
-source ~/.skaffold-completion
-source ~/.kind-completion
-source ~/.kuma-completion
-source ~/.deck-completion
-source ~/.confluent-completion
+unalias gm 2>/dev/null || true
+
+# Completion paths
 fpath+=~/.zfunc
 fpath=($HOME/.zsh/gradle-completion $fpath)
 
 export PATH=~/bin:$PATH
 
-if type brew &>/dev/null
-then
-  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+# Initialize completions
+autoload -Uz compinit
+compinit
 
-  autoload -Uz compinit
-  compinit
+# Load additional completion functions
+autoload -U +X bashcompinit && bashcompinit
+
+# Additional completion options
+setopt complete_in_word
+setopt glob_complete
+
+
+
+# Completion styling
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu select
+
+# Directory completion
+zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' squeeze-slashes true
+zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
+zstyle ':completion:*:cd:*' group-order local-directories path-directories
+zstyle ':completion:*:cd:*' accept-exact-dirs true
+
+# Brew completions
+if type brew &>/dev/null; then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 fi
 
-# adding shhist to PATH, so we can use it from Terminal
+# Shell History integration
 PATH="${PATH}:/Applications/ShellHistory.app/Contents/Helpers"
-
-# creating an unique session id for each terminal session
 __shhist_session="${RANDOM}"
 
-# prompt function to record the history
 __shhist_prompt() {
     local __exit_code="${?:-1}"
     \history -D -t "%s" -1 | sudo --preserve-env --user ${SUDO_USER:-${LOGNAME}} shhist insert --session ${TERM_SESSION_ID:-${__shhist_session}} --username ${LOGNAME} --hostname $(hostname) --exit-code ${__exit_code} --shell zsh
     return ${__exit_code}
 }
 
-# integrating prompt function in prompt
 precmd_functions=(__shhist_prompt $precmd_functions)
 
-#awscli completion 
-complete -C '/opt/homebrew/bin/aws_completer' aws
-#[[ -s "/Users/vikgamov/.gvm/scripts/gvm" ]] && source "/Users/vikgamov/.gvm/scripts/gvm"
+# AWS completion (will be loaded automatically when needed)
 
-# fnm
-FNM_PATH="$BREW_HOME/bin/fnm"
-if [ -d "$FNM_PATH" ]; then
-  eval "$(fnm env --use-on-cd)"
+# Auto-install completions for CLI tools (smart startup)
+if [[ -f ~/projects/dotfiles/install-completions.sh ]]; then
+    # Only run completion installer if:
+    # 1. It's been more than 7 days since last run, OR
+    # 2. No completion check file exists
+    local completion_check_file="$HOME/.completion-last-check"
+    local should_run=false
+    
+    if [[ ! -f "$completion_check_file" ]]; then
+        should_run=true
+    else
+        local last_check=$(cat "$completion_check_file" 2>/dev/null || echo 0)
+        local current_time=$(date +%s)
+        local days_since_check=$(( (current_time - last_check) / 86400 ))
+        
+        if [[ $days_since_check -gt 7 ]]; then
+            should_run=true
+        fi
+    fi
+    
+    if $should_run; then
+        # Run in background and update check file
+        (
+            ~/projects/dotfiles/install-completions.sh > /dev/null 2>&1
+            echo "$(date +%s)" > "$completion_check_file"
+        ) &
+    fi
 fi
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+# Windsurf
+export PATH="/Users/vikgamov/.codeium/windsurf/bin:$PATH"
+
+
+# direnv
+eval "$(direnv hook zsh)"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Final cleanup: ensure zoxide owns cd command
+unalias cd 2>/dev/null || true
+unfunction __enhancd::cd 2>/dev/null || true
+eval "$(zoxide init zsh --no-cmd)"
+function z() { __zoxide_z "$@" }
+function zz() { __zoxide_zi "$@" }
+alias cd='z'
+
+# end profiling
+# zprof
+complete -o nospace -C /opt/homebrew/bin/terraform terraform

@@ -32,7 +32,7 @@ alias citimongo='mongod --dbpath /Users/apple/projects/Farata/Citi/mondo/db/data
 alias _w="open http://localhost:8000;python -m SimpleHTTPServer 8000"
 
 # tree aliases
-alias tree="exa --tree"
+alias tree="eza --tree"
 alias tree1="tree -L 1"
 alias tree1h="tree -L 1 -h"
 alias tree2="tree -L 2"
