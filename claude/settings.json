@@ -37,6 +37,36 @@
     "defaultMode": "acceptEdits"
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/projects/dotfiles/tmux-agentbar/scripts/agentbar-report.sh idle"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/projects/dotfiles/tmux-agentbar/scripts/agentbar-report.sh thinking"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/projects/dotfiles/tmux-agentbar/scripts/agentbar-report.sh waiting"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
@@ -44,6 +74,10 @@
             "type": "command",
             "command": "~/projects/dotfiles/claude/stop-hook.sh",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/projects/dotfiles/tmux-agentbar/scripts/agentbar-report.sh done"
           }
         ]
       }

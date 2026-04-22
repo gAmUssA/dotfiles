@@ -55,8 +55,11 @@ elif [[ -f "$target/pytest.ini" ]] || [[ -f "$target/pyproject.toml" ]]; then
   test_cmd="pytest"
 fi
 
-# Create the session detached, with the first window running claude
-tmux new-session -d -s "$session" -n "claude" -c "$target" "claude"
+# Create the session detached, with the first window running claude.
+# No explicit -n name — automatic-rename-format turns it into the project
+# dirname, which matches the other auto-named windows. The robot + status
+# icon in the window-status-format already announces "claude is here."
+tmux new-session -d -s "$session" -c "$target" "claude"
 
 # Second window: plain shell in the project root
 tmux new-window -t "$session:" -n "shell" -c "$target"
