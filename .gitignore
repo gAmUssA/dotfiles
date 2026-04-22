@@ -195,3 +195,14 @@ buildNumber.properties
 
 # End of https://www.gitignore.io/api/maven
 .idea
+.agents
+.mcp.json
+tessl.json
+.tessl
+.vscode
+.history
+.github
+.gemini
+.cursor
+.codex
+.claude

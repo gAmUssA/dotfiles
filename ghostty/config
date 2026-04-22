@@ -1,0 +1,70 @@
+# Ghostty configuration
+# Migrated from iTerm2 Dracula-based profile
+
+# Font (matching iTerm2 "IosevkaTermNF 20")
+font-family = IosevkaTerm Nerd Font
+font-size = 20
+font-feature = calt
+font-feature = liga
+
+# Window
+window-width = 200
+window-height = 25
+window-padding-x = 4
+window-padding-y = 4
+window-decoration = true
+macos-titlebar-style = tabs
+
+# Cursor (iTerm2: block, blinking)
+cursor-style = block
+cursor-style-blink = true
+
+# Scrollback (match tmux history-limit)
+scrollback-limit = 50000
+
+# Background (iTerm2 had ~0.7% transparency + blur)
+background-opacity = 0.99
+background-blur-radius = 5
+
+# Shell integration
+shell-integration = zsh
+shell-integration-features = sudo,title
+
+# Mouse
+mouse-scroll-multiplier = 3
+
+# Clipboard
+clipboard-read = allow
+clipboard-write = allow
+copy-on-select = clipboard
+
+# macOS specific
+macos-option-as-alt = true
+
+# Colors — custom Dracula (migrated from iTerm2)
+background = 1e1f28
+foreground = ebece6
+cursor-color = e4e4e4
+cursor-text = 1e1f28
+selection-background = 80adc5
+selection-foreground = 1e1f28
+
+# Normal colors (0-7)
+palette = 0=#000000
+palette = 1=#fb4245
+palette = 2=#50fa7b
+palette = 3=#f0fa8b
+palette = 4=#49b9fe
+palette = 5=#fb4cb3
+palette = 6=#8be9fd
+palette = 7=#ededec
+
+# Bright colors (8-15)
+palette = 8=#555555
+palette = 9=#fb4245
+palette = 10=#50fa7b
+palette = 11=#f0fa8b
+palette = 12=#49b9fe
+palette = 13=#fb4cb3
+palette = 14=#8be9fd
+palette = 15=#ededec

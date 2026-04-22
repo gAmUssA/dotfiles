@@ -1,3 +1,11 @@
+# OPENSPEC:START
+# OpenSpec shell completions configuration
+# NOTE: compinit is intentionally NOT called here — it runs once later in this
+# file, after all fpath additions (zinit plugins, .zfunc, brew site-functions).
+# If OpenSpec's installer re-adds `compinit` here, delete it again.
+fpath=("$HOME/.zsh/completions" $fpath)
+# OPENSPEC:END
+
 # profile zsh startup
 # zmodload zsh/zprof
 
@@ -11,15 +19,18 @@ fi
 # Terminal 256 colors
 export TERM="xterm-256color"
 
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
 export EDITOR='micro'
 
 # history
 export HISTFILE=~/.zsh_history # Where it gets saved
 export HISTSIZE=10000
 export SAVEHIST=10000
-export HISTCONTROL=ignorespace:ignoredups
+# Note: HISTCONTROL is a bash variable; zsh uses hist_ignore_space / hist_ignore_dups below.
 setopt append_history # Don't overwrite, append!
-setopt INC_APPEND_HISTORY # Write after each command
+setopt inc_append_history # Write after each command (save entries as soon as entered)
 setopt hist_expire_dups_first # Expire duplicate entries first when trimming history.
 setopt hist_fcntl_lock # use OS file locking
 setopt hist_ignore_all_dups # Delete old recorded entry if new entry is a duplicate.
@@ -27,10 +38,7 @@ setopt hist_lex_words # better word splitting, but more CPU heavy
 setopt hist_reduce_blanks # Remove superfluous blanks before recording entry.
 setopt hist_save_no_dups # Don't write duplicate entries in the history file.
 setopt share_history # share history between multiple shells
-setopt HIST_IGNORE_SPACE # Don't record an entry starting with a space.
-setopt hist_reduce_blanks # remove superfluous blanks from history items
-setopt inc_append_history # save history entries as soon as they are entered
-setopt share_history # share history between different instances of the shell
+setopt hist_ignore_space # Don't record an entry starting with a space.
 setopt auto_cd # cd by typing directory name if it's not a command
 #setopt correct_all # autocorrect commands
 setopt auto_list # automatically list choices on ambiguous completion
@@ -41,8 +49,10 @@ setopt always_to_end # move cursor to end if word had one match
 export BREW_HOME=/opt/homebrew
 export PATH="$BREW_HOME/bin:$BREW_HOME/sbin:$PATH"
 
-# Speeds up load time
-DISABLE_UPDATE_PROMPT=true
+# GNU make
+export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
+
+# (Removed DISABLE_UPDATE_PROMPT — Oh-My-Zsh var, no effect under zinit)
 
 # Base16 Shell
 BASE16_SHELL="$HOME/.config/base16-shell/"
@@ -52,22 +62,19 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 
 test -e ~/.dircolors && eval `gdircolors -b ~/.dircolors`
 
-# tmux
-alias tmux="TERM=screen-256color-bce tmux -u"
-DISABLE_AUTO_TITLE=true
+# tmux (let .tmux.conf own default-terminal; no TERM override needed)
+alias tmux="tmux -u"
 
 # chruby 
 source $BREW_HOME/opt/chruby/share/chruby/chruby.sh
 source $BREW_HOME/opt/chruby/share/chruby/auto.sh
 RUBIES+=(~/.rbenv/versions/*)
 
-# Go development
+# Go development (Go detects GOROOT automatically since 1.10; don't pin it)
 export GOPATH="${HOME}/.go"
-export GOROOT="$BREW_HOME/opt/go/libexec"
-export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+export PATH="$PATH:${GOPATH}/bin"
 
-test -d "${GOPATH}" || mkdir "${GOPATH}"
-test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
+test -d "${GOPATH}" || mkdir -p "${GOPATH}/src/github.com"
 
 # ===== ZINIT INITIALIZATION =====
 # Set the directory we want to store zinit and plugins
@@ -100,12 +107,16 @@ bindkey "^[[A" history-substring-search-up
 bindkey "^[[B" history-substring-search-down
 
 # ===== LAZY LOADED PLUGINS =====
-# Smart cd replacement with frecency algorithm  
-# Initialize zoxide but don't let it override zi (keep zi for zinit)
-eval "$(zoxide init zsh --no-cmd)"
-function z() { __zoxide_z "$@" }
-function zz() { __zoxide_zi "$@" }  # Interactive mode for zoxide
-alias cd='z'
+# Oh-my-zsh plugins (from backup config)
+# Note: kubectl, helm, docker, github completions are managed by install-completions.sh
+zinit ice wait'1' lucid; zinit snippet OMZP::git
+zinit ice wait'1' lucid; zinit snippet OMZP::git-extras
+zinit ice wait'1' lucid; zinit snippet OMZP::rake
+zinit ice wait'1' lucid; zinit snippet OMZP::gitignore
+zinit ice wait'1' lucid; zinit snippet OMZP::docker-compose
+zinit ice wait'1' lucid; zinit snippet OMZP::brew
+zinit ice wait'1' lucid; zinit snippet OMZP::gem
+zinit ice wait'1' lucid; zinit snippet OMZP::gradle
 
 # Better npm completion
 zinit ice wait'1' lucid; zinit light "lukechilds/zsh-better-npm-completion"
@@ -152,21 +163,19 @@ gcloud() {
     command gcloud "$@"
 }
 
-# Lazy load SDKMAN
-sdk_lazy_load() {
-    if [ ! -f "$HOME/.sdkman_loaded" ] && [[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]]; then
-        echo "Loading SDKMAN..."
-        source "${HOME}/.sdkman/bin/sdkman-init.sh"
-        touch "$HOME/.sdkman_loaded"
-    fi
+# Lazy load SDKMAN for faster startup
+export SDKMAN_DIR="$HOME/.sdkman"
+_sdk_lazy_load() {
+    unset -f sdk java gradle mvn kotlin groovy 2>/dev/null
+    unalias gradle 2>/dev/null  # Remove OMZ gradle alias if present
+    [[ -s "${SDKMAN_DIR}/bin/sdkman-init.sh" ]] && source "${SDKMAN_DIR}/bin/sdkman-init.sh"
 }
-
-# Override sdk command to lazy load
-sdk() {
-    unfunction sdk
-    sdk_lazy_load
-    command sdk "$@"
-}
+sdk() { _sdk_lazy_load; sdk "$@"; }
+java() { _sdk_lazy_load; java "$@"; }
+unalias gradle 2>/dev/null; gradle() { _sdk_lazy_load; gradle "$@"; }
+mvn() { _sdk_lazy_load; mvn "$@"; }
+kotlin() { _sdk_lazy_load; kotlin "$@"; }
+groovy() { _sdk_lazy_load; groovy "$@"; }
 
 # Lazy load NVM for faster startup
 export NVM_DIR="$HOME/.nvm"
@@ -207,13 +216,16 @@ function kube-toggle() {
 
 unalias gm 2>/dev/null || true
 
-# Completion paths
+# Completion paths — all fpath additions must happen BEFORE compinit
 fpath+=~/.zfunc
 fpath=($HOME/.zsh/gradle-completion $fpath)
 
+# Brew completions (must be in fpath before compinit, not FPATH after)
+fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+
 export PATH=~/bin:$PATH
 
-# Initialize completions
+# Initialize completions (single authoritative call, after all fpath additions)
 autoload -Uz compinit
 compinit
 
@@ -238,53 +250,49 @@ zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-dir
 zstyle ':completion:*:cd:*' group-order local-directories path-directories
 zstyle ':completion:*:cd:*' accept-exact-dirs true
 
-# Brew completions
-if type brew &>/dev/null; then
-  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
-fi
-
 # Shell History integration
 PATH="${PATH}:/Applications/ShellHistory.app/Contents/Helpers"
 __shhist_session="${RANDOM}"
 
 __shhist_prompt() {
     local __exit_code="${?:-1}"
-    \history -D -t "%s" -1 | sudo --preserve-env --user ${SUDO_USER:-${LOGNAME}} shhist insert --session ${TERM_SESSION_ID:-${__shhist_session}} --username ${LOGNAME} --hostname $(hostname) --exit-code ${__exit_code} --shell zsh
+    \history -D -t "%s" -1 | shhist insert --session ${TERM_SESSION_ID:-${__shhist_session}} --username ${LOGNAME} --hostname $(hostname) --exit-code ${__exit_code} --shell zsh
     return ${__exit_code}
 }
 
-precmd_functions=(__shhist_prompt $precmd_functions)
+# Guard against double-registration on re-source (e.g., `exec zsh` or `reload!`)
+if (( ! ${precmd_functions[(Ie)__shhist_prompt]} )); then
+    precmd_functions=(__shhist_prompt $precmd_functions)
+fi
 
-# AWS completion (will be loaded automatically when needed)
+# AWS CLI v2 completion (requires bashcompinit, loaded above)
+if command -v aws_completer >/dev/null 2>&1; then
+    complete -C aws_completer aws
+fi
 
-# Auto-install completions for CLI tools (smart startup)
-if [[ -f ~/projects/dotfiles/install-completions.sh ]]; then
-    # Only run completion installer if:
-    # 1. It's been more than 7 days since last run, OR
-    # 2. No completion check file exists
-    local completion_check_file="$HOME/.completion-last-check"
+# Auto-install completions for CLI tools (runs at most once per 7 days)
+__maybe_install_completions() {
+    local installer=~/projects/dotfiles/install-completions.sh
+    [[ -f $installer ]] || return 0
+
+    local check_file="$HOME/.completion-last-check"
     local should_run=false
-    
-    if [[ ! -f "$completion_check_file" ]]; then
+
+    if [[ ! -f $check_file ]]; then
         should_run=true
     else
-        local last_check=$(cat "$completion_check_file" 2>/dev/null || echo 0)
-        local current_time=$(date +%s)
-        local days_since_check=$(( (current_time - last_check) / 86400 ))
-        
-        if [[ $days_since_check -gt 7 ]]; then
-            should_run=true
-        fi
+        local last_check=$(cat "$check_file" 2>/dev/null || echo 0)
+        local days=$(( ( $(date +%s) - last_check ) / 86400 ))
+        (( days > 7 )) && should_run=true
     fi
-    
+
     if $should_run; then
-        # Run in background and update check file
-        (
-            ~/projects/dotfiles/install-completions.sh > /dev/null 2>&1
-            echo "$(date +%s)" > "$completion_check_file"
-        ) &
+        # Disown so shell exit doesn't wait/HUP the background job
+        ( "$installer" >/dev/null 2>&1; date +%s > "$check_file" ) &!
     fi
-fi
+}
+__maybe_install_completions
+unset -f __maybe_install_completions
 
 # Windsurf
 export PATH="/Users/vikgamov/.codeium/windsurf/bin:$PATH"
@@ -296,14 +304,36 @@ eval "$(direnv hook zsh)"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Final cleanup: ensure zoxide owns cd command
-unalias cd 2>/dev/null || true
-unfunction __enhancd::cd 2>/dev/null || true
+# end profiling
+# zprof
+complete -o nospace -C /opt/homebrew/bin/terraform terraform
+export PATH="/Users/vikgamov/projects/kafka/kwack-dist/bin:$PATH"
+
+[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
+
+# To enable command-not-found
+# Add the following lines to ~/.zshrc
+
+HOMEBREW_COMMAND_NOT_FOUND_HANDLER="/opt/homebrew/Library/Homebrew/command-not-found/handler.sh"
+if [ -f "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER" ]; then
+  source "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER";
+fi
+
+. "$HOME/.cargo/env"
+# uv
+export PATH="/Users/vikgamov/.local/bin:$PATH"
+# bun completions
+[ -s "/Users/vikgamov/.bun/_bun" ] && source "/Users/vikgamov/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+
+# zoxide - MUST be last in .zshrc
+export _ZO_DOCTOR=0
 eval "$(zoxide init zsh --no-cmd)"
 function z() { __zoxide_z "$@" }
 function zz() { __zoxide_zi "$@" }
 alias cd='z'
-
-# end profiling
-# zprof
-complete -o nospace -C /opt/homebrew/bin/terraform terraform

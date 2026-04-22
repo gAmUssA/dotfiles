@@ -16,20 +16,17 @@ alias h="history"
 alias j="jobs"
 
 alias sys_info='sw_vers'
-alias reload!='. ~/.zshrc'
+# Prefer exec zsh over sourcing: avoids double-registering precmd hooks & fpath entries
+alias reload!='exec zsh'
 # Count files in subdirs
 alias lll='for i in *; do echo "`ls -1aRi "$i" | awk "/^[0-9]+ / { print $1 }" | sort -u | wc -l` $i" ; done | sort -n'
-alias grep='grep --color=auto'
 
 # groovyserv
 alias gs='groovyclient -Cenv-all'
 alias senv='gs ~/senv'
 
-# mongo for citi
-alias citimongo='mongod --dbpath /Users/apple/projects/Farata/Citi/mondo/db/data --directoryperdb --smallfiles -v'
-
 # local webserver
-alias _w="open http://localhost:8000;python -m SimpleHTTPServer 8000"
+alias _w="open http://localhost:8000;python3 -m http.server 8000"
 
 # tree aliases
 alias tree="eza --tree"
@@ -40,8 +37,7 @@ alias tree2h="tree -L 2 -h"
 alias tree3="tree -L 3"
 alias tree3h="tree -L 3 -h"
 
-#git
-alias g='git'
+# (git alias defined above as `g="git"`)
 
 # mkdir, cd into it (via http://onethingwell.org/post/586977440/mkcd-improved)
 function mkcd () {
@@ -107,9 +103,9 @@ alias ohmyzsh="st ~/.oh-my-zsh"
 
 alias fuck='eval $(thefuck $(fc -ln -1 | tail -n 1)); fc -R'
 alias copypath='pwd|pbcopy'
-alias ls="ls --color=always"
-alias grep="grep --color=always"
-alias egrep="egrep --color=always"
+# ls aliased to lsd below — don't shadow it here
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
 
 # hub alias for pull requests
 alias github-pull-request="hub fork;git push -u gAmUssA HEAD;hub pull-request"
@@ -131,7 +127,7 @@ alias watch='watch '
 alias ping='prettyping --nolegend'
 
 #brew install htop
-alias top="sudo htop"
+alias top="htop"
 
 #brew install fd
 alias du="ncdu --color dark -rr -x --exclude .git --exclude node_modules"
@@ -144,3 +140,10 @@ alias la='ls -a'
 alias lla='ls -la'
 alias lt='ls --tree'
 
+alias ws='windsurf'
+
+# Claude Code — skip permission prompts (use with caution on trusted repos only)
+alias yolo='claude --dangerously-skip-permissions'
+
+# Spawn a project-scoped tmux session with Claude Code, a shell, and (if detected) a test runner window
+alias cdev='~/projects/dotfiles/claude-dev.sh'

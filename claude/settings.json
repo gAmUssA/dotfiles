@@ -1,0 +1,86 @@
+{
+  "env": {},
+  "includeCoAuthoredBy": false,
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 1
+  },
+  "permissions": {
+    "allow": [
+      "Bash(openspec new:*)",
+      "Bash(openspec status:*)",
+      "Bash(openspec instructions proposal:*)",
+      "Bash(openspec instructions design:*)",
+      "Bash(openspec instructions specs:*)",
+      "Bash(openspec instructions tasks:*)",
+      "Bash(openspec instructions apply:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run compile:*)",
+      "Bash(make icon:*)",
+      "Bash(make build:*)",
+      "Bash(make:*)",
+      "WebSearch",
+      "WebFetch(domain:commons.wikimedia.org)",
+      "WebFetch(domain:www.svgrepo.com)",
+      "Bash(vsce login:*)",
+      "Bash(git init:*)",
+      "Bash(gh auth:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nInitial release of Calliope v0.1.0\n\nUlysses-style hybrid Markdown editor for VS Code.\nFeatures:\n- Inline rendering \\(headers, emphasis, code, links, task lists\\)\n- Three-state visibility \\(rendered/ghost/raw\\)\n- Clickable task checkboxes\n- Zero document modification\nEOF\n\\)\")",
+      "Bash(gh repo create:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(npm version:*)"
+    ],
+    "deny": [],
+    "defaultMode": "acceptEdits"
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/projects/dotfiles/claude/stop-hook.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "axiom@axiom-marketplace": true,
+    "swift-lsp@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "jdtls-lsp@claude-plugins-official": true,
+    "kotlin-lsp@claude-plugins-official": true,
+    "telegram@claude-plugins-official": true,
+    "banana-claude@banana-claude-marketplace": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    },
+    "ui-ux-pro-max-skill": {
+      "source": {
+        "source": "github",
+        "repo": "nextlevelbuilder/ui-ux-pro-max-skill"
+      }
+    },
+    "banana-claude-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "AgriciDaniel/banana-claude"
+      }
+    }
+  },
+  "skipDangerousModePermissionPrompt": true
+}

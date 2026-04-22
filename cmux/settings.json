@@ -1,0 +1,57 @@
+{
+  "$schema": "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux-settings.schema.json",
+  "schemaVersion": 1,
+
+  // tmux-style keybindings using Ctrl-Space as prefix (chord first key).
+  // Pane navigation also works without prefix via Alt-Arrow, matching tmux.
+  // cmux doesn't support: pane resize, swap panes, sync panes, layout cycling.
+
+  "shortcuts": {
+    "bindings": {
+      // Split panes (tmux: prefix+| / prefix+_)
+      "splitRight": ["ctrl+space", "shift+\\"],
+      "splitDown": ["ctrl+space", "shift+-"],
+
+      // Pane navigation (tmux: Alt-Arrow, no prefix needed)
+      "focusLeft": "opt+left",
+      "focusRight": "opt+right",
+      "focusUp": "opt+up",
+      "focusDown": "opt+down",
+
+      // Zoom/maximize pane (tmux: prefix+x)
+      "toggleSplitZoom": ["ctrl+space", "x"],
+
+      // New workspace (tmux: prefix+N for new session)
+      "newTab": ["ctrl+space", "shift+n"],
+
+      // New surface/tab in workspace (tmux: prefix+c equivalent)
+      "newSurface": ["ctrl+space", "c"],
+
+      // Reload config (tmux: prefix+r)
+      "reloadConfiguration": ["ctrl+space", "r"],
+
+      // Rename tab (tmux: prefix+t)
+      "renameTab": ["ctrl+space", "t"],
+
+      // Rename workspace (tmux: prefix+$ equivalent)
+      "renameWorkspace": ["ctrl+space", "shift+r"],
+
+      // Next/prev surface (tmux: prefix+n / prefix+p)
+      "nextSurface": ["ctrl+space", "n"],
+      "prevSurface": ["ctrl+space", "p"],
+
+      // Toggle sidebar (quick access)
+      "toggleSidebar": ["ctrl+space", "b"],
+
+      // Command palette (IntelliJ-style double-shift)
+      "commandPalette": "shift+shift",
+
+      // Close tab (tmux: prefix+& equivalent)
+      "closeTab": ["ctrl+space", "shift+7"],
+
+      // Close workspace
+      "closeWorkspace": ["ctrl+space", "shift+w"]
+    },
+    "showModifierHoldHints": true
+  }
+}

@@ -100,6 +100,7 @@ main() {
         "helm:helm completion zsh"
         "docker:docker completion zsh"
         "gh:gh completion -s zsh"
+        "just:just --completions zsh"
         "terraform:terraform -install-autocomplete"
         "aws:aws_completer"
     )
@@ -124,15 +125,12 @@ main() {
                 fi
                 ;;
             "aws")
-                if command -v aws &> /dev/null; then
-                    # AWS CLI completion is handled differently
-                    if [[ ! -f "$COMPLETION_DIR/_aws" ]]; then
-                        echo '#compdef aws\n_aws' > "$COMPLETION_DIR/_aws"
-                        print_status "$GREEN" "✓ Installed completion for aws"
-                        ((success_count++))
-                    else
-                        print_status "$BLUE" "→ aws completion is up to date"
-                    fi
+                # AWS CLI v2 ships its own completer. The correct setup is
+                # `complete -C aws_completer aws` in your .zshrc (via
+                # bashcompinit), NOT a generated _aws compdef file.
+                # We skip this entry — leave it to the shell rc to wire up.
+                if command -v aws &> /dev/null && command -v aws_completer &> /dev/null; then
+                    print_status "$BLUE" "→ aws: use 'complete -C aws_completer aws' in .zshrc"
                 fi
                 ;;
             *)
