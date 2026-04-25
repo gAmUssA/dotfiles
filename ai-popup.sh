@@ -10,7 +10,7 @@
 
 set -u
 
-MODEL="${1:-qwen2.5:7b}"
+MODEL="${1:-gemma3:4b}"
 
 # tmux session names can't contain `:`, `/`, or `.`; mangle for the model→name
 # map. (claude-dev.sh hits the same restriction with project paths.)
