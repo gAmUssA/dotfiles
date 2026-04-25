@@ -64,11 +64,14 @@ tmux new-session -d -s "$session" -c "$target" "claude"
 # Second window: plain shell in the project root
 tmux new-window -t "$session:" -n "shell" -c "$target"
 
-# Third window: test runner, if one was detected (not auto-run — land in shell
-# at the project root so you can start/restart it intentionally)
+# Third window: test runner, if one was detected (not auto-run — pre-type the
+# command into the prompt so you hit Enter to start it intentionally).
+# Previous version sent "# ready: $test_cmd" + an empty arg, which (a) didn't
+# press Enter so the line stayed parked in the buffer, and (b) wouldn't have
+# parsed anyway because interactive_comments isn't active in this zsh setup.
 if [[ -n "$test_cmd" ]]; then
   tmux new-window -t "$session:" -n "tests" -c "$target"
-  tmux send-keys -t "$session:tests" "# ready: $test_cmd" ""
+  tmux send-keys -t "$session:tests" "$test_cmd"
 fi
 
 # Focus window 1 (claude) on attach
