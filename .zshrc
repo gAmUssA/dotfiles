@@ -141,8 +141,14 @@ if command -v thefuck >/dev/null 2>&1 && [[ -z "$THEFUCK_INSTANT_MODE" ]] && [[ 
   eval "$(thefuck --alias --enable-experimental-instant-mode)"
 fi
 
-# Load custom aliases and functions
-source ~/projects/dotfiles/zsh_custom/aliases.zsh
+# Load all *.zsh files in zsh_custom/ (aliases, setopts, java env, color_maven, etc.).
+# Glob qualifier (N) makes the loop a no-op if no matches; the `*.zsh.bak` files
+# are skipped automatically since they don't end in `.zsh`. Drop a new `*.zsh`
+# in there and it gets picked up on next shell start.
+for f in ~/projects/dotfiles/zsh_custom/*.zsh(N); do
+  source "$f"
+done
+unset f
 
 # fzf configuration
 export FZF_DEFAULT_OPTS="
