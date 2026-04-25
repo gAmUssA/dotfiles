@@ -74,3 +74,16 @@ ls -lah ~/.deck.yaml
 ls -lah "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
 ls -lah ~/.config/cmux/settings.json
 ls -lah ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh
+
+# thefuck — installed via pipx pinned to python@3.11 (the brew formula has a
+# stale openssl@1.1 dep, and thefuck 3.32 imports `distutils` which Python
+# 3.12+ removed). Idempotent: re-runs only if not already installed.
+if command -v pipx >/dev/null 2>&1; then
+  if ! pipx list 2>/dev/null | grep -q "package thefuck"; then
+    if [ -x /opt/homebrew/bin/python3.11 ]; then
+      pipx install --python /opt/homebrew/bin/python3.11 thefuck
+    else
+      echo "skip: thefuck install — install python@3.11 first (brew install python@3.11)"
+    fi
+  fi
+fi

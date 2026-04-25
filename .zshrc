@@ -124,8 +124,22 @@ zinit ice wait'1' lucid; zinit light "lukechilds/zsh-better-npm-completion"
 # Alias tips
 zinit ice wait'1' lucid; zinit light "djui/alias-tips"
 
-# thefuck
-zinit ice wait'2' lucid; zinit light "laggardkernel/zsh-thefuck"
+# thefuck — instant mode (https://github.com/nvbn/thefuck#experimental-instant-mode).
+# Replaces the lazy-loaded zinit plugin: instant mode wraps the shell with
+# `script(1)` to capture command output, so it must run at shell init time,
+# NOT lazy-loaded. The plugin (laggardkernel/zsh-thefuck) doesn't pass the
+# --enable-experimental-instant-mode flag, so we eval directly.
+# Guards:
+#   - thefuck on PATH (pipx-installed via linkall.sh)
+#   - autocorrect off (it is, see zsh_custom/setopt.zsh — though not yet sourced)
+#   - [[ -t 1 ]] — only run in real TTYs; instant mode tries to ioctl the PTY
+#     and crashes with "Inappropriate ioctl for device" in non-interactive
+#     contexts (like `zsh -ic '...'` from another script).
+#   - $THEFUCK_INSTANT_MODE — the wrapper script sets this so the inner shell's
+#     re-source of .zshrc doesn't recurse into another wrapper.
+if command -v thefuck >/dev/null 2>&1 && [[ -z "$THEFUCK_INSTANT_MODE" ]] && [[ -t 1 ]]; then
+  eval "$(thefuck --alias --enable-experimental-instant-mode)"
+fi
 
 # Load custom aliases and functions
 source ~/projects/dotfiles/zsh_custom/aliases.zsh

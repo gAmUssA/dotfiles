@@ -416,8 +416,12 @@ brew "television"
 brew "texinfo"
 # Code-search similar to ack
 brew "the_silver_searcher"
-# Programmatically correct mistyped console commands
-brew "thefuck"
+# thefuck is installed via pipx (the brew formula has a stale openssl@1.1
+# dep and is broken on modern macOS); the actual install is handled by
+# linkall.sh, which pins it to python@3.11 because thefuck 3.32 (last
+# release, 2022) imports `distutils` which Python 3.12+ removed.
+brew "pipx"
+brew "python@3.11"
 # Text interface for Git repositories
 brew "tig"
 # Terminal multiplexer

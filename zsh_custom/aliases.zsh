@@ -101,7 +101,8 @@ alias appleinfo="archey"
 alias zshconfig="st ~/.zshrc"
 alias ohmyzsh="st ~/.oh-my-zsh"
 
-alias fuck='eval $(thefuck $(fc -ln -1 | tail -n 1)); fc -R'
+# `fuck` is provided by thefuck's instant-mode init in .zshrc (a function,
+# not an alias) so no manual alias needed here.
 alias copypath='pwd|pbcopy'
 # ls aliased to lsd below — don't shadow it here
 alias grep='grep --color=auto'
