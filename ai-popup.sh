@@ -12,8 +12,9 @@ set -u
 
 MODEL="${1:-qwen2.5:7b}"
 
-# tmux session names can't contain `:` or `/`; mangle for the model→name map
-SESSION="ollama-$(echo "$MODEL" | tr ':/' '__')"
+# tmux session names can't contain `:`, `/`, or `.`; mangle for the model→name
+# map. (claude-dev.sh hits the same restriction with project paths.)
+SESSION="ollama-$(echo "$MODEL" | tr ':/.' '___')"
 
 # Daemon health check — Ollama.app GUI usually keeps it running, but fail
 # loudly if it's not so the popup doesn't open onto a dead `ollama run`.
