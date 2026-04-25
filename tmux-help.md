@@ -45,7 +45,7 @@
 | `prefix + Enter` | ephemeral **shell** peek (scoped to pane cwd) |
 | `prefix + y` | Claude per-dir popup (auto-spawn/reattach by cwd MD5) |
 | `prefix + o` | sessionx fuzzy picker |
-| `prefix + a` | **AI chat menu** — pick local Ollama model; each model has its own persistent conversation |
+| `prefix + a` | **AI chat menu** — pick local Ollama model; each has its own persistent conversation. On `/bye` or Ctrl-D, the chat is auto-copied to the macOS clipboard for pasting elsewhere. |
 | `prefix + ?` | this cheat sheet |
 
 ## Copy / scroll / clear
