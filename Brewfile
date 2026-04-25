@@ -836,3 +836,5 @@ krew "ctx"
 krew "krew"
 krew "neat"
 krew "ns"
+# Smart tmux session manager — shell-first entry point to tmux sessions
+brew "sesh"

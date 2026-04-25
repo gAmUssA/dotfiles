@@ -1,0 +1,27 @@
+# sesh — smart tmux session manager config
+# https://github.com/joshmedeski/sesh
+#
+# sesh auto-discovers sessions from: existing tmux, zoxide history, tmuxinator,
+# and this file. Pinned projects below always appear at the top of the picker.
+#
+# Default session-name strategy is the directory basename, which matches
+# claude-dev.sh's `basename "$target"` so there's no duplicate-session drift.
+
+default_session = { startup_command = "" }
+
+# Pinned projects — always visible in `sesh list`
+[[session]]
+name = "dotfiles"
+path = "~/projects/dotfiles"
+
+[[session]]
+name = "writing"
+path = "~/projects/ai/writing-and-stuff"
+
+# Override what happens for specific paths discovered by zoxide.
+# When sesh connects to a session matching `name`, run startup_command.
+# Example:
+# [[session]]
+# name = "my-flink-demo"
+# path = "~/projects/flink-demo"
+# startup_command = "make dev"

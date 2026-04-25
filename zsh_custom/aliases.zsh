@@ -147,3 +147,12 @@ alias yolo='claude --dangerously-skip-permissions'
 
 # Spawn a project-scoped tmux session with Claude Code, a shell, and (if detected) a test runner window
 alias cdev='~/projects/dotfiles/claude-dev.sh'
+
+# sesh — fuzzy session switcher, works both outside and inside tmux.
+# Sources: config pins (~/.config/sesh/sesh.toml) + zoxide + existing tmux sessions.
+# Inside tmux, sesh switch-client's instead of attaching, so this works from within a pane.
+function s() {
+  local picked
+  picked=$(sesh list --icons | fzf --reverse --prompt="⚡ Session › " --height=40%)
+  [[ -n "$picked" ]] && sesh connect "$picked"
+}

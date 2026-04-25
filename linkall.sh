@@ -44,6 +44,11 @@ mkdir -p ~/.config/cmux
 rm -f ~/.config/cmux/settings.json
 ln -s ~/projects/dotfiles/cmux/settings.json ~/.config/cmux/settings.json
 
+# sesh — tmux session manager config
+mkdir -p ~/.config/sesh
+rm -f ~/.config/sesh/sesh.toml
+ln -s ~/projects/dotfiles/sesh/sesh.toml ~/.config/sesh/sesh.toml
+
 # Claude Code config (settings + custom statusline + stop hook script)
 # Skips settings.local.json — that's meant to stay per-machine.
 mkdir -p ~/.claude
