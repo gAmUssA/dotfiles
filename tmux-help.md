@@ -43,8 +43,10 @@
 |---|---|
 | `prefix + g` | **lazygit** in popup (scoped to pane cwd) |
 | `prefix + Enter` | ephemeral **shell** peek (scoped to pane cwd) |
-| `prefix + y` | Claude per-dir popup |
+| `prefix + y` | Claude per-dir popup (auto-spawn/reattach by cwd MD5) |
 | `prefix + o` | sessionx fuzzy picker |
+| `prefix + a` | **AI chat menu** — pick local Ollama model; each model has its own persistent conversation |
+| `prefix + ?` | this cheat sheet |
 
 ## Copy / scroll / clear
 | Key | Action |
