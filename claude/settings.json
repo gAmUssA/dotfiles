@@ -1,11 +1,6 @@
 {
   "env": {},
   "includeCoAuthoredBy": false,
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/statusline.sh",
-    "padding": 1
-  },
   "permissions": {
     "allow": [
       "Bash(openspec new:*)",
@@ -83,6 +78,11 @@
       }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 1
+  },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
     "axiom@axiom-marketplace": true,
@@ -116,5 +116,8 @@
       }
     }
   },
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark-daltonized",
+  "remoteControlAtStartup": true,
+  "agentPushNotifEnabled": true
 }
