@@ -10,7 +10,7 @@
 
 set -u
 
-MODEL="${1:-llama3.2}"
+MODEL="${1:-qwen2.5:7b}"
 
 # tmux session names can't contain `:` or `/`; mangle for the model→name map
 SESSION="ollama-$(echo "$MODEL" | tr ':/' '__')"
