@@ -18,11 +18,18 @@ ROBOT=$(printf '\xee\xb8\x8d')
 _SPINNER=(✢ ✳ ✶ ✻ ✽ ✻ ✶ ✳)
 
 icon_for() {
+    # tmux interprets #[fg=...] specs inside shell-output substitutions, so
+    # we can color each state inline. We restore fg to #f8f8f2 (Dracula's
+    # tab-text color, same for normal and current tabs) after the glyph
+    # instead of using #[default] — #[default] would also reset bg, which
+    # strips Dracula's tab background and breaks the powerline chevrons on
+    # the current tab. Colors below are from the Dracula palette.
     case "$1" in
-        waiting)  echo "◷" ;;
-        thinking) echo "${_SPINNER[$(( $(date +%s) % ${#_SPINNER[@]} ))]}" ;;
-        done)     echo "✓" ;;
-        idle|*)   echo "·" ;;
+        waiting)  printf '#[fg=#ff5555]⏸#[fg=#f8f8f2]' ;;                             # red — needs you
+        thinking) printf '#[fg=#f1fa8c]%s#[fg=#f8f8f2]' \
+                      "${_SPINNER[$(( $(date +%s) % ${#_SPINNER[@]} ))]}" ;;       # yellow — processing
+        done)     printf '#[fg=#50fa7b]✓#[fg=#f8f8f2]' ;;                             # green — completed
+        idle|*)   printf '#[fg=#6272a4]∘#[fg=#f8f8f2]' ;;                             # gray — recedes
     esac
 }
 
