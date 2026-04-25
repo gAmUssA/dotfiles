@@ -20,12 +20,12 @@ models=(
   "gemma3:4b"
   "llama3.2:latest"
   "qwen2.5:7b"
+  "qwen2.5-coder:7b"
   "mistral:7b"
+  "phi4:14b"
   "starcoder2:15b"
   "gpt-oss:20b"
-  "qwen3.5:27b"
   "qwen3-coder:30b"
-  "codellama:34b"
 )
 
 # Unload everything first so each model is a true cold start
