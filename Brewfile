@@ -838,3 +838,7 @@ krew "neat"
 krew "ns"
 # Smart tmux session manager — shell-first entry point to tmux sessions
 brew "sesh"
+# Terminal UI for git commands (invoked via `prefix + g` tmux popup)
+brew "lazygit"
+# Markdown renderer — used for the `prefix + ?` cheat-sheet popup
+brew "glow"
