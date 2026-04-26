@@ -608,6 +608,8 @@ cask "hammerspoon"
 cask "inkscape"
 # CLI HTTP and GraphQL Client
 cask "inso"
+# Free, open-source menu bar manager — Bartender replacement
+cask "jordanbaird-ice"
 # Keyboard customiser
 cask "karabiner-elements"
 # Tool to prevent the system from going into sleep mode

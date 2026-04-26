@@ -7,6 +7,7 @@ These are the configs I run on my Mac every day: zsh, tmux, iTerm2, Ghostty, and
 - `.zshrc` + `zsh_custom/` — zinit plugin manager, lazy-loaded SDKMAN/NVM, a single authoritative `compinit`, and the p10k prompt.
 - `.tmux.conf` — `Ctrl-Space` prefix, visual bell wired to Claude Code's Stop hook, and `prefix + y` to pop up a per-directory Claude session.
 - `claude/` — `settings.json`, a custom status line, and the Stop-hook shell script that fires a macOS banner when a turn finishes.
+- `hammerspoon/` — Lua menu-bar modules: caffeine toggle (☕/💤), Ollama loaded-model status (🦙), and a Claude-session router (🤖) that lists every running `claude` process and click-jumps to its terminal tab + tmux pane (handles the `thefuck` pty wrapper via ppid-walk; uses iTerm2 AppleScript for tab focus and `tmux switch-client`/`select-window`/`select-pane` for the pane). Init writes a debug trace to `/tmp/hammerspoon.log`.
 - `ghostty/config` — Dracula-ish palette, IosevkaTerm Nerd Font with ligatures on.
 - `cmux/settings.json` — tmux-style keybindings for [manaflow-ai/cmux](https://github.com/manaflow-ai/cmux).
 - `iterm2-icons/` — custom `.icns` files from [jasonlong/iterm2-icons](https://github.com/jasonlong/iterm2-icons) plus extracted PNGs that the Stop-hook banner uses.
