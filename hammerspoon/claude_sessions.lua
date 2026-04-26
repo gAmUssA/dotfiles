@@ -34,13 +34,18 @@
 
 local M = {}
 
-local REFRESH_S     = 15
+local REFRESH_S     = 5
 local TERMINAL_APPS = {"iTerm2", "Ghostty", "Terminal", "Alacritty", "WezTerm", "kitty"}
 local TMUX_BIN      = "/opt/homebrew/bin/tmux"
 local OSASCRIPT_BIN = "/usr/bin/osascript"
 local MAX_PPID_HOPS = 8
 
 local menu = hs.menubar.new()
+
+-- Items shown when the menu opens. Updated by render() on each refresh; the
+-- dynamic setMenu callback below returns this cached list so the menu opens
+-- instantly even before the click-triggered refresh completes.
+local cachedItems = {{title = "Loading…", disabled = true}}
 
 ------------------------------------------------------------------------------
 -- async helpers (non-blocking)
@@ -295,7 +300,7 @@ local function render(sessions)
     end
     table.insert(items, {title = "-"})
     table.insert(items, {title = "Refresh", fn = function() M.refresh() end})
-    menu:setMenu(items)
+    cachedItems = items
 end
 
 local PANES_FMT = "#{pane_tty}|#{pane_current_path}|#{session_name}|#{session_id}|#{window_index}|#{window_id}|#{pane_index}|#{pane_id}"
@@ -336,6 +341,15 @@ function M.refresh()
             maybeFinish()
         end)
 end
+
+-- Dynamic menu: every click on the icon triggers an async refresh (so the
+-- next interaction sees fresh data) and immediately shows the cached items.
+-- The cache is also kept warm by the periodic timer below, which is what
+-- keeps the icon's title (the count badge) accurate while the menu is closed.
+menu:setMenu(function()
+    M.refresh()
+    return cachedItems
+end)
 
 M.refresh()
 hs.timer.doEvery(REFRESH_S, function() M.refresh() end)
