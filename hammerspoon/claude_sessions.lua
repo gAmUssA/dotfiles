@@ -120,13 +120,13 @@ end
 local function parsePanes(out)
     local map = {}
     for line in out:gmatch("[^\n]+") do
-        local pane_tty, cwd, sname, sid, widx, wid, pidx, panid =
-            line:match("([^|]+)|([^|]*)|([^|]*)|([^|]*)|([^|]*)|([^|]*)|([^|]*)|([^|]*)")
+        local pane_tty, cwd, sname, sid, widx, wname, wid, pidx, panid =
+            line:match("([^|]+)|([^|]*)|([^|]*)|([^|]*)|([^|]*)|([^|]*)|([^|]*)|([^|]*)|([^|]*)")
         if pane_tty then
             map[stripDev(pane_tty)] = {
                 paneTty = pane_tty, cwd = cwd,
                 session = sname, sessionId = sid,
-                window = widx, windowId = wid,
+                window = widx, windowName = wname, windowId = wid,
                 pane = pidx, paneId = panid,
             }
         end
@@ -286,9 +286,16 @@ local function render(sessions)
     else
         table.insert(items, {title = ("Claude sessions: %d"):format(#sessions), disabled = true})
         for _, s in ipairs(sessions) do
-            local context = s.tmux
-                and ("tmux %s:%s.%s"):format(s.tmux.session, s.tmux.window, s.tmux.pane)
-                or  (s.tty or "no-tty")
+            local context
+            if s.tmux then
+                -- prefer the (renamable) window name over the numeric index
+                local winLabel = (s.tmux.windowName and s.tmux.windowName ~= "")
+                    and s.tmux.windowName
+                    or  s.tmux.window
+                context = ("tmux %s:%s.%s"):format(s.tmux.session, winLabel, s.tmux.pane)
+            else
+                context = s.tty or "no-tty"
+            end
             local proj = s.cwd and basename(s.cwd) or ("pid " .. s.pid)
             local label = ("  %s  · %s  (%s)"):format(proj, s.etime, context)
             table.insert(items, {
@@ -303,7 +310,7 @@ local function render(sessions)
     cachedItems = items
 end
 
-local PANES_FMT = "#{pane_tty}|#{pane_current_path}|#{session_name}|#{session_id}|#{window_index}|#{window_id}|#{pane_index}|#{pane_id}"
+local PANES_FMT = "#{pane_tty}|#{pane_current_path}|#{session_name}|#{session_id}|#{window_index}|#{window_name}|#{window_id}|#{pane_index}|#{pane_id}"
 
 function M.refresh()
     local procs, procMap, paneMap
