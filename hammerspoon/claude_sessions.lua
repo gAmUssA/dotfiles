@@ -35,7 +35,11 @@
 local M = {}
 
 local REFRESH_S     = 5
-local TERMINAL_APPS = {"iTerm2", "Ghostty", "Terminal", "Alacritty", "WezTerm", "kitty"}
+-- Order = priority for the title-match and last-resort activation fallbacks.
+-- iTerm2 stays first (current daily driver, exact tty matching). cmux is
+-- next because it's an intentional install with AppleScript support; a
+-- proper cwd-based focus path can replace the title fallback later.
+local TERMINAL_APPS = {"iTerm2", "cmux", "Ghostty", "Terminal", "Alacritty", "WezTerm", "kitty"}
 local TMUX_BIN      = "/opt/homebrew/bin/tmux"
 local OSASCRIPT_BIN = "/usr/bin/osascript"
 local MAX_PPID_HOPS = 8
