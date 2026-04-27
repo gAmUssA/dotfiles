@@ -14,8 +14,22 @@
 
 set -euo pipefail
 
-DB="$HOME/Library/Safari/CloudTabs.db"
-[[ -f "$DB" ]] || { echo "Safari CloudTabs.db not found at $DB" >&2; exit 1; }
+# Modern Safari (sandboxed) writes iCloud Tabs to its container. The
+# pre-sandbox path ~/Library/Safari/CloudTabs.db still exists on most
+# machines but stopped getting updated when Safari was sandboxed —
+# reading from it gives a years-stale snapshot. Prefer the container.
+SANDBOX_DB="$HOME/Library/Containers/com.apple.Safari/Data/Library/Safari/CloudTabs.db"
+LEGACY_DB="$HOME/Library/Safari/CloudTabs.db"
+
+if [[ -f "$SANDBOX_DB" ]]; then
+    DB="$SANDBOX_DB"
+elif [[ -f "$LEGACY_DB" ]]; then
+    DB="$LEGACY_DB"
+    echo "warning: using legacy CloudTabs.db (pre-sandbox); data may be stale" >&2
+else
+    echo "Safari CloudTabs.db not found in container or legacy paths" >&2
+    exit 1
+fi
 
 OPEN_IN_SAFARI=0
 DEVICE=""
