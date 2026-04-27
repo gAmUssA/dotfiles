@@ -238,12 +238,18 @@ local function focusSession(s)
                     return
                 end
                 tmuxSwitchAndSelect(s.tmux, clientTty)
-                if hs.application.get("iTerm2") then
+                -- iTerm focus is best-effort. tmux switch-client/select-pane
+                -- has already moved the attached client to the right pane,
+                -- so the visible tab is already showing what we want — we
+                -- only need iTerm in front. Try the exact tty match first
+                -- (lands on the right tab when there are several); fall
+                -- back to a plain activate (e.g. right after an iTerm
+                -- restart, when session.tty hasn't propagated yet). No
+                -- alert: the user already sees the correct pane.
+                local iterm = hs.application.get("iTerm2")
+                if iterm then
                     focusITermAsync(stripDev(clientTty), function(ok)
-                        if not ok and not focusByTitle(s.cwd) then
-                            hs.alert.show(("Switched tmux to %s:%s.%s — couldn't find iTerm tab")
-                                :format(s.tmux.session, s.tmux.window, s.tmux.pane), 1.4)
-                        end
+                        if not ok then iterm:activate() end
                     end)
                 end
             end)
