@@ -13,7 +13,7 @@ These are the configs I run on my Mac every day: zsh, tmux, iTerm2, Ghostty, and
 - `iterm2-icons/` — custom `.icns` files from [jasonlong/iterm2-icons](https://github.com/jasonlong/iterm2-icons) plus extracted PNGs that the Stop-hook banner uses.
 - `fix-iterm-ligatures.sh` — rewrites iTerm2 profiles from ligature-stripping Nerd Font "Complete" builds to v3+ `IosevkaTermNF`.
 - `claude-dev.sh` — project-scoped tmux launcher: one window for `claude`, one shell, one for tests when a test runner is detected.
-- `cloud-tabs-to-notes.sh` — snapshot Safari iCloud tabs from a given device into a new Notes.app note (alphabetized clickable list). Run with no args to list devices and tab counts; pass a device name to create the note. Reads `~/Library/Safari/CloudTabs.db` directly.
+- `cloud-tabs-to-notes.sh` — snapshot Safari iCloud tabs from a given device. Default sink is a new Notes.app note (alphabetized clickable list); pass `--open` to open them all in a fresh Safari window instead. Run with no args to list devices and tab counts. Reads `~/Library/Safari/CloudTabs.db` directly.
 - `tmux-paste-image.sh` — clipboard image to `/image <path>` helper.
   Not currently bound (Claude Code handles clipboard paste natively), but kept in case that changes.
 - `Brewfile` — everything above, plus my usual CLI kit.
