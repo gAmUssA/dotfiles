@@ -7,7 +7,8 @@
 #   claude-dev.sh ~/projects/api     # session name = "api"
 #
 # Layout:
-#   Window 1 (claude) — runs `claude` in the project directory
+#   Window 1 (claude) — runs `claude --dangerously-skip-permissions` (yolo)
+#                       in the project directory
 #   Window 2 (shell)  — plain zsh, for git / builds / scratch commands
 #   Window 3 (tests)  — only created if the project has a test runner
 #                       (package.json, go.mod, Cargo.toml, pytest.ini, pyproject.toml)
@@ -55,11 +56,16 @@ elif [[ -f "$target/pytest.ini" ]] || [[ -f "$target/pyproject.toml" ]]; then
   test_cmd="pytest"
 fi
 
-# Create the session detached, with the first window running claude.
+# Create the session detached, with the first window running claude in
+# yolo mode (--dangerously-skip-permissions). The literal flag is used
+# rather than the `yolo` zsh alias because tmux execs the command directly
+# without going through an interactive shell — interactive aliases don't
+# resolve in that context.
+#
 # No explicit -n name — automatic-rename-format turns it into the project
 # dirname, which matches the other auto-named windows. The robot + status
 # icon in the window-status-format already announces "claude is here."
-tmux new-session -d -s "$session" -c "$target" "claude"
+tmux new-session -d -s "$session" -c "$target" "claude --dangerously-skip-permissions"
 
 # Second window: plain shell in the project root
 tmux new-window -t "$session:" -n "shell" -c "$target"
