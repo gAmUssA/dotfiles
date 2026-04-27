@@ -34,7 +34,7 @@
 
 local M = {}
 
-local REFRESH_S     = 5
+local REFRESH_S     = 2
 -- Order = priority for the title-match and last-resort activation fallbacks.
 -- iTerm2 stays first (current daily driver, exact tty matching). cmux is
 -- next because it's an intentional install with AppleScript support; a
@@ -61,6 +61,7 @@ local function asyncShell(cmd, callback)
     end, {"-c", cmd})
     task:start()
 end
+
 
 local function asyncOsascript(script, callback)
     local task = hs.task.new(OSASCRIPT_BIN, function(_, stdout, _)
@@ -322,47 +323,49 @@ end
 
 local PANES_FMT = "#{pane_tty}|#{pane_current_path}|#{session_name}|#{session_id}|#{window_index}|#{window_name}|#{window_id}|#{pane_index}|#{pane_id}"
 
+local CLAUDE_PS_CMD = "ps -eo pid=,ppid=,tty=,etime=,command= | awk '$5==\"claude\"'"
+local PROCMAP_PS_CMD = "ps -eo pid=,ppid=,tty="
+local PANES_CMD = TMUX_BIN .. " list-panes -a -F '" .. PANES_FMT .. "' 2>/dev/null"
+
+-- Combine three parsed inputs into the session list the menu renders.
+local function buildSessions(procs, procMap, paneMap)
+    local sessions = {}
+    for _, p in ipairs(procs) do
+        local pane = paneForChain(p.pid, procMap, paneMap)
+        table.insert(sessions, {
+            pid = p.pid, ppid = p.ppid, tty = p.tty,
+            etime = p.etime, cmd = p.cmd,
+            cwd = pane and pane.cwd or nil,
+            tmux = pane,
+        })
+    end
+    return sessions
+end
+
+
 function M.refresh()
     local procs, procMap, paneMap
 
     local function maybeFinish()
         if not procs or not procMap or not paneMap then return end
-        local sessions = {}
-        for _, p in ipairs(procs) do
-            local pane = paneForChain(p.pid, procMap, paneMap)
-            table.insert(sessions, {
-                pid = p.pid, ppid = p.ppid, tty = p.tty,
-                etime = p.etime, cmd = p.cmd,
-                cwd = pane and pane.cwd or nil,
-                tmux = pane,
-            })
-        end
-        render(sessions)
+        render(buildSessions(procs, procMap, paneMap))
     end
 
     -- Three async calls (claude rows, full proc map, tmux panes). Each output
     -- is small (well under hs.task's buffer cap). maybeFinish guards against
     -- partial state — only renders when all three have landed.
-    asyncShell("ps -eo pid=,ppid=,tty=,etime=,command= | awk '$5==\"claude\"'",
-        function(out)
-            procs = parseClaudeRows(out)
-            maybeFinish()
-        end)
-    asyncShell("ps -eo pid=,ppid=,tty=", function(out)
-        procMap = parseProcMap(out)
-        maybeFinish()
-    end)
-    asyncShell(TMUX_BIN .. " list-panes -a -F '" .. PANES_FMT .. "' 2>/dev/null",
-        function(out)
-            paneMap = parsePanes(out)
-            maybeFinish()
-        end)
+    asyncShell(CLAUDE_PS_CMD,  function(out) procs   = parseClaudeRows(out); maybeFinish() end)
+    asyncShell(PROCMAP_PS_CMD, function(out) procMap = parseProcMap(out);    maybeFinish() end)
+    asyncShell(PANES_CMD,      function(out) paneMap = parsePanes(out);      maybeFinish() end)
 end
 
--- Dynamic menu: every click on the icon triggers an async refresh (so the
--- next interaction sees fresh data) and immediately shows the cached items.
--- The cache is also kept warm by the periodic timer below, which is what
--- keeps the icon's title (the count badge) accurate while the menu is closed.
+-- Dynamic menu: kick an async refresh on every open and return the cached
+-- items. macOS doesn't update an open NSMenu, so close + reopen always
+-- shows the latest. Background timer also keeps the cache warm.
+--
+-- Sync refresh sounded right but ps -eo is ~1s on macOS Tahoe (×2 calls =
+-- 2s before menu paints) — too laggy. The 2s background interval below
+-- bounds rename-to-visible at one timer tick + one reopen.
 menu:setMenu(function()
     M.refresh()
     return cachedItems
