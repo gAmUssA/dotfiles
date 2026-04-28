@@ -339,7 +339,7 @@ if [ -f "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER" ]; then
   source "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER";
 fi
 
-. "$HOME/.cargo/env"
+[[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
 # uv
 export PATH="/Users/vikgamov/.local/bin:$PATH"
 # bun completions
@@ -350,6 +350,9 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+
+# Machine-specific overrides (not tracked in git)
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
 # zoxide - MUST be last in .zshrc
 export _ZO_DOCTOR=0

@@ -47,7 +47,8 @@ brew "asciidoctor"
 brew "asciinema"
 # Send macOS notifications from the command line (used by Claude Code Stop hook)
 # alerter is a modern Swift rewrite of terminal-notifier that works on macOS 13+
-brew "alerter"
+tap "vjeantet/tap"
+brew "vjeantet/tap/alerter"
 # Distributed revision control system
 brew "git"
 # Extendable version manager with support for Ruby, Node.js, Erlang & more
@@ -528,7 +529,7 @@ brew "tinygo-org/tools/tinygo"
 # Linux port of FAR Manager v2
 brew "yurikoles/yurikoles/far2l", args: ["HEAD"]
 # Command-line interface for 1Password
-cask "1password-cli"
+# cask "1password-cli"  # broken cask definition upstream
 # GPU-accelerated terminal emulator
 cask "alacritty"
 # Enable Windows-like alt-tab
