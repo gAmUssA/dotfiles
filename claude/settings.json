@@ -32,6 +32,17 @@
     "defaultMode": "acceptEdits"
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Edit|Write|MultiEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/projects/dotfiles/claude/block-secrets.py"
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [

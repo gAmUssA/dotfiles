@@ -52,10 +52,11 @@ ln -s ~/projects/dotfiles/sesh/sesh.toml ~/.config/sesh/sesh.toml
 # Claude Code config (settings + custom statusline + stop hook script)
 # Skips settings.local.json — that's meant to stay per-machine.
 mkdir -p ~/.claude
-rm -f ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh
+rm -f ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh ~/.claude/block-secrets.py
 ln -s ~/projects/dotfiles/claude/settings.json ~/.claude/settings.json
 ln -s ~/projects/dotfiles/claude/statusline.sh ~/.claude/statusline.sh
 ln -s ~/projects/dotfiles/claude/stop-hook.sh ~/.claude/stop-hook.sh
+ln -s ~/projects/dotfiles/claude/block-secrets.py ~/.claude/block-secrets.py
 
 # Hammerspoon — entry point + caffeine + ollama menubar modules.
 # File-level symlinks so anything else in ~/.hammerspoon (Spoons/, scratch
