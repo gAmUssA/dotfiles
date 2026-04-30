@@ -83,6 +83,11 @@
 
 ## Gotchas worth remembering
 - **Right Option** key in iTerm2 must be set to **"Esc+"** (not Normal) for Shift+Alt+arrow to fire.
-- `prefix + l` is **next layout**, NOT "last window" — use `prefix + p` to bounce back.
-- `prefix + (` / `prefix + )` swap **panes**, not sessions — Shift+Alt+↑/↓ for sessions.
+- `prefix + l` is **next layout**, NOT "last window". Use `prefix + prefix` to toggle, or `prefix + p` for previous.
+- `prefix + (` / `prefix + )` swap **panes**, not sessions. Use Shift+Alt+↑/↓ for sessions.
 - Powerline chevrons require IosevkaTermNF or another Nerd Font.
+
+## Notifications & persistence
+- Clicking the macOS Claude banner routes to the **specific tmux pane** that fired it (not just "iTerm activated"). The hook captures `$TMUX_PANE` and `$ITERM_SESSION_ID` and uses both to route inside tmux first, then focus the iTerm window/tab/pane.
+- After a Mac reboot, opening iTerm auto-launches tmux and restores all sessions/windows/layouts/cwds (`@continuum-boot 'on'`). **Running processes don't auto-resume** — panes come back as fresh shells at the right cwd.
+- Continuum saves state every 5 minutes. Manual save/restore: `prefix + Ctrl-s` / `prefix + Ctrl-r`.
