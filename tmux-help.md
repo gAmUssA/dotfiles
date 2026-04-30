@@ -20,6 +20,7 @@
 | Key | Action |
 |---|---|
 | `Shift + Alt + ← / →` *(no prefix)* | prev / next window |
+| `prefix + prefix` (double Ctrl-Space) | toggle last window |
 | `prefix + 1..9` | jump directly to window N |
 | `prefix + n` / `prefix + p` | next / previous window |
 | `prefix + w` | interactive window picker |
