@@ -61,10 +61,15 @@ ln -s ~/projects/dotfiles/claude/block-secrets.py ~/.claude/block-secrets.py
 # Local AI coding agents — Ollama provider configs only. Machine state
 # (opencode node_modules/bun.lock, pi auth.json/sessions/settings.json) is
 # deliberately NOT versioned, so symlink the single config file in each.
-mkdir -p ~/.config/opencode ~/.pi/agent
+mkdir -p ~/.config/opencode ~/.pi/agent ~/.agents/skills
 rm -f ~/.config/opencode/opencode.json ~/.pi/agent/models.json
 ln -s ~/projects/dotfiles/opencode/opencode.json ~/.config/opencode/opencode.json
 ln -s ~/projects/dotfiles/pi/models.json ~/.pi/agent/models.json
+# Shared agent skill (SKILL.md open standard) in the universal ~/.agents/skills
+# location — discovered by OpenCode, Pi, AND Claude Code alike. Pi has no MCP,
+# so web search is a skill (CLI tool + SKILL.md) rather than an MCP server.
+rm -rf ~/.agents/skills/tavily-search
+ln -s ~/projects/dotfiles/agents/skills/tavily-search ~/.agents/skills/tavily-search
 
 # Hammerspoon — entry point + caffeine + ollama menubar modules.
 # File-level symlinks so anything else in ~/.hammerspoon (Spoons/, scratch
@@ -94,7 +99,7 @@ ls -lah "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
 ls -lah ~/.config/cmux/settings.json
 ls -lah ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh
 ls -lah ~/.hammerspoon/init.lua ~/.hammerspoon/caffeine.lua ~/.hammerspoon/ollama.lua ~/.hammerspoon/claude_sessions.lua
-ls -lah ~/.config/opencode/opencode.json ~/.pi/agent/models.json
+ls -lah ~/.config/opencode/opencode.json ~/.pi/agent/models.json ~/.agents/skills/tavily-search
 
 # thefuck — installed via pipx pinned to python@3.11 (the brew formula has a
 # stale openssl@1.1 dep, and thefuck 3.32 imports `distutils` which Python
