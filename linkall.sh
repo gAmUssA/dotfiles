@@ -58,6 +58,14 @@ ln -s ~/projects/dotfiles/claude/statusline.sh ~/.claude/statusline.sh
 ln -s ~/projects/dotfiles/claude/stop-hook.sh ~/.claude/stop-hook.sh
 ln -s ~/projects/dotfiles/claude/block-secrets.py ~/.claude/block-secrets.py
 
+# Local AI coding agents — Ollama provider configs only. Machine state
+# (opencode node_modules/bun.lock, pi auth.json/sessions/settings.json) is
+# deliberately NOT versioned, so symlink the single config file in each.
+mkdir -p ~/.config/opencode ~/.pi/agent
+rm -f ~/.config/opencode/opencode.json ~/.pi/agent/models.json
+ln -s ~/projects/dotfiles/opencode/opencode.json ~/.config/opencode/opencode.json
+ln -s ~/projects/dotfiles/pi/models.json ~/.pi/agent/models.json
+
 # Hammerspoon — entry point + caffeine + ollama menubar modules.
 # File-level symlinks so anything else in ~/.hammerspoon (Spoons/, scratch
 # files, Hammerspoon's own state) is left alone.
@@ -86,6 +94,7 @@ ls -lah "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
 ls -lah ~/.config/cmux/settings.json
 ls -lah ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh
 ls -lah ~/.hammerspoon/init.lua ~/.hammerspoon/caffeine.lua ~/.hammerspoon/ollama.lua ~/.hammerspoon/claude_sessions.lua
+ls -lah ~/.config/opencode/opencode.json ~/.pi/agent/models.json
 
 # thefuck — installed via pipx pinned to python@3.11 (the brew formula has a
 # stale openssl@1.1 dep, and thefuck 3.32 imports `distutils` which Python
