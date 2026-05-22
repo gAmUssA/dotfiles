@@ -15,7 +15,12 @@
 
 set -u
 
-MODEL="${1:-gemma3:4b}"
+# Default: qwen2.5-coder:7b — best speed/quality balance in the 5-prompt suite
+# (see ollama-bench.sh): 4.5/5 correct at a 2.85s cold start, the only sub-9s
+# model to get stdlib code-gen, the debug fix, AND the BSD-vs-GNU trap right.
+# For top quality at the cost of a ~9s load, pass qwen3-coder:30b. Override by
+# passing any installed model as the first arg.
+MODEL="${1:-qwen2.5-coder:7b}"
 
 # tmux session names can't contain `:`, `/`, or `.`; mangle for the model→name
 # map. (claude-dev.sh hits the same restriction with project paths.)
