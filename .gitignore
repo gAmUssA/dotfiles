@@ -207,3 +207,6 @@ tessl.json
 .codex
 .claude
 .zshrc.local
+
+# coding-benchmark generated sources + raw model responses (reproducible via ollama-code-bench.sh)
+bench-out/
