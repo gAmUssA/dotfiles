@@ -46,7 +46,6 @@ models=(
   "gemma3:4b"
   "qwen2.5-coder:7b"
   "mistral:7b"
-  "phi4:14b"
   "qwen3-coder:30b"
 )
 

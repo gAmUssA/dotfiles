@@ -40,7 +40,6 @@ fi
 # --- models (coding-capable; small chat models excluded) -------------------
 models=(
   "qwen2.5-coder:7b"
-  "phi4:14b"
   "qwen3-coder:30b"
   "qwen3.6:27b"
   "devstral:24b"
