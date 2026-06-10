@@ -6,7 +6,7 @@
 set -uo pipefail
 
 # Quick exit if no tools are available
-if ! command -v deck &> /dev/null && ! command -v kubectl &> /dev/null && ! command -v confluent &> /dev/null; then
+if ! command -v deck &> /dev/null && ! command -v kubectl &> /dev/null && ! command -v confluent &> /dev/null && ! command -v quarkus &> /dev/null; then
     # If none of the major tools are available, exit quickly
     exit 0
 fi
@@ -103,6 +103,7 @@ main() {
         "just:just --completions zsh"
         "terraform:terraform -install-autocomplete"
         "aws:aws_completer"
+        "quarkus:quarkus completion"
     )
     
     local success_count=0
@@ -131,6 +132,34 @@ main() {
                 # We skip this entry — leave it to the shell rc to wire up.
                 if command -v aws &> /dev/null && command -v aws_completer &> /dev/null; then
                     print_status "$BLUE" "→ aws: use 'complete -C aws_completer aws' in .zshrc"
+                fi
+                ;;
+            "quarkus")
+                # `quarkus completion` emits a picocli/bash-format script
+                # (uses `complete -F _complete_quarkus`), not a zsh #compdef
+                # file. Write it with a .bash suffix so zsh doesn't try to
+                # autoload it as a completion function; .zshrc sources it
+                # after bashcompinit.
+                if command -v quarkus &> /dev/null; then
+                    local quarkus_file="$COMPLETION_DIR/quarkus_completion.bash"
+                    if [[ -f "$quarkus_file" ]]; then
+                        local file_age=$(( $(date +%s) - $(stat -f %m "$quarkus_file" 2>/dev/null || echo 0) ))
+                        if [[ $file_age -lt 2592000 ]]; then
+                            print_status "$BLUE" "→ quarkus completion is up to date"
+                            ((success_count++))
+                            continue
+                        fi
+                    fi
+                    print_status "$BLUE" "→ Installing completion for quarkus..."
+                    if quarkus completion > "$quarkus_file" 2>/dev/null; then
+                        print_status "$GREEN" "✓ Installed completion for quarkus"
+                        ((success_count++))
+                    else
+                        print_status "$RED" "✗ Failed to install completion for quarkus"
+                        rm -f "$quarkus_file"
+                    fi
+                else
+                    print_status "$YELLOW" "⚠ quarkus not found, skipping completion"
                 fi
                 ;;
             *)

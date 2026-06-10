@@ -290,6 +290,11 @@ if command -v aws_completer >/dev/null 2>&1; then
     complete -C aws_completer aws
 fi
 
+# Quarkus CLI completion (picocli/bash-format, requires bashcompinit)
+if [[ -f "$HOME/.zfunc/quarkus_completion.bash" ]]; then
+    source "$HOME/.zfunc/quarkus_completion.bash"
+fi
+
 # Auto-install completions for CLI tools (runs at most once per 7 days)
 __maybe_install_completions() {
     local installer=~/projects/dotfiles/install-completions.sh
