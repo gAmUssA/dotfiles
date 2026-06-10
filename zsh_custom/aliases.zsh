@@ -46,9 +46,9 @@ function mkcd () {
 }
 
 # mkdir and touch file there (via https://unix.stackexchange.com/questions/305844/how-to-create-a-file-and-parent-directories-in-one-command#305850)
-function mktouch() { 
-  mkdir -p $(dirname $1)
-  touch $1; 
+function mktouch() {
+  mkdir -p "$(dirname "$1")"
+  touch "$1"
 }
 
 # Based on http://schneems.com/post/41104255619/use-gifs-in-your-pull-request-for-good-not-evil
@@ -85,11 +85,13 @@ fshow() {
     k=$(head -2 <<< "$out" | tail -1)
     shas=$(sed '1,2d;s/^[^a-z0-9]*//;/^$/d' <<< "$out" | awk '{print $1}')
     [ -z "$shas" ] && continue
+    # ${=shas}/${(f)shas}: zsh doesn't word-split unquoted vars, so multi-select
+    # (tab in fzf) passed all SHAs as one newline-joined arg and broke.
     if [ "$k" = ctrl-d ]; then
-      git icdiff --color=always $shas | less -R
+      git icdiff --color=always ${=shas} | less -R
     else
-      for sha in $shas; do
-        git show --color=always $sha | less -R
+      for sha in ${(f)shas}; do
+        git show --color=always "$sha" | less -R
       done
     fi
   done

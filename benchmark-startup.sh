@@ -14,7 +14,7 @@ for i in {1..$runs}; do
     # Use a fresh shell instance for each test
     duration=$(zsh -c "
         start_time=\$(date +%s%N)
-        source /Users/vikgamov/projects/dotfiles/.zshrc > /dev/null 2>&1
+        source \$HOME/projects/dotfiles/.zshrc > /dev/null 2>&1
         end_time=\$(date +%s%N)
         echo \$(( (end_time - start_time) / 1000000 ))
     ")
