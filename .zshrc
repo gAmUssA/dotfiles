@@ -60,7 +60,16 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
     [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
         eval "$("$BASE16_SHELL/profile_helper.sh")"
 
-test -e ~/.dircolors && eval `gdircolors -b ~/.dircolors`
+# dircolors: cache the eval output; regenerate only if ~/.dircolors changes
+if [[ -e ~/.dircolors ]]; then
+    __dc_cache="${XDG_CACHE_HOME:-$HOME/.cache}/dircolors.zsh"
+    if [[ ! -s $__dc_cache || ~/.dircolors -nt $__dc_cache ]]; then
+        mkdir -p "${__dc_cache:h}"
+        gdircolors -b ~/.dircolors > "$__dc_cache"
+    fi
+    source "$__dc_cache"
+    unset __dc_cache
+fi
 
 # tmux (let .tmux.conf own default-terminal; no TERM override needed)
 alias tmux="tmux -u"
@@ -183,19 +192,19 @@ gcloud() {
     command gcloud "$@"
 }
 
-# Lazy load SDKMAN for faster startup
+# SDKMAN: skip the 2.65s shell init by pointing PATH/JAVA_HOME at the `current`
+# symlinks directly (which is what `sdk use` flips anyway). `sdk` command itself
+# stays lazy — pays the init cost only when you actually run `sdk install/use/list`.
 export SDKMAN_DIR="$HOME/.sdkman"
-_sdk_lazy_load() {
-    unset -f sdk java gradle mvn kotlin groovy 2>/dev/null
-    unalias gradle 2>/dev/null  # Remove OMZ gradle alias if present
-    [[ -s "${SDKMAN_DIR}/bin/sdkman-init.sh" ]] && source "${SDKMAN_DIR}/bin/sdkman-init.sh"
+export JAVA_HOME="$SDKMAN_DIR/candidates/java/current"
+export GRADLE_HOME="$SDKMAN_DIR/candidates/gradle/current"
+path=("$JAVA_HOME/bin" "$GRADLE_HOME/bin" $path)
+unalias gradle 2>/dev/null  # OMZ gradle plugin may set an alias; we want the binary
+sdk() {
+    unset -f sdk
+    [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
+    sdk "$@"
 }
-sdk() { _sdk_lazy_load; sdk "$@"; }
-java() { _sdk_lazy_load; java "$@"; }
-unalias gradle 2>/dev/null; gradle() { _sdk_lazy_load; gradle "$@"; }
-mvn() { _sdk_lazy_load; mvn "$@"; }
-kotlin() { _sdk_lazy_load; kotlin "$@"; }
-groovy() { _sdk_lazy_load; groovy "$@"; }
 
 # Lazy load NVM for faster startup
 export NVM_DIR="$HOME/.nvm"
@@ -245,9 +254,14 @@ fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 
 export PATH=~/bin:$PATH
 
-# Initialize completions (single authoritative call, after all fpath additions)
+# Initialize completions (single authoritative call, after all fpath additions).
+# Skip the full security/rebuild scan if .zcompdump was regenerated in the last 24h.
 autoload -Uz compinit
-compinit
+if [[ -n $HOME/.zcompdump(#qN.mh-24) ]]; then
+    compinit -C
+else
+    compinit
+fi
 
 # Load additional completion functions
 autoload -U +X bashcompinit && bashcompinit
@@ -273,10 +287,11 @@ zstyle ':completion:*:cd:*' accept-exact-dirs true
 # Shell History integration
 PATH="${PATH}:/Applications/ShellHistory.app/Contents/Helpers"
 __shhist_session="${RANDOM}"
+__shhist_host="$(hostname)"
 
 __shhist_prompt() {
     local __exit_code="${?:-1}"
-    \history -D -t "%s" -1 | shhist insert --session ${TERM_SESSION_ID:-${__shhist_session}} --username ${LOGNAME} --hostname $(hostname) --exit-code ${__exit_code} --shell zsh
+    { \history -D -t "%s" -1 | shhist insert --session ${TERM_SESSION_ID:-${__shhist_session}} --username ${LOGNAME} --hostname ${__shhist_host} --exit-code ${__exit_code} --shell zsh } &!
     return ${__exit_code}
 }
 
