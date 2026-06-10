@@ -1,20 +1,19 @@
 #!/bin/sh
-rm ~/.zshrc
-rm -rf ~/.oh-my-zsh/custom
-rm ~/.gitconfig
-rm ~/.gitignore
-rm ~/.jshintrc
-rm ~/.inputrc
-rm ~/.tigrc
-rm ~/.ssh/config
-rm ~/.dircolors
-rm ~/.mackup.cfg
-rm ~/.antigen.zsh
-rm ~/.tmux.conf
-rm ~/.vimrc
-rm ~/.p10k.zsh
+# rm -f everywhere: quiet on a fresh machine (no "No such file" spam) and
+# guarantees the following ln -s can't silently no-op against a leftover file.
+rm -f ~/.zshrc
+rm -f ~/.gitconfig
+rm -f ~/.gitignore
+rm -f ~/.jshintrc
+rm -f ~/.inputrc
+rm -f ~/.tigrc
+rm -f ~/.ssh/config
+rm -f ~/.dircolors
+rm -f ~/.mackup.cfg
+rm -f ~/.tmux.conf
+rm -f ~/.vimrc
+rm -f ~/.p10k.zsh
 
-ln -s ~/projects/dotfiles/antigen.zsh ~/.antigen.zsh
 ln -s ~/projects/dotfiles/.zshrc ~/.zshrc
 ln -s ~/projects/dotfiles/.gitconfig ~/.gitconfig
 ln -s ~/projects/dotfiles/.gitignore ~/.gitignore
@@ -27,7 +26,6 @@ ln -s ~/projects/dotfiles/.dircolors ~/.dircolors
 ln -s ~/projects/dotfiles/.mackup.cfg ~/.mackup.cfg
 ln -s ~/projects/dotfiles/.tmux.conf ~/.tmux.conf
 ln -s ~/projects/dotfiles/.p10k.zsh ~/.p10k.zsh
-ln -s ~/projects/dotfiles/.deck.yaml ~/.deck.yaml
 
 # Ghostty terminal config
 # On macOS, Ghostty loads ~/Library/Application Support/com.mitchellh.ghostty/config
@@ -91,10 +89,8 @@ ls -lah ~/.vimrc
 ls -lah ~/.ssh/config
 ls -lah ~/.dircolors
 ls -lah ~/.mackup.cfg
-ls -lah ~/.antigen.zsh
 ls -lah ~/.tmux.conf
 ls -lah ~/.p10k.zsh
-ls -lah ~/.deck.yaml
 ls -lah "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
 ls -lah ~/.config/cmux/settings.json
 ls -lah ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh
