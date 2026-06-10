@@ -16,11 +16,14 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Terminal 256 colors
-export TERM="xterm-256color"
+# NOTE: do NOT export TERM here — the terminal sets it (Ghostty: xterm-ghostty)
+# and tmux owns it inside sessions (tmux-256color). Forcing xterm-256color broke
+# .tmux.conf's xterm-ghostty terminal-overrides and capability detection in tmux.
+
+# Keep PATH/fpath entries unique even when .zshrc is re-sourced (exec zsh, reload!)
+typeset -U path PATH fpath FPATH
 
 export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
 
 export EDITOR='micro'
 
@@ -74,10 +77,13 @@ fi
 # tmux (let .tmux.conf own default-terminal; no TERM override needed)
 alias tmux="tmux -u"
 
-# chruby 
-source $BREW_HOME/opt/chruby/share/chruby/chruby.sh
-source $BREW_HOME/opt/chruby/share/chruby/auto.sh
-RUBIES+=(~/.rbenv/versions/*)
+# chruby (guarded: skip cleanly on machines without it; (N) glob so an empty
+# ~/.rbenv/versions doesn't abort startup with "no matches found")
+if [[ -f "$BREW_HOME/opt/chruby/share/chruby/chruby.sh" ]]; then
+    source "$BREW_HOME/opt/chruby/share/chruby/chruby.sh"
+    source "$BREW_HOME/opt/chruby/share/chruby/auto.sh"
+    RUBIES+=(~/.rbenv/versions/*(N))
+fi
 
 # Go development (Go detects GOROOT automatically since 1.10; don't pin it)
 export GOPATH="${HOME}/.go"
@@ -166,29 +172,18 @@ export FZF_DEFAULT_OPTS="
   --color info:108,prompt:109,spinner:108,pointer:168,marker:168
 "
 
-FZ_HISTORY_CD_CMD=_zlua
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # ===== LAZY LOADED HEAVY SERVICES =====
-# Lazy load GCP SDK
-gcp_lazy_load() {
-    if [ ! -f "$HOME/.gcp_loaded" ]; then
-        echo "Loading GCP SDK..."
-        if [ -f "$BREW_HOME/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc" ]; then
-            source "$BREW_HOME/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
-        fi
-        if [ -f "$BREW_HOME/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc" ]; then
-            source "$BREW_HOME/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
-        fi
-        export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-        touch "$HOME/.gcp_loaded"
-    fi
-}
-
-# Override gcloud command to lazy load
+# Lazy load GCP SDK. NOTE: per-shell laziness via unfunction — the old version
+# used a persistent ~/.gcp_loaded marker file, which made this a permanent no-op
+# after the first run ever (SDK path/completions never loaded in new shells).
 gcloud() {
     unfunction gcloud
-    gcp_lazy_load
+    local sdk="$BREW_HOME/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
+    [[ -f "$sdk/path.zsh.inc" ]] && source "$sdk/path.zsh.inc"
+    [[ -f "$sdk/completion.zsh.inc" ]] && source "$sdk/completion.zsh.inc"
+    export USE_GKE_GCLOUD_AUTH_PLUGIN=True
     command gcloud "$@"
 }
 
@@ -248,6 +243,11 @@ unalias gm 2>/dev/null || true
 # Completion paths — all fpath additions must happen BEFORE compinit
 fpath+=~/.zfunc
 fpath=($HOME/.zsh/gradle-completion $fpath)
+
+# grok CLI (moved here from the installer-appended block at the bottom of the
+# file, which added fpath AFTER compinit and ran a duplicate `compinit -C`)
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=(~/.grok/completions/zsh $fpath)
 
 # Brew completions (must be in fpath before compinit, not FPATH after)
 fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
@@ -335,7 +335,7 @@ __maybe_install_completions
 unset -f __maybe_install_completions
 
 # Windsurf
-export PATH="/Users/vikgamov/.codeium/windsurf/bin:$PATH"
+export PATH="$HOME/.codeium/windsurf/bin:$PATH"
 
 
 # direnv
@@ -347,7 +347,7 @@ eval "$(direnv hook zsh)"
 # end profiling
 # zprof
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
-export PATH="/Users/vikgamov/projects/kafka/kwack-dist/bin:$PATH"
+export PATH="$HOME/projects/kafka/kwack-dist/bin:$PATH"
 
 [[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
 
@@ -361,9 +361,9 @@ fi
 
 [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
 # uv
-export PATH="/Users/vikgamov/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 # bun completions
-[ -s "/Users/vikgamov/.bun/_bun" ] && source "/Users/vikgamov/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
@@ -380,9 +380,6 @@ eval "$(zoxide init zsh --no-cmd)"
 function z() { __zoxide_z "$@" }
 function zz() { __zoxide_zi "$@" }
 alias cd='z'
-
-# >>> grok installer >>>
-export PATH="$HOME/.grok/bin:$PATH"
-fpath=(~/.grok/completions/zsh $fpath)
-autoload -Uz compinit && compinit -C
-# <<< grok installer <<<
+# NOTE: grok installer appends a block here (PATH + fpath + a duplicate
+# compinit). Its contents live in the completion-paths section above — if the
+# installer re-adds the block, delete it again.

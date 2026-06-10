@@ -74,16 +74,17 @@ ansi_color() {
 
 color_maven() {
 
-    # pick color type
-    if [ $TERM = 'xterm-256color' ]
-    then
+    # pick color type — match any 256color-capable TERM (.zshrc no longer
+    # forces xterm-256color, so this sees the real value: xterm-ghostty,
+    # tmux-256color, etc.)
+    case "$TERM" in
+    *-256color|xterm-ghostty|xterm-kitty)
         xterm_color
-#    elif [ $TERM = 'ansi' ]
-#    then
-#     ansi_color
-  else
+        ;;
+  *)
       echo "${c_red}WARNING:::Terminal '${TERM}' is not supported at this time. Colorized output will not happen for Maven${c_end}"
-  fi
+      ;;
+  esac
 
   error=${c_bold}${c_red}
   info=${c_white}
