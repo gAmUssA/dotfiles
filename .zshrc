@@ -360,3 +360,9 @@ eval "$(zoxide init zsh --no-cmd)"
 function z() { __zoxide_z "$@" }
 function zz() { __zoxide_zi "$@" }
 alias cd='z'
+
+# >>> grok installer >>>
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=(~/.grok/completions/zsh $fpath)
+autoload -Uz compinit && compinit -C
+# <<< grok installer <<<

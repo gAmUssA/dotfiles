@@ -29,7 +29,7 @@
       "Bash(npm version:*)"
     ],
     "deny": [],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "auto"
   },
   "hooks": {
     "PreToolUse": [
@@ -105,7 +105,9 @@
     "jdtls-lsp@claude-plugins-official": true,
     "kotlin-lsp@claude-plugins-official": true,
     "telegram@claude-plugins-official": true,
-    "banana-claude@banana-claude-marketplace": true
+    "banana-claude@banana-claude-marketplace": true,
+    "code-simplifier@claude-plugins-official": true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
@@ -114,10 +116,10 @@
         "repo": "anthropics/claude-plugins-official"
       }
     },
-    "ui-ux-pro-max-skill": {
+    "axiom-marketplace": {
       "source": {
         "source": "github",
-        "repo": "nextlevelbuilder/ui-ux-pro-max-skill"
+        "repo": "CharlesWiltgen/Axiom"
       }
     },
     "banana-claude-marketplace": {
@@ -125,10 +127,42 @@
         "source": "github",
         "repo": "AgriciDaniel/banana-claude"
       }
+    },
+    "ui-ux-pro-max-skill": {
+      "source": {
+        "source": "github",
+        "repo": "nextlevelbuilder/ui-ux-pro-max-skill"
+      }
+    },
+    "quarkus-skills": {
+      "source": {
+        "source": "github",
+        "repo": "quarkusio/skills"
+      }
     }
+  },
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
   },
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark-daltonized",
   "remoteControlAtStartup": true,
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
+  "voiceEnabled": true,
+  "mcpServers": {
+    "nanobanana-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@ycse/nanobanana-mcp"
+      ],
+      "env": {
+        "GOOGLE_AI_API_KEY": "${GOOGLE_AI_API_KEY}",
+        "NANOBANANA_MODEL": "gemini-3.1-flash-image-preview"
+      }
+    }
+  },
+  "model": "claude-fable-5[1m]"
 }
