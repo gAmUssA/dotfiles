@@ -139,21 +139,19 @@ zinit ice wait'1' lucid; zinit light "lukechilds/zsh-better-npm-completion"
 # Alias tips
 zinit ice wait'1' lucid; zinit light "djui/alias-tips"
 
-# thefuck — instant mode (https://github.com/nvbn/thefuck#experimental-instant-mode).
-# Replaces the lazy-loaded zinit plugin: instant mode wraps the shell with
-# `script(1)` to capture command output, so it must run at shell init time,
-# NOT lazy-loaded. The plugin (laggardkernel/zsh-thefuck) doesn't pass the
-# --enable-experimental-instant-mode flag, so we eval directly.
-# Guards:
-#   - thefuck on PATH (pipx-installed via linkall.sh)
-#   - autocorrect off (it is, see zsh_custom/setopt.zsh — though not yet sourced)
-#   - [[ -t 1 ]] — only run in real TTYs; instant mode tries to ioctl the PTY
-#     and crashes with "Inappropriate ioctl for device" in non-interactive
-#     contexts (like `zsh -ic '...'` from another script).
-#   - $THEFUCK_INSTANT_MODE — the wrapper script sets this so the inner shell's
-#     re-source of .zshrc doesn't recurse into another wrapper.
-if command -v thefuck >/dev/null 2>&1 && [[ -z "$THEFUCK_INSTANT_MODE" ]] && [[ -t 1 ]]; then
-  eval "$(thefuck --alias --enable-experimental-instant-mode)"
+# thefuck — cached plain-alias mode (pipx-installed via linkall.sh).
+# Instant mode was dropped: it cost ~1.5s per shell — ~700ms of Python spin-up
+# for the eval, plus its script(1) wrapper spawning an inner zsh that sources
+# .zshrc a second time. Plain `thefuck --alias` output is static per version,
+# so cache it like dircolors; regenerate when the thefuck shim changes.
+if command -v thefuck >/dev/null 2>&1; then
+  __tf_cache="${XDG_CACHE_HOME:-$HOME/.cache}/thefuck-alias.zsh"
+  if [[ ! -s $__tf_cache || "$(command -v thefuck)" -nt $__tf_cache ]]; then
+    mkdir -p "${__tf_cache:h}"
+    thefuck --alias > "$__tf_cache"
+  fi
+  source "$__tf_cache"
+  unset __tf_cache
 fi
 
 # Load all *.zsh files in zsh_custom/ (aliases, setopts, java env, color_maven, etc.).
@@ -257,10 +255,24 @@ export PATH=~/bin:$PATH
 # Initialize completions (single authoritative call, after all fpath additions).
 # Skip the full security/rebuild scan if .zcompdump was regenerated in the last 24h.
 autoload -Uz compinit
-if [[ -n $HOME/.zcompdump(#qN.mh-24) ]]; then
+# NOTE: the previous gate used [[ -n $HOME/.zcompdump(#qN.mh-24) ]], but (#q)
+# needs EXTENDED_GLOB (never set here) — the word stayed a literal string, the
+# test was always true, and the dump NEVER rebuilt (new completions silently
+# missing until a manual rm). Array assignment applies glob qualifiers without
+# extendedglob: rebuild at most once a day, -C fast path otherwise.
+__zcd=(~/.zcompdump(N.mh-24))
+if (( $#__zcd )); then
     compinit -C
 else
     compinit
+    # compinit leaves an unchanged dump's mtime alone — refresh it explicitly
+    # or the daily gate would trigger a full scan every shell once it's >24h.
+    touch "$HOME/.zcompdump"
+fi
+unset __zcd
+# Byte-compile the dump so -C loads it faster; regen only when the dump changes.
+if [[ ! -s "$HOME/.zcompdump.zwc" || "$HOME/.zcompdump" -nt "$HOME/.zcompdump.zwc" ]]; then
+    zcompile "$HOME/.zcompdump" 2>/dev/null
 fi
 
 # Load additional completion functions
