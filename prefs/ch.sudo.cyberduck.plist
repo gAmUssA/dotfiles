@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSNavLastRootDirectory</key>
+	<string>~/Downloads</string>
+	<key>NSNavPanelExpandedSizeForOpenMode</key>
+	<string>{800, 448}</string>
+	<key>NSTableView Columns v3 ListBrowserView</key>
+	<data>
+	YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0b3BYJG9iamVjdHMS
+	AAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVVBcnJheYABrxApCwweKSorLC0uLzU/QEFL
+	TE1XWFljZGVmcHF7fH2HiJKTnZ6oqbO0vr9VJG51bGzSDQ4PHVpOUy5vYmplY3RzViRj
+	bGFzc60QERITFBUWFxgZGhscgAKACoANgBCAE4AXgBmAHIAegCCAIoAkgCaAKNMfDQ4g
+	JChXTlMua2V5c6MhIiOAA4AEgAWjJSYngAaAB4AIgAlaSWRlbnRpZmllclVXaWR0aFZI
+	aWRkZW5UaWNvbiNANAAAAAAAAAjSMDEyM1okY2xhc3NuYW1lWCRjbGFzc2VzXE5TRGlj
+	dGlvbmFyeaIyNFhOU09iamVjdNMfDQ42OiijISIjgAOABIAFozs8J4ALgAyACIAJWGZp
+	bGVuYW1lI0BhwAAAAAAA0x8NDkJGKKMhIiOAA4AEgAWjR0gngA6AD4AIgAlUc2l6ZSNA
+	X2AAAAAAANMfDQ5OUiijISIjgAOABIAFo1NUJ4ARgBKACIAJWG1vZGlmaWVkI0ByYAAA
+	AAAA0x8NDlpeKKMhIiOAA4AEgAWjX2BhgBSAFYAWgAlVb3duZXIjQFQAAAAAAAAJ0x8N
+	DmdrKKMhIiOAA4AEgAWjbGBhgBiAFYAWgAlVZ3JvdXDTHw0OcnYooyEiI4ADgASABaN3
+	eGGAGoAbgBaACVpwZXJtaXNzaW9uI0BZAAAAAAAA0x8NDn6CKKMhIiOAA4AEgAWjg2Bh
+	gB2AFYAWgAlUa2luZNMfDQ6JjSijISIjgAOABIAFo45gYYAfgBWAFoAJWWV4dGVuc2lv
+	btMfDQ6UmCijISIjgAOABIAFo5lgYYAhgBWAFoAJVnJlZ2lvbtMfDQ6foyijISIjgAOA
+	BIAFo6RgYYAjgBWAFoAJV3ZlcnNpb27THw0Oqq4ooyEiI4ADgASABaOvYGGAJYAVgBaA
+	CVhjaGVja3N1bdMfDQ61uSijISIjgAOABIAFo7pgYYAngBWAFoAJXHN0b3JhZ2VjbGFz
+	c9IwMcDBXk5TTXV0YWJsZUFycmF5o8DCNFdOU0FycmF5AAgAEQAaACQAKQAyADcASQBM
+	AFIAVACAAIYAiwCWAJ0AqwCtAK8AsQCzALUAtwC5ALsAvQC/AMEAwwDFAMcAzgDWANoA
+	3ADeAOAA5ADmAOgA6gDsAPcA/QEEAQkBEgETARgBIwEsATkBPAFFAUwBUAFSAVQBVgFa
+	AVwBXgFgAWIBawF0AXsBfwGBAYMBhQGJAYsBjQGPAZEBlgGfAaYBqgGsAa4BsAG0AbYB
+	uAG6AbwBxQHOAdUB2QHbAd0B3wHjAeUB5wHpAesB8QH6AfsCAgIGAggCCgIMAhACEgIU
+	AhYCGAIeAiUCKQIrAi0CLwIzAjUCNwI5AjsCRgJPAlYCWgJcAl4CYAJkAmYCaAJqAmwC
+	cQJ4AnwCfgKAAoIChgKIAooCjAKOApgCnwKjAqUCpwKpAq0CrwKxArMCtQK8AsMCxwLJ
+	AssCzQLRAtMC1QLXAtkC4QLoAuwC7gLwAvIC9gL4AvoC/AL+AwcDDgMSAxQDFgMYAxwD
+	HgMgAyIDJAMxAzYDRQNJAAAAAAAAAgEAAAAAAAAAwwAAAAAAAAAAAAAAAAAAA1E=
+	</data>
+	<key>NSTableView Columns v3 OutlineBrowserView</key>
+	<data>
+	YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0b3BYJG9iamVjdHMS
+	AAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVVBcnJheYABrxAmCwwdKCkqKywtLjQ+P0BK
+	S0xWV1hZY2Rub3B6e4WGkJGbnKansbJVJG51bGzSDQ4PHFpOUy5vYmplY3RzViRjbGFz
+	c6wQERITFBUWFxgZGhuAAoAKgA2AEIAUgBaAGYAbgB2AH4AhgCOAJdMeDQ4fIydXTlMu
+	a2V5c6MgISKAA4AEgAWjJCUmgAaAB4AIgAlaSWRlbnRpZmllclVXaWR0aFZIaWRkZW5Y
+	ZmlsZW5hbWUjQHlwAAAAAAAI0i8wMTJaJGNsYXNzbmFtZVgkY2xhc3Nlc1xOU0RpY3Rp
+	b25hcnmiMTNYTlNPYmplY3TTHg0ONTknoyAhIoADgASABaM6OyaAC4AMgAiACVRzaXpl
+	I0BhMAAAAAAA0x4NDkFFJ6MgISKAA4AEgAWjRkcmgA6AD4AIgAlYbW9kaWZpZWQjQHLY
+	AAAAAADTHg0OTVEnoyAhIoADgASABaNSU1SAEYASgBOACVVvd25lciNAVAAAAAAAAAnT
+	Hg0OWl4noyAhIoADgASABaNfU1SAFYASgBOACVVncm91cNMeDQ5laSejICEigAOABIAF
+	o2prVIAXgBiAE4AJWnBlcm1pc3Npb24jQFkAAAAAAADTHg0OcXUnoyAhIoADgASABaN2
+	U1SAGoASgBOACVRraW5k0x4NDnyAJ6MgISKAA4AEgAWjgVNUgByAEoATgAlZZXh0ZW5z
+	aW9u0x4NDoeLJ6MgISKAA4AEgAWjjFNUgB6AEoATgAlWcmVnaW9u0x4NDpKWJ6MgISKA
+	A4AEgAWjl1NUgCCAEoATgAlXdmVyc2lvbtMeDQ6doSejICEigAOABIAFo6JTVIAigBKA
+	E4AJWGNoZWNrc3Vt0x4NDqisJ6MgISKAA4AEgAWjrVNUgCSAEoATgAlcc3RvcmFnZWNs
+	YXNz0i8ws7ReTlNNdXRhYmxlQXJyYXmjs7UzV05TQXJyYXkACAARABoAJAApADIANwBJ
+	AEwAUgBUAH0AgwCIAJMAmgCnAKkAqwCtAK8AsQCzALUAtwC5ALsAvQC/AMEAyADQANQA
+	1gDYANoA3gDgAOIA5ADmAPEA9wD+AQcBEAERARYBIQEqATcBOgFDAUoBTgFQAVIBVAFY
+	AVoBXAFeAWABZQFuAXUBeQF7AX0BfwGDAYUBhwGJAYsBlAGdAaQBqAGqAawBrgGyAbQB
+	tgG4AboBwAHJAcoB0QHVAdcB2QHbAd8B4QHjAeUB5wHtAfQB+AH6AfwB/gICAgQCBgII
+	AgoCFQIeAiUCKQIrAi0CLwIzAjUCNwI5AjsCQAJHAksCTQJPAlECVQJXAlkCWwJdAmcC
+	bgJyAnQCdgJ4AnwCfgKAAoIChAKLApIClgKYApoCnAKgAqICpAKmAqgCsAK3ArsCvQK/
+	AsECxQLHAskCywLNAtYC3QLhAuMC5QLnAusC7QLvAvEC8wMAAwUDFAMYAAAAAAAAAgEA
+	AAAAAAAAtgAAAAAAAAAAAAAAAAAAAyA=
+	</data>
+	<key>NSTableView Sort Ordering v2 ListBrowserView</key>
+	<data>
+	YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0b3BYJG9iamVjdHMS
+	AAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVVBcnJheYABowsMEVUkbnVsbNINDg8QWk5T
+	Lm9iamVjdHNWJGNsYXNzoIAC0hITFBVaJGNsYXNzbmFtZVgkY2xhc3Nlc15OU011dGFi
+	bGVBcnJheaMUFhdXTlNBcnJheVhOU09iamVjdAgRGiQpMjdJTFJUWF5jbnV2eH2IkaCk
+	rAAAAAAAAAEBAAAAAAAAABgAAAAAAAAAAAAAAAAAAAC1
+	</data>
+	<key>NSTableView Sort Ordering v2 OutlineBrowserView</key>
+	<data>
+	YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0b3BYJG9iamVjdHMS
+	AAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVVBcnJheYABowsMEVUkbnVsbNINDg8QWk5T
+	Lm9iamVjdHNWJGNsYXNzoIAC0hITFBVaJGNsYXNzbmFtZVgkY2xhc3Nlc15OU011dGFi
+	bGVBcnJheaMUFhdXTlNBcnJheVhOU09iamVjdAgRGiQpMjdJTFJUWF5jbnV2eH2IkaCk
+	rAAAAAAAAAEBAAAAAAAAABgAAAAAAAAAAAAAAAAAAAC1
+	</data>
+	<key>NSTableView Supports v2 ListBrowserView</key>
+	<true/>
+	<key>NSTableView Supports v2 OutlineBrowserView</key>
+	<true/>
+	<key>NSToolbar Configuration Cyberduck Toolbar</key>
+	<dict>
+		<key>TB Display Mode</key>
+		<integer>1</integer>
+		<key>TB Icon Size Mode</key>
+		<integer>1</integer>
+		<key>TB Is Shown</key>
+		<integer>1</integer>
+		<key>TB Size Mode</key>
+		<integer>1</integer>
+	</dict>
+	<key>NSToolbar Configuration Transfer Toolbar</key>
+	<dict>
+		<key>TB Display Mode</key>
+		<integer>1</integer>
+		<key>TB Icon Size Mode</key>
+		<integer>1</integer>
+		<key>TB Is Shown</key>
+		<integer>1</integer>
+		<key>TB Size Mode</key>
+		<integer>1</integer>
+	</dict>
+	<key>NSWindow Frame 27e84fc6-3efa-4942-9aad-85c9490a8388</key>
+	<string>256 80 1044 687 0 0 1496 939 </string>
+	<key>NSWindow Frame 8b446f36-44ae-4394-a107-8701b342b18d</key>
+	<string>0 52 864 1033 0 0 1728 1085 </string>
+	<key>NSWindow Frame Activity</key>
+	<string>297 617 435 183 0 0 1496 939 </string>
+	<key>NSWindow Frame Bookmark</key>
+	<string>896 5 600 612 0 0 1496 939 </string>
+	<key>NSWindow Frame Browser</key>
+	<string>0 52 864 1033 0 0 1728 1085 </string>
+	<key>NSWindow Frame Connection</key>
+	<string>529 250 499 324 0 0 1496 939 </string>
+	<key>NSWindow Frame Login</key>
+	<string>650 244 420 294 0 0 1496 939 </string>
+	<key>NSWindow Frame NSNavPanelAutosaveName</key>
+	<string>954 392 800 448 0 0 1728 1085 </string>
+	<key>NSWindow Frame Preferences</key>
+	<string>362 315 772 518 0 0 1496 939 </string>
+	<key>NSWindow Frame SUUpdateAlert</key>
+	<string>554 515 620 398 0 0 1728 1085 </string>
+	<key>NSWindow Frame Transfers</key>
+	<string>36 123 744 713 0 0 1728 1085 </string>
+	<key>NSWindow Frame Validator</key>
+	<string>-89 20 1081 753 0 0 1496 939 </string>
+	<key>NSWindow Frame c215f655-1d4c-4e7f-a892-1fde082dee41</key>
+	<string>980 125 748 887 0 0 1728 1085 </string>
+	<key>NSWindow Frame d2ca2cc3-c076-4fa3-9da2-454c4d04e6ec</key>
+	<string>481 112 852 908 0 0 1920 1080 </string>
+	<key>NSWindow Frame e8785983-5038-4e34-8ad7-0fb4e5d0afea</key>
+	<string>980 198 748 887 0 0 1728 1085 </string>
+	<key>NSWindow Frame fa215eb6-2d93-49ed-886c-cc6d16034075</key>
+	<string>2667 546 748 887 1496 424 1920 1080 </string>
+	<key>SUAutomaticallyUpdate</key>
+	<false/>
+	<key>SUEnableAutomaticChecks</key>
+	<false/>
+	<key>SUHasLaunchedBefore</key>
+	<true/>
+	<key>SULastCheckTime</key>
+	<date>2026-04-21T00:11:16Z</date>
+	<key>SUSendProfileInfo</key>
+	<false/>
+	<key>SUUpdateGroupIdentifier</key>
+	<integer>2297836490</integer>
+	<key>SUUpdateRelaunchingMarker</key>
+	<false/>
+	<key>bookmark.0c7ffd8f-b420-4c81-89fa-a6b33d063094</key>
+	<string>8</string>
+	<key>bookmark.27e84fc6-3efa-4942-9aad-85c9490a8388</key>
+	<string>2</string>
+	<key>bookmark.4240b15c-b392-464c-8cb6-4d645525da76</key>
+	<string>7</string>
+	<key>bookmark.47ab49f7-2752-4250-b5a4-28133b65a68a</key>
+	<string>5</string>
+	<key>bookmark.57b718cb-78bd-47b2-a2bb-5178184b8c22</key>
+	<string>0</string>
+	<key>bookmark.733594a0-feeb-48ff-98cd-58712eb4a449</key>
+	<string>4</string>
+	<key>bookmark.8b446f36-44ae-4394-a107-8701b342b18d</key>
+	<string>11</string>
+	<key>bookmark.a032527c-fb37-4ec9-b281-d004731ff2ec</key>
+	<string>6</string>
+	<key>bookmark.c215f655-1d4c-4e7f-a892-1fde082dee41</key>
+	<string>3</string>
+	<key>bookmark.cebfc3d7-5a32-4844-a465-be569cd0ed59</key>
+	<string>10</string>
+	<key>bookmark.d2ca2cc3-c076-4fa3-9da2-454c4d04e6ec</key>
+	<string>0</string>
+	<key>bookmark.e426db16-e9d8-4291-a9ce-50d50d9098a6</key>
+	<string>9</string>
+	<key>bookmark.e8785983-5038-4e34-8ad7-0fb4e5d0afea</key>
+	<string>1</string>
+	<key>bookmark.import.com.crossftp</key>
+	<string>true</string>
+	<key>bookmark.import.com.eltima.cloudmounter</key>
+	<string>true</string>
+	<key>bookmark.import.com.expandrive.ExpanDrive</key>
+	<string>true</string>
+	<key>bookmark.import.com.expandrive.ExpanDrive3</key>
+	<string>true</string>
+	<key>bookmark.import.com.expandrive.ExpanDrive34</key>
+	<string>true</string>
+	<key>bookmark.import.com.expandrive.ExpanDrive35</key>
+	<string>true</string>
+	<key>bookmark.import.com.expandrive.ExpanDrive36</key>
+	<string>true</string>
+	<key>bookmark.import.com.extendmac.Flow</key>
+	<string>true</string>
+	<key>bookmark.import.com.fetchsoftworks.Fetch</key>
+	<string>true</string>
+	<key>bookmark.import.com.nolobe.interarchy</key>
+	<string>true</string>
+	<key>bookmark.import.com.panic.Transmit</key>
+	<string>true</string>
+	<key>bookmark.import.com.panic.Transmit5</key>
+	<string>true</string>
+	<key>bookmark.import.de.filezilla</key>
+	<string>true</string>
+	<key>bookmark.import.org.mozdev.fireftp</key>
+	<string>true</string>
+	<key>bookmark.toggle.options</key>
+	<string>1</string>
+	<key>browser.column.filename.width</key>
+	<string>420.0</string>
+	<key>browser.column.modified.width</key>
+	<string>301.5</string>
+	<key>browser.column.size.width</key>
+	<string>137.5</string>
+	<key>browser.move.confirm</key>
+	<string>false</string>
+	<key>browser.sort.ascending</key>
+	<string>true</string>
+	<key>browser.sort.column</key>
+	<string>filename</string>
+	<key>browser.view</key>
+	<string>1</string>
+	<key>donate.reminder.date</key>
+	<string>1689281549934</string>
+	<key>dropbox.oauth.expiry</key>
+	<string>1638542751098</string>
+	<key>googledrive.oauth.expiry</key>
+	<string>1661047568953</string>
+	<key>gs.oauth.expiry</key>
+	<string>1661211536218</string>
+	<key>preferences.toolbar.selected</key>
+	<string>4</string>
+	<key>profiles.s3.digitalocean-nyc3.enabled</key>
+	<string>true</string>
+	<key>profiles.s3.digitalocean-sfo2.enabled</key>
+	<string>true</string>
+	<key>profiles.s3.digitalocean-sfo3.enabled</key>
+	<string>true</string>
+	<key>queue.prompt.upload.action.default</key>
+	<string>skip</string>
+	<key>queue.window.open.default</key>
+	<string>true</string>
+	<key>session.5b50b53c-ea88-4281-856f-7af3ba961d59</key>
+	<string>0</string>
+	<key>session.733594a0-feeb-48ff-98cd-58712eb4a449</key>
+	<string>0</string>
+	<key>session.c215f655-1d4c-4e7f-a892-1fde082dee41</key>
+	<string>2</string>
+	<key>session.d2ca2cc3-c076-4fa3-9da2-454c4d04e6ec</key>
+	<string>0</string>
+	<key>session.fa215eb6-2d93-49ed-886c-cc6d16034075</key>
+	<string>0</string>
+	<key>transfer.0115a3e7-6c3f-4ee1-a8fe-b810531ec47b</key>
+	<string>2</string>
+	<key>transfer.092234dd-607e-4bbe-9881-3dc5a76d822d</key>
+	<string>10</string>
+	<key>transfer.0a7fe4ad-f546-4913-aede-67b715e569a3</key>
+	<string>4</string>
+	<key>transfer.0b80256d-af4a-4b1e-89f7-c7cfc827c0da</key>
+	<string>15</string>
+	<key>transfer.111c8931-99c5-49e9-90e6-ddce49795d89</key>
+	<string>16</string>
+	<key>transfer.1f3f46fb-801f-4b7f-9434-f8a0c2a81732</key>
+	<string>18</string>
+	<key>transfer.2679865d-f9d6-4fc9-97d8-da581e3285ba</key>
+	<string>13</string>
+	<key>transfer.29289a77-5c59-49d3-a72a-0d6cebe512e9</key>
+	<string>8</string>
+	<key>transfer.2c49b447-9bf5-4efc-9c95-30711acde6d9</key>
+	<string>14</string>
+	<key>transfer.2d226917-9f47-4aa1-bb39-0f263e979847</key>
+	<string>17</string>
+	<key>transfer.32560aac-fdec-4bae-827f-728671324bd6</key>
+	<string>3</string>
+	<key>transfer.328da24e-4a46-4697-9bb8-ef4cdbaef619</key>
+	<string>11</string>
+	<key>transfer.34a80e76-9376-4287-909b-5be0ee5c1aa5</key>
+	<string>13</string>
+	<key>transfer.37aadc0e-0520-4a4a-a5d0-7b7764699b61</key>
+	<string>8</string>
+	<key>transfer.4dd08bac-f104-4df2-89bf-196681a26142</key>
+	<string>5</string>
+	<key>transfer.4f6d7fef-7b88-4127-a494-f5a570117592</key>
+	<string>1</string>
+	<key>transfer.4f8acbc2-88be-4e32-8459-34074133a760</key>
+	<string>12</string>
+	<key>transfer.50cde202-c8aa-47ad-9c56-51ec31558ad7</key>
+	<string>18</string>
+	<key>transfer.58198913-ee5b-4c24-bd46-d38710c3e35d</key>
+	<string>2</string>
+	<key>transfer.6090e6d7-75d6-463d-a880-6330788fb0c9</key>
+	<string>12</string>
+	<key>transfer.646f5add-5662-4d7e-8f98-684186308831</key>
+	<string>17</string>
+	<key>transfer.666dd600-1800-427d-94c6-0fe1de2ea55b</key>
+	<string>10</string>
+	<key>transfer.674120e2-fe68-467e-b518-35759d5fcd39</key>
+	<string>0</string>
+	<key>transfer.7449f60f-e883-4110-ba8a-e4fcbb4d5c70</key>
+	<string>4</string>
+	<key>transfer.7e8a791f-b012-4be3-b93e-ac45436ca897</key>
+	<string>6</string>
+	<key>transfer.87297e6e-2072-4e26-9cbb-e93871be74dd</key>
+	<string>7</string>
+	<key>transfer.92e28321-ac85-4d0f-8139-90b6a06b17b5</key>
+	<string>16</string>
+	<key>transfer.93d8979b-706a-4134-9bab-4bbdaf938dc2</key>
+	<string>3</string>
+	<key>transfer.969230ae-ea51-44c8-a7cd-17a44c386e46</key>
+	<string>5</string>
+	<key>transfer.96dc7956-906a-429f-9eb7-021ad8985de1</key>
+	<string>14</string>
+	<key>transfer.9da59894-564e-42de-af59-dc0f5fcc404e</key>
+	<string>5</string>
+	<key>transfer.a501b71b-f518-44b1-8677-e8714dc58816</key>
+	<string>2</string>
+	<key>transfer.a539c6eb-b055-4c03-b395-3de09e3ca80d</key>
+	<string>6</string>
+	<key>transfer.adb381d1-8dbb-47a6-8753-e95b953a4b54</key>
+	<string>4</string>
+	<key>transfer.aecfade3-c2a9-460e-bcbb-950a77c98602</key>
+	<string>9</string>
+	<key>transfer.b6e7b49f-dbd7-4773-ba04-b2c386f31266</key>
+	<string>7</string>
+	<key>transfer.b98daefe-f26d-493a-85a8-e68693830972</key>
+	<string>7</string>
+	<key>transfer.c29b582f-15bc-4af9-ac51-3b8a578a5933</key>
+	<string>1</string>
+	<key>transfer.c62b05b0-271a-4de5-8eba-9423d3e8ec83</key>
+	<string>9</string>
+	<key>transfer.cf1b0c3c-e42c-44a3-b802-19874f8acc38</key>
+	<string>0</string>
+	<key>transfer.d137f65e-9a7b-4521-8c45-778d0dc737b5</key>
+	<string>0</string>
+	<key>transfer.d2327028-d8ec-499f-b34e-4d688de63c18</key>
+	<string>15</string>
+	<key>transfer.dcb85462-c568-4f88-a6ec-05700a534eef</key>
+	<string>6</string>
+	<key>transfer.df9bb330-e3cd-43bf-9bfe-91783c3c1032</key>
+	<string>3</string>
+	<key>transfer.e500ce0b-be75-434b-bb6f-4a311f4a0330</key>
+	<string>1</string>
+	<key>transfer.f41c1b71-e651-42be-b231-feaabf5d24f9</key>
+	<string>8</string>
+	<key>transfer.f96030d1-0c90-460d-8e47-659edf680c43</key>
+	<string>9</string>
+	<key>transfer.fa5faa35-2364-498f-ade8-c17031c5095b</key>
+	<string>11</string>
+	<key>transfer.toggle.details</key>
+	<string>1</string>
+	<key>update.check.timestamp</key>
+	<string>1704944285899</string>
+	<key>uses</key>
+	<string>96</string>
+</dict>
+</plist>

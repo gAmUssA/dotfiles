@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSSplitView Subview Frames NSColorPanelSplitView</key>
+	<array>
+		<string>0.000000, 0.000000, 224.000000, 258.000000, NO, NO</string>
+		<string>0.000000, 259.000000, 224.000000, 48.000000, NO, NO</string>
+	</array>
+	<key>NSToolbar Configuration com.apple.NSColorPanel</key>
+	<dict>
+		<key>TB Is Shown</key>
+		<integer>1</integer>
+	</dict>
+	<key>NSWindow Frame iSta Menus Settings</key>
+	<string>460 319 808 660 0 0 1728 1085 </string>
+	<key>NSWindow Frame istatmenus</key>
+	<string>1929 668 890 560 1496 422 1920 1080 </string>
+	<key>STP_is_first_launch</key>
+	<false/>
+	<key>STP_last_used_version</key>
+	<string>4.2.0</string>
+	<key>Setup.Shown</key>
+	<true/>
+	<key>ShownSetupScreen</key>
+	<true/>
+	<key>_modelid</key>
+	<string>MacBookPro18,2</string>
+</dict>
+</plist>

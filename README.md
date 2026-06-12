@@ -34,6 +34,26 @@ If you already have config at any of those paths, back it up before running — 
 Claude Code settings live at `claude/settings.json`, symlinked to `~/.claude/settings.json`.
 The per-machine file `~/.claude/settings.local.json` stays local and is gitignored.
 
+### App preferences (Moom, Bartender, iStat Menus, PopClip, Marked, TaskPaper, Cyberduck)
+
+GUI app plists can't be symlinked — cfprefsd caches and rewrites them, which is
+why the old Mackup setup silently died. Instead, snapshots:
+
+```bash
+./prefs-backup.sh    # after changing settings worth keeping; review diff, commit
+./prefs-restore.sh   # on a new machine, after the apps are installed; restart apps
+```
+
+Snapshots live in `prefs/` as XML plists. The backup script scans every export
+for license/serial/credential key names and refuses to write ones that match
+(this repo is public — that's also why TextExpander is excluded; its prefs
+carry its serial number, and it cloud-syncs itself anyway).
+
+### Ollama models
+
+`./ollama-restore.sh` pulls the registry models and recreates the local
+`-ctx64k` variants used by the OpenCode/Pi agent setup.
+
 ## The Claude Code bits
 
 I wrote a long blog post on why and how this is wired up, including every macOS 26 notification rabbit hole I fell into on the way.

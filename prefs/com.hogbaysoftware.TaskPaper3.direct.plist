@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>BIncludeDateWhenTaggingDone</key>
+	<true/>
+	<key>BIncludeProjectWhenArchivingDone</key>
+	<true/>
+	<key>BLastRunVersion</key>
+	<string>479</string>
+	<key>BSidebarFontSizeFollowsSystemPreferences</key>
+	<true/>
+	<key>NSNavLastRootDirectory</key>
+	<string>~/Library/Mobile Documents/com~hogbaysoftware~TaskPaper/Documents</string>
+	<key>NSNavPanelExpandedSizeForOpenMode</key>
+	<string>{800, 448}</string>
+	<key>NSOutlineView Items Sidebar</key>
+	<array>
+		<string>searches</string>
+		<string>tags</string>
+		<string>projects</string>
+		<string>tag-data-done</string>
+	</array>
+	<key>NSSplitView Subview Frames OutlineEditorSplitView</key>
+	<array>
+		<string>0.000000, 0.000000, 160.000000, 500.000000, NO, NO</string>
+		<string>161.000000, 0.000000, 442.000000, 500.000000, NO, NO</string>
+	</array>
+	<key>NSWindow Frame DocumentWindowFrameAutosaveName</key>
+	<string>104 125 603 500 0 0 1728 1085 </string>
+	<key>NSWindow Frame NSNavPanelAutosaveName</key>
+	<string>2044 460 328 188 1728 37 1920 1080 </string>
+	<key>NSWindow Frame OutlineWindow</key>
+	<string>104 125 603 500 0 0 1728 1085 </string>
+	<key>NSWindow Frame SUStatusFrame</key>
+	<string>664 712 400 135 0 0 1728 1085 </string>
+	<key>NSWindow Frame SUUpdateAlert</key>
+	<string>554 515 620 398 0 0 1728 1085 </string>
+	<key>Paddle-TaskPaper-501879-SD</key>
+	<string>fe60ccf72cdee999d610682122daeee5b89c5db6b2fdc4f532fce6dfce269944</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>https://www.taskpaper.com/assets/app/TaskPaper.rss</string>
+	<key>SUHasLaunchedBefore</key>
+	<true/>
+	<key>SULastCheckTime</key>
+	<date>2025-11-30T23:27:40Z</date>
+	<key>SUUpdateGroupIdentifier</key>
+	<integer>1094526971</integer>
+	<key>SUUpdateRelaunchingMarker</key>
+	<false/>
+</dict>
+</plist>
