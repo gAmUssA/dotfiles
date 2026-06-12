@@ -69,6 +69,17 @@ ln -s ~/projects/dotfiles/pi/models.json ~/.pi/agent/models.json
 rm -rf ~/.agents/skills/tavily-search
 ln -s ~/projects/dotfiles/agents/skills/tavily-search ~/.agents/skills/tavily-search
 
+# Karabiner-Elements — whole-directory symlink (the approach Karabiner's sync
+# docs support; file-level symlinks are risky because the GUI rewrites
+# karabiner.json on every change). automatic_backups/ inside is gitignored.
+# Restart the user server after linking so it picks up the new path.
+if [ -d ~/.config/karabiner ] && [ ! -L ~/.config/karabiner ]; then
+  mv ~/.config/karabiner ~/.config/karabiner.pre-symlink-backup
+fi
+rm -f ~/.config/karabiner
+ln -s ~/projects/dotfiles/karabiner ~/.config/karabiner
+launchctl kickstart -k "gui/$(id -u)/org.pqrs.service.agent.karabiner_console_user_server" 2>/dev/null
+
 # Hammerspoon — entry point + caffeine + ollama menubar modules.
 # File-level symlinks so anything else in ~/.hammerspoon (Spoons/, scratch
 # files, Hammerspoon's own state) is left alone.
