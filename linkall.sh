@@ -69,6 +69,13 @@ ln -s ~/projects/dotfiles/pi/models.json ~/.pi/agent/models.json
 rm -rf ~/.agents/skills/tavily-search
 ln -s ~/projects/dotfiles/agents/skills/tavily-search ~/.agents/skills/tavily-search
 
+# micro editor — file-level symlinks (NOT the whole dir: micro keeps machine
+# state in ~/.config/micro/backups and buffers alongside the config).
+mkdir -p ~/.config/micro
+rm -f ~/.config/micro/settings.json ~/.config/micro/bindings.json
+ln -s ~/projects/dotfiles/micro/settings.json ~/.config/micro/settings.json
+ln -s ~/projects/dotfiles/micro/bindings.json ~/.config/micro/bindings.json
+
 # Karabiner-Elements — whole-directory symlink (the approach Karabiner's sync
 # docs support; file-level symlinks are risky because the GUI rewrites
 # karabiner.json on every change). automatic_backups/ inside is gitignored.
