@@ -137,6 +137,8 @@ alias du="ncdu --color dark -rr -x --exclude .git --exclude node_modules"
 
 # brew install lsd
 alias ls='lsd'
+# NOTE: `compdef lsd=ls` lives in .zshrc after compinit — compdef isn't defined
+# yet when this file is sourced (zsh_custom loads before compinit runs).
 
 alias ll='ls -l'
 alias la='ls -a'

@@ -1,3 +1,10 @@
+
+# Kiro CLI pre block. Keep at the top of this file.
+# Disabled: Kiro's figterm wrapper re-sourced the shell and leaked harmony
+# channel tokens as "(eval):201: unmatched '" at startup. Rarely used — re-enable
+# by uncommenting both this and the post block at the bottom.
+# [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
+
 # OPENSPEC:START
 # OpenSpec shell completions configuration
 # NOTE: compinit is intentionally NOT called here — it runs once later in this
@@ -152,6 +159,16 @@ if command -v thefuck >/dev/null 2>&1; then
   fi
   source "$__tf_cache"
   unset __tf_cache
+
+  # Esc Esc to correct the previous command. `thefuck --alias` only defines the
+  # `fuck` function — it does NOT bind a key. This ZLE widget is the optional
+  # double-escape shortcut from thefuck's README; without it, Esc Esc is a no-op.
+  fuck-command-line() {
+    local FUCK="$(THEFUCK_REQUIRE_CONFIRMATION=1 thefuck $(fc -ln -1 | tail -n 1) 2>/dev/null)"
+    [[ -n $FUCK ]] && BUFFER="$FUCK" && zle end-of-line
+  }
+  zle -N fuck-command-line
+  bindkey '\e\e' fuck-command-line
 fi
 
 # Load all *.zsh files in zsh_custom/ (aliases, setopts, java env, color_maven, etc.).
@@ -285,6 +302,9 @@ setopt glob_complete
 
 
 # Completion styling
+# Reuse `ls` completion rules for the `lsd` alias (compdef needs compinit, above)
+compdef lsd=ls
+
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu select
@@ -395,3 +415,8 @@ alias cd='z'
 # NOTE: grok installer appends a block here (PATH + fpath + a duplicate
 # compinit). Its contents live in the completion-paths section above — if the
 # installer re-adds the block, delete it again.
+
+
+# Kiro CLI post block. Keep at the bottom of this file.
+# Disabled (rarely used) — see the pre block note at the top to re-enable.
+# [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
