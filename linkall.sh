@@ -56,6 +56,15 @@ ln -s ~/projects/dotfiles/claude/statusline.sh ~/.claude/statusline.sh
 ln -s ~/projects/dotfiles/claude/stop-hook.sh ~/.claude/stop-hook.sh
 ln -s ~/projects/dotfiles/claude/block-secrets.py ~/.claude/block-secrets.py
 
+# 1Password secret references (op:// pointers, no secrets — safe to version).
+# Consumed by zsh_custom/onepassword.zsh: `opsync` resolves these once into the
+# login keychain so new shells cost zero biometric prompts; `opx` resolves them
+# fresh per command. ~/.config/op also holds op's own config, so link the single
+# file rather than the directory.
+mkdir -p ~/.config/op
+rm -f ~/.config/op/agents.refs
+ln -s ~/projects/dotfiles/op/agents.refs ~/.config/op/agents.refs
+
 # Local AI coding agents — Ollama provider configs only. Machine state
 # (opencode node_modules/bun.lock, pi auth.json/sessions/settings.json) is
 # deliberately NOT versioned, so symlink the single config file in each.
@@ -114,6 +123,7 @@ ls -lah ~/.config/cmux/settings.json
 ls -lah ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh
 ls -lah ~/.hammerspoon/init.lua ~/.hammerspoon/caffeine.lua ~/.hammerspoon/ollama.lua ~/.hammerspoon/claude_sessions.lua
 ls -lah ~/.config/opencode/opencode.json ~/.pi/agent/models.json ~/.agents/skills/tavily-search
+ls -lah ~/.config/op/agents.refs
 
 # thefuck — installed via pipx pinned to python@3.11 (the brew formula has a
 # stale openssl@1.1 dep, and thefuck 3.32 imports `distutils` which Python

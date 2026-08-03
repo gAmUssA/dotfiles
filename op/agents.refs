@@ -1,0 +1,43 @@
+# 1Password secret references for agent/CLI tooling.
+#
+# This file contains NO secrets — only `op://vault/item/field` pointers. It is
+# safe to commit. Symlinked to ~/.config/op/agents.refs by linkall.sh.
+#
+# (Named .refs rather than .env so the repo's block-secrets hook doesn't have
+# to treat it as a credential file. The format is still dotenv — that's what
+# `op run --env-file` expects; the extension is irrelevant to op.)
+#
+# Consumed two ways (see zsh_custom/onepassword.zsh):
+#   opsync        — resolve every ref once, cache the values in the macOS
+#                   login keychain, so new shells start with zero op calls
+#                   and zero biometric prompts.
+#   opx <cmd>     — run <cmd> with values resolved fresh from 1Password,
+#                   bypassing the cache (via `op run --env-file`).
+#
+# Format: NAME=op://<vault>/<item>/<field>. Do not quote the value — `op run`
+# treats everything after `=` as the reference, spaces included.
+#
+# Verify a single ref by hand:  op read 'op://Agents/Google AI API/credential'
+
+# ---- Google AI Studio (nanobanana-mcp, Gemini) -----------------------------
+GOOGLE_AI_API_KEY=op://Agents/Google AI API/credential
+
+# ---- Confluent Cloud (confluent-infra MCP) ---------------------------------
+CONFLUENT_CLOUD_API_KEY=op://Agents/Confluent Cloud/api key
+CONFLUENT_CLOUD_API_SECRET=op://Agents/Confluent Cloud/api secret
+
+# ---- Tavily Search ---------------------------------------------------------
+# The claude.ai Tavily MCP auths through the claude.ai account, not this var.
+# Staged for a self-hosted Tavily MCP (`npx -y tavily-mcp`) or other consumers.
+TAVILY_API_KEY=op://Agents/Tavily API/credential
+
+# ---- Anthropic (Confluent-provided key) ------------------------------------
+# Referenced by item UUID, not title — by-title lookups intermittently fail
+# ("isn't an item") under the desktop-app CLI integration; UUID reads are stable.
+# Item title is "CFLT Anthropic API".
+# NOTE: Claude Code prompts once asking whether to use this key vs. the web
+# login — answer "No" to keep the web login. Other SDKs consume it silently.
+ANTHROPIC_API_KEY=op://Agents/mi5kvjhbrs2pbunwmbvs6pfzlq/credential
+
+# ---- OpenAI ----------------------------------------------------------------
+OPENAI_API_KEY=op://Agents/OpenAI API/credential

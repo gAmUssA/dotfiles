@@ -213,3 +213,8 @@ bench-out/
 
 # karabiner machine-local state (Karabiner writes backups into the symlinked dir)
 karabiner/automatic_backups/
+
+# Playwright MCP scratch output (page snapshots + console logs from browser
+# automation). Untracked junk, and this repo is public — never let a `git add -A`
+# sweep a captured page in here.
+.playwright-mcp/
