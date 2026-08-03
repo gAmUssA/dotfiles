@@ -1,0 +1,232 @@
+#compdef composio
+#
+# Hand-written zsh completion for the Composio CLI.
+#
+# WHY HAND-WRITTEN: composio (0.3.1) has no `completion` subcommand — it is a
+# compiled Bun/Mach-O binary with a bespoke help renderer, so there is nothing
+# to generate from. Worse, it exits 0 on an unknown subcommand and writes the
+# error to stderr, so `composio completion zsh > _composio` would produce an
+# EMPTY file and still look like a success. That is why composio is not in the
+# generated-tools array in install-completions.sh; this file is versioned in
+# the dotfiles repo and symlinked into ~/.zfunc instead.
+#
+# Regenerating by hand: `composio --help` for the top level, `composio <cmd>`
+# (bare, no --help) for a container command's COMMANDS block.
+
+_composio_toolkit() {
+  # Toolkit slugs are server-side and would need a network round-trip to
+  # enumerate — far too slow for a completion. Left free-form on purpose;
+  # `composio search <query>` is the discovery path.
+  _message 'toolkit slug (e.g. github, gmail, slack)'
+}
+
+_composio_tool_slug() {
+  _message 'tool slug (e.g. GITHUB_CREATE_ISSUE) — find one with: composio search'
+}
+
+_composio() {
+  local curcontext="$curcontext" state line ret=1
+  typeset -A opt_args
+
+  local -a top
+  top=(
+    'search:Find tools by use case across all toolkits'
+    'execute:Execute a tool (validates inputs and connections)'
+    'link:Connect your account for a toolkit/app'
+    'run:Run inline TS/JS code with shimmed CLI commands'
+    'proxy:curl-like access to a toolkit API via your connected account'
+    'tools:Browse and inspect tools before executing them'
+    'triggers:Browse and inspect trigger types'
+    'connections:Inspect and remove connected toolkit accounts'
+    'agent:Manage Composio agent identity, inbox, and handoff'
+    'orgs:List and switch organization context'
+    'artifacts:Session artifact directory'
+    'config:View and manage CLI configuration'
+    'generate:Generate typed tool bindings'
+    'install:Install Composio integrations'
+    'setup:Run first-time setup'
+    'login:Log in to Composio'
+    'logout:Log out'
+    'signup:Create a Composio account'
+    'whoami:Show the current identity'
+    'version:Show the CLI version'
+    'upgrade:Upgrade the CLI'
+    'dev:Toggle or run in dev mode'
+    'listen:Subscribe to trigger events (experimental — enable with: composio config experimental listen on)'
+  )
+
+  _arguments -C \
+    '(-h --help)'{-h,--help}'[Show help]' \
+    '(-v --version)'{-v,--version}'[Show version]' \
+    '1: :->cmd' \
+    '*:: :->args' && ret=0
+
+  case $state in
+    cmd)
+      _describe -t commands 'composio command' top && ret=0
+      ;;
+    args)
+      case $words[1] in
+        search)
+          _arguments \
+            '--toolkits[Filter by toolkit slugs, comma-separated]:toolkits:' \
+            '--limit[Maximum number of results (1-1000)]:limit:' \
+            '--human[Show formatted output instead of JSON]' \
+            '*:query:_message "semantic use-case query, e.g. \"send emails\""' && ret=0
+          ;;
+        execute)
+          _arguments \
+            '(-d --data)'{-d,--data}'[JSON/JS-style args, @file, or - for stdin]:data:' \
+            '(-p --parallel)'{-p,--parallel}'[Execute repeated <slug> -d <text> pairs concurrently]' \
+            '--account[Connected account alias, word_id, or account ID]:account:' \
+            '--file[Inject a local file into the file_uploadable input]:file:_files' \
+            '--dry-run[Validate and preview without executing]' \
+            '--get-schema[Fetch and print the CLI-facing input schema]' \
+            '*:tool slug:_composio_tool_slug' && ret=0
+          ;;
+        link)
+          _arguments \
+            '--alias[Alias for this connected account]:alias:' \
+            '1:toolkit:_composio_toolkit' && ret=0
+          ;;
+        run)
+          _arguments \
+            '(-f --file)'{-f,--file}'[Run a TS/JS file instead of inline code]:file:_files' \
+            '--dry-run[Preview execute() calls without running remote actions]' \
+            '1:code:_message "inline Bun ESNext code"' && ret=0
+          ;;
+        proxy)
+          _arguments \
+            '--toolkit[Toolkit slug whose connected account should be used]:toolkit:_composio_toolkit' \
+            '--account[Connected account alias, word_id, or account ID]:account:' \
+            '(-X --method)'{-X,--method}'[HTTP method]:method:(GET POST PUT DELETE PATCH)' \
+            '*'{-H,--header}'[HTTP header]:header:' \
+            '(-d --data)'{-d,--data}'[Request body]:data:' \
+            '1:url:_urls' && ret=0
+          ;;
+        generate)
+          _arguments \
+            '--output-dir[Output directory]:dir:_files -/' \
+            '--type-tools[Emit tool types]' \
+            '*--toolkits[Toolkits to generate for]:toolkit:_composio_toolkit' && ret=0
+          ;;
+        dev)
+          _arguments \
+            '--mode[Enable or disable dev mode]:mode:(on off)' \
+            '*:command:' && ret=0
+          ;;
+        tools)
+          _composio_container tools \
+            'list:List available tools for a toolkit' \
+            'info:Show a tool summary and its CLI-facing input schema'
+          ret=$?
+          ;;
+        triggers)
+          _composio_container triggers \
+            'list:List available trigger types' \
+            'info:View details of a specific trigger type'
+          ret=$?
+          ;;
+        connections)
+          _composio_container connections \
+            'list:List connection statuses as JSON' \
+            'remove:Interactively remove a connection'
+          ret=$?
+          ;;
+        agent)
+          _composio_container agent \
+            'signup:Sign up and optionally log in as a Composio agent' \
+            'login:Log in with an existing Composio agent key' \
+            'whoami:Show the stored Composio agent identity' \
+            'claim:Invite a human admin to claim this agent org' \
+            'inbox:Read the stored Composio agent inbox'
+          ret=$?
+          ;;
+        orgs)
+          _composio_container orgs \
+            'list:List organizations and show current selection' \
+            'switch:Switch current organization context'
+          ret=$?
+          ;;
+        artifacts)
+          _composio_container artifacts \
+            'cwd:Print the cwd-scoped session artifact directory'
+          ret=$?
+          ;;
+        config)
+          _composio_container config \
+            'experimental:View or toggle experimental feature flags'
+          ret=$?
+          ;;
+        *)
+          _default && ret=0
+          ;;
+      esac
+      ;;
+  esac
+
+  return ret
+}
+
+# Two-level dispatch: complete a container command's subcommands, then hand off
+# to per-subcommand options.
+_composio_container() {
+  local group=$1; shift
+  local -a subs=("$@")
+  local state line ret=1
+  typeset -A opt_args
+
+  _arguments -C '1: :->sub' '*:: :->subargs' && ret=0
+
+  case $state in
+    sub)
+      _describe -t "${group}-commands" "composio $group command" subs && ret=0
+      ;;
+    subargs)
+      case "$group:$words[1]" in
+        tools:list)
+          _arguments \
+            '--query[Filter by query]:query:' \
+            '--tags[Filter by tags]:tags:' \
+            '--limit[Maximum results]:limit:' \
+            '1:toolkit:_composio_toolkit' && ret=0
+          ;;
+        tools:info)          _arguments '1:tool slug:_composio_tool_slug' && ret=0 ;;
+        triggers:list)
+          _arguments \
+            '--limit[Maximum results]:limit:' \
+            '1:toolkit:_composio_toolkit' && ret=0
+          ;;
+        triggers:info)       _arguments '1:trigger slug:' && ret=0 ;;
+        connections:list)    _arguments '--toolkit[Filter by toolkit]:toolkit:_composio_toolkit' && ret=0 ;;
+        connections:remove)  _arguments '1:account:_message "toolkit slug, alias, word_id, or account ID"' && ret=0 ;;
+        orgs:list)           _arguments '--limit[Maximum results]:limit:' && ret=0 ;;
+        orgs:switch)
+          _arguments \
+            '--org-id[Organization ID]:org id:' \
+            '--limit[Maximum results]:limit:' && ret=0
+          ;;
+        agent:signup)
+          _arguments \
+            '--no-wait[Do not wait for completion]' \
+            '--no-login[Do not log in after signup]' \
+            '(-f --force)'{-f,--force}'[Force signup]' && ret=0
+          ;;
+        agent:login)         _arguments '1:composio agent key:' && ret=0 ;;
+        agent:claim)         _arguments '1:email:_email_addresses' && ret=0 ;;
+        agent:inbox)         _arguments '--limit[Maximum messages]:limit:' && ret=0 ;;
+        config:experimental)
+          # `composio config experimental` with no args lists all features.
+          _arguments \
+            '1:feature:(listen local_tools)' \
+            '2:state:(on off)' && ret=0
+          ;;
+        *) _default && ret=0 ;;
+      esac
+      ;;
+  esac
+
+  return ret
+}
+
+_composio "$@"

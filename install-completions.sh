@@ -72,6 +72,15 @@ install_completion() {
     print_status "$BLUE" "→ Installing completion for $tool..."
     
     if eval "$completion_command" > "$completion_file" 2>/dev/null; then
+        # Exit status alone is not enough. Some CLIs (composio 0.3.1, for one)
+        # exit 0 on an unknown subcommand and print the error to stderr, which
+        # would leave a zero-byte file in fpath and report success. Require
+        # actual output before believing it worked.
+        if [[ ! -s "$completion_file" ]]; then
+            print_status "$RED" "✗ $tool produced empty completion output (no real support?)"
+            rm -f "$completion_file"
+            return 1
+        fi
         print_status "$GREEN" "✓ Installed completion for $tool"
     else
         print_status "$RED" "✗ Failed to install completion for $tool"
@@ -104,6 +113,14 @@ main() {
         "terraform:terraform -install-autocomplete"
         "aws:aws_completer"
         "quarkus:quarkus completion"
+        "railway:railway completion zsh"
+    )
+
+    # Hand-written completions versioned in this repo (completions/_<tool>),
+    # for CLIs that cannot generate their own. Symlinked so edits to the repo
+    # take effect without re-running this script.
+    local -a static_completions=(
+        "composio"
     )
     
     local success_count=0
@@ -169,7 +186,36 @@ main() {
                 ;;
         esac
     done
-    
+
+    # Link the hand-written completions. Only if the tool is actually present,
+    # to match the generated-tool behaviour.
+    local repo_dir="${${(%):-%x}:A:h}"
+    for tool in "${static_completions[@]}"; do
+        (( total_count++ ))
+        local src="$repo_dir/completions/_$tool"
+        local dst="$COMPLETION_DIR/_$tool"
+        if ! command -v "$tool" &> /dev/null; then
+            print_status "$YELLOW" "⚠ $tool not found, skipping completion"
+            continue
+        fi
+        if [[ ! -f $src ]]; then
+            print_status "$RED" "✗ missing hand-written completion: $src"
+            continue
+        fi
+        if [[ -L $dst && "$(readlink "$dst")" == "$src" ]]; then
+            print_status "$BLUE" "→ $tool completion already linked"
+            ((success_count++))
+            continue
+        fi
+        rm -f "$dst"
+        if ln -s "$src" "$dst"; then
+            print_status "$GREEN" "✓ Linked hand-written completion for $tool"
+            ((success_count++))
+        else
+            print_status "$RED" "✗ Failed to link completion for $tool"
+        fi
+    done
+
     local end_time=$(date +%s)
     local duration=$((end_time - start_time))
     print_status "$GREEN" "Completion installation finished: $success_count/$total_count tools (${duration}s)"

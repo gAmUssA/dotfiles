@@ -5,6 +5,7 @@ This directory contains an automated shell completion management system for vari
 ## Files
 
 - `install-completions.sh` - Main completion installation script
+- `completions/_<tool>` - Hand-written completions for CLIs that cannot generate their own
 
 ## How it works
 
@@ -32,6 +33,20 @@ The script supports completions for:
 - **gh** - GitHub CLI
 - **terraform** - Infrastructure as Code
 - **aws** - AWS CLI
+- **railway** - Railway infrastructure CLI (`railway completion zsh`)
+
+### Hand-written (in `completions/`)
+
+- **composio** - Composio CLI
+
+  composio 0.3.1 has no `completion` subcommand — it's a compiled Bun/Mach-O
+  binary with a bespoke help renderer, so there's nothing to generate from.
+  `completions/_composio` is maintained by hand and symlinked into `~/.zfunc/`,
+  so edits in this repo take effect without re-running the installer.
+
+  To refresh it after a composio upgrade: `composio --help` gives the top-level
+  commands, and `composio <cmd>` (bare, **no** `--help`) prints a container
+  command's `COMMANDS` block.
 
 ## Manual Usage
 
@@ -55,6 +70,15 @@ To add a new CLI tool completion:
 1. Edit `install-completions.sh`
 2. Add the tool to the `tools` array in format: `"tool_name:completion_command"`
 3. Example: `"newtool:newtool completion zsh"`
+
+If the tool has no completion support, write `completions/_newtool` by hand and
+add its name to the `static_completions` array instead — the installer symlinks
+those into `~/.zfunc/`.
+
+**Check the generated file is non-empty.** Exit status alone is not enough:
+composio exits 0 on an unknown subcommand and prints the error to stderr, which
+would leave a zero-byte file in `fpath` and report success. The installer now
+guards against this, but it's worth knowing why.
 
 ## Troubleshooting
 
