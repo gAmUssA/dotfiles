@@ -41,3 +41,7 @@ ANTHROPIC_API_KEY=op://Agents/mi5kvjhbrs2pbunwmbvs6pfzlq/credential
 
 # ---- OpenAI ----------------------------------------------------------------
 OPENAI_API_KEY=op://Agents/OpenAI API/credential
+
+# ---- Exa (neural search) ---------------------------------------------------
+# EXA_API_KEY is the var both official SDKs read (exa-py, exa-js).
+EXA_API_KEY=op://Agents/Exa API/credential
