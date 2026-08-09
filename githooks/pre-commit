@@ -1,0 +1,162 @@
+#!/usr/bin/env python3
+"""pre-commit: refuse to commit secrets into this PUBLIC repo.
+
+Why this exists
+---------------
+claude/settings.json is a symlink target for ~/.claude/settings.json, so
+Claude Code writes into this repo directly whenever a setting changes. On
+2026-08-04 it re-materialised GOOGLE_AI_API_KEY as a literal value where the
+tracked file carries ${GOOGLE_AI_API_KEY}. That write does not pass through
+claude/block-secrets.py -- that hook is a PreToolUse guard on the agent's own
+tool calls, not on Claude Code's internal config writes. This hook is the
+backstop for anything that reaches the index by any route.
+
+What it checks
+--------------
+1. The full staged CONTENT of every added/modified file (not just the diff
+   hunks), so a whole new file is covered rather than only its changed lines.
+2. Literal occurrences of the real secret VALUES cached in the login keychain
+   by `opsync`. This is the check that actually matters: it needs no pattern
+   to match and catches a leaked credential whose shape we never anticipated.
+   Best-effort -- if the cache is unavailable the pattern checks still run.
+
+Bypass with `git commit --no-verify` if a finding is genuinely a false
+positive, then add the construct to ALLOW below so it stays quiet.
+"""
+import base64
+import os
+import re
+import subprocess
+import sys
+
+# Shape-based patterns. Ordered roughly by how specific they are.
+PATTERNS = {
+    "google-ai-key":  r"AIza[0-9A-Za-z_\-]{20,}",
+    "anthropic-key":  r"sk-ant-[0-9A-Za-z_\-]{20,}",
+    "openai-key":     r"sk-(?!ant)[0-9A-Za-z]{32,}",
+    "aws-access-key": r"AKIA[0-9A-Z]{16}",
+    "github-token":   r"gh[pousr]_[0-9A-Za-z]{30,}",
+    "slack-token":    r"xox[abprs]-[0-9A-Za-z-]{20,}",
+    "tavily-key":     r"tvly-[0-9A-Za-z]{16,}",
+    "stripe-live":    r"[sr]k_live_[0-9A-Za-z]{20,}",
+    "private-key":    r"-----BEGIN (?:RSA |EC |DSA |OPENSSH |PGP )?PRIVATE KEY",
+    "jwt":            r"eyJ[A-Za-z0-9_\-]{10,}\.eyJ[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}",
+    # NAME = "literal" where the literal is long and is not a reference/placeholder.
+    "assigned-secret":
+        r"(?i)(?:api[_-]?key|secret|token|password|passwd|credential)"
+        r"\s*[\"']?\s*[:=]\s*[\"'](?!\$\{|\$\(|op://|%s|\{\{|<|\*)[^\"'\s]{16,}[\"']",
+}
+
+# Constructs that look secret-shaped but are references or examples. Matched
+# against a window of text around the hit, not the hit alone, so an adjacent
+# `op://` or `${VAR}` is enough to clear it.
+ALLOW = re.compile(
+    r"\$\{[A-Za-z_][A-Za-z0-9_]*\}"   # ${VAR} indirection
+    r"|op://"                          # 1Password secret reference
+    r"|\$\([^)]+\)"                    # $(command) substitution
+    r"|EXAMPLE|PLACEHOLDER|REDACTED|CHANGEME|YOUR[_-]?[A-Z]+[_-]?(KEY|TOKEN)"
+    r"|xxxx+|<[a-z-]+>"                # <your-key> style
+    , re.I)
+
+SKIP_SUFFIXES = (".png", ".jpg", ".jpeg", ".gif", ".pdf", ".zip", ".gz",
+                 ".woff", ".woff2", ".ttf", ".icns", ".ico", ".webp")
+MAX_BYTES = 2_000_000
+
+RED, YELLOW, RESET = "\033[0;31m", "\033[1;33m", "\033[0m"
+
+
+def staged_files():
+    out = subprocess.run(
+        ["git", "diff", "--cached", "--name-only", "--diff-filter=ACMR", "-z"],
+        capture_output=True, text=True).stdout
+    return [f for f in out.split("\0") if f]
+
+
+def staged_content(path):
+    """Content as it will be committed -- the index version, not the worktree."""
+    r = subprocess.run(["git", "show", f":{path}"], capture_output=True)
+    if r.returncode != 0:
+        return None
+    if len(r.stdout) > MAX_BYTES or b"\0" in r.stdout[:8192]:
+        return None                      # too big, or binary
+    return r.stdout.decode("utf-8", errors="replace")
+
+
+def live_secret_values():
+    """Real secret values from the opsync keychain cache. Best-effort."""
+    try:
+        r = subprocess.run(
+            ["security", "find-generic-password", "-w",
+             "-s", os.environ.get("OP_KEYCHAIN_SERVICE", "dotfiles-agent-secrets"),
+             "-a", os.environ.get("USER", "")],
+            capture_output=True, text=True, timeout=5)
+        if r.returncode != 0:
+            return {}
+        decoded = base64.b64decode(r.stdout.strip()).decode()
+    except Exception:
+        return {}
+    values = {}
+    for line in decoded.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        name, _, value = line.partition("=")
+        if len(value) >= 12:             # too short to be distinctive
+            values[value] = name
+    return values
+
+
+def main():
+    files = staged_files()
+    if not files:
+        return 0
+
+    live = live_secret_values()
+    findings = []
+
+    for path in files:
+        if path.endswith(SKIP_SUFFIXES):
+            continue
+        text = staged_content(path)
+        if text is None:
+            continue
+
+        for name, pattern in PATTERNS.items():
+            for m in re.finditer(pattern, text):
+                window = text[max(0, m.start() - 80): m.end() + 80]
+                if ALLOW.search(window):
+                    continue
+                line = text.count("\n", 0, m.start()) + 1
+                findings.append((path, line, name, m.group(0), False))
+
+        # Literal value match -- no pattern required, so it catches anything.
+        for value, var in live.items():
+            idx = text.find(value)
+            if idx != -1:
+                line = text.count("\n", 0, idx) + 1
+                findings.append((path, line, f"LIVE VALUE of {var}", value, True))
+
+    if not findings:
+        return 0
+
+    print(f"\n{RED}✗ pre-commit: refusing to commit — possible secrets staged{RESET}\n",
+          file=sys.stderr)
+    for path, line, kind, hit, is_live in findings:
+        shown = f"{hit[:8]}…{hit[-4:]} ({len(hit)} chars)" if len(hit) > 16 else hit
+        mark = f"{RED}!!{RESET}" if is_live else f"{YELLOW}??{RESET}"
+        print(f"  {mark} {path}:{line}  [{kind}]  {shown}", file=sys.stderr)
+
+    if any(f[4] for f in findings):
+        print(f"\n{RED}  At least one hit is an EXACT match for a live secret in your"
+              f" 1Password/keychain cache.{RESET}", file=sys.stderr)
+        print("  Do not bypass this. Replace it with ${VAR} or an op:// reference.",
+              file=sys.stderr)
+
+    print(f"\n  This repo is PUBLIC. Fix the file, or if this is a false positive:",
+          file=sys.stderr)
+    print("      git commit --no-verify\n", file=sys.stderr)
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

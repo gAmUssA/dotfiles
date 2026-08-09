@@ -56,6 +56,17 @@ ln -s ~/projects/dotfiles/claude/statusline.sh ~/.claude/statusline.sh
 ln -s ~/projects/dotfiles/claude/stop-hook.sh ~/.claude/stop-hook.sh
 ln -s ~/projects/dotfiles/claude/block-secrets.py ~/.claude/block-secrets.py
 
+# Git hooks for THIS repo. Not a symlink into .git/hooks — core.hooksPath points
+# git at the version-tracked githooks/ directory instead, so the hooks travel
+# with the repo and a new machine picks them up here.
+#
+# githooks/pre-commit matters because ~/.claude/settings.json is a symlink INTO
+# this repo: Claude Code writes config changes straight into tracked content,
+# and those writes don't pass through claude/block-secrets.py (that one guards
+# the agent's tool calls, not Claude Code's own config writes). This repo is
+# public, so the pre-commit scan is the backstop.
+git -C ~/projects/dotfiles config core.hooksPath githooks
+
 # 1Password secret references (op:// pointers, no secrets — safe to version).
 # Consumed by zsh_custom/onepassword.zsh: `opsync` resolves these once into the
 # login keychain so new shells cost zero biometric prompts; `opx` resolves them
@@ -124,6 +135,7 @@ ls -lah ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh
 ls -lah ~/.hammerspoon/init.lua ~/.hammerspoon/caffeine.lua ~/.hammerspoon/ollama.lua ~/.hammerspoon/claude_sessions.lua
 ls -lah ~/.config/opencode/opencode.json ~/.pi/agent/models.json ~/.agents/skills/tavily-search
 ls -lah ~/.config/op/agents.refs
+echo "git hooks -> $(git -C ~/projects/dotfiles config core.hooksPath) ($(ls ~/projects/dotfiles/githooks | tr '\n' ' '))"
 
 # thefuck — installed via pipx pinned to python@3.11 (the brew formula has a
 # stale openssl@1.1 dep, and thefuck 3.32 imports `distutils` which Python
