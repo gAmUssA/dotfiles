@@ -1,5 +1,7 @@
 {
-  "env": {},
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
@@ -31,7 +33,6 @@
     "deny": [],
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -99,16 +100,18 @@
     "context7@claude-plugins-official": true,
     "axiom@axiom-marketplace": true,
     "swift-lsp@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": false,
     "playwright@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true,
-    "commit-commands@claude-plugins-official": true,
-    "jdtls-lsp@claude-plugins-official": true,
-    "kotlin-lsp@claude-plugins-official": true,
-    "telegram@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": false,
+    "commit-commands@claude-plugins-official": false,
+    "jdtls-lsp@claude-plugins-official": false,
+    "kotlin-lsp@claude-plugins-official": false,
+    "telegram@claude-plugins-official": false,
     "banana-claude@banana-claude-marketplace": true,
-    "code-simplifier@claude-plugins-official": true,
-    "ui-ux-pro-max@ui-ux-pro-max-skill": true
+    "code-simplifier@claude-plugins-official": false,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
+    "composio@composio": false,
+    "i-have-adhd@i-have-adhd": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
@@ -121,7 +124,8 @@
       "source": {
         "source": "github",
         "repo": "CharlesWiltgen/Axiom"
-      }
+      },
+      "autoUpdate": true
     },
     "banana-claude-marketplace": {
       "source": {
@@ -140,13 +144,39 @@
         "source": "github",
         "repo": "quarkusio/skills"
       }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "cloudflare": {
+      "source": {
+        "source": "github",
+        "repo": "cloudflare/skills"
+      }
+    },
+    "composio": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/ComposioHQ/composio-plugin-cc.git"
+      }
+    },
+    "i-have-adhd": {
+      "source": {
+        "source": "github",
+        "repo": "ayghri/i-have-adhd"
+      }
     }
   },
+  "tui": "fullscreen",
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
   "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
   "theme": "dark-daltonized",
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
@@ -164,5 +194,6 @@
         "NANOBANANA_MODEL": "gemini-3.1-flash-image-preview"
       }
     }
-  }
+  },
+  "model": "claude-fable-5[1m]"
 }
