@@ -7,7 +7,15 @@
 # Output is always 2 columns: either `ICON ` (icon + space) or 2 spaces —
 # so the tab width never changes, which prevents status-bar reflow flicker.
 #
-# Vendored from https://github.com/dcryan/tmux-agentbar (MIT)
+# The status shown is an aggregate over the window's live panes, so a window
+# hosting an agent team reads as one thing: `thinking` while any teammate is
+# still working, `waiting` the moment any of them needs you, `done` only once
+# the last one lands. See agentbar-lib.sh for the precedence rules.
+#
+# Vendored from https://github.com/dcryan/tmux-agentbar (MIT), with local
+# pane-keying changes — see agentbar-lib.sh.
+
+. "$(dirname "${BASH_SOURCE[0]}")/agentbar-lib.sh"
 
 # Nerd Font fa-robot (U+EE0D). Emitted on every agent window so the tab
 # clearly reads as "agent lives here" regardless of which agent it is —
@@ -33,17 +41,15 @@ icon_for() {
     esac
 }
 
-# True if any descendant process of the pane's root pid has argv matching
-# a known agent. tmux's #{pane_current_command} is unreliable (Claude Code
+# True if any descendant process of the given pane pids has argv matching a
+# known agent. tmux's #{pane_current_command} is unreliable (Claude Code
 # rewrites its process title to its version string), so we walk the tree.
 has_agent_in_window() {
-    local win_target="$1"
-    local pids
-    # Collapse newlines to spaces — BSD awk (macOS) errors on `-v roots=$pids`
+    # Pids arrive space-separated — BSD awk (macOS) errors on `-v roots=$pids`
     # when $pids contains a newline, which happens in any window with >1 pane.
     # Upstream bug; fixed here.
-    pids=$(tmux list-panes -t "$win_target" -F '#{pane_pid}' 2>/dev/null | tr '\n' ' ')
-    [ -z "$pids" ] && return 1
+    local pids="$1"
+    [ -z "${pids// /}" ] && return 1
 
     ps -ao pid=,ppid=,args= 2>/dev/null | awk -v roots="$pids" '
         BEGIN { n = split(roots, r, /[[:space:]]+/); for (i=1; i<=n; i++) if (r[i] != "") tree[r[i]] = 1 }
@@ -71,19 +77,21 @@ session_name=$(tmux display-message -p '#{session_name}' 2>/dev/null)
 session_id=$(tmux display-message -p '#{session_id}' 2>/dev/null)
 [ -z "$session_name" ] || [ -z "$session_id" ] && blank
 
-has_agent_in_window "${session_name}:${win_idx}" || blank
+# One list-panes call for both the pids (agent detection) and the pane ids
+# (state aggregation) — this runs once per window per second, so the round
+# trip is worth collapsing.
+panes=$(tmux list-panes -t "${session_name}:${win_idx}" \
+    -F '#{pane_id} #{pane_pid}' 2>/dev/null)
+[ -z "$panes" ] && blank
 
-state_file="${TMPDIR:-/tmp}/tmux-agentbar/${session_id}/win-${win_idx}"
-status="idle"
-[ -f "$state_file" ] && status=$(cat "$state_file")
+pane_ids=$(printf '%s\n' "$panes" | cut -d' ' -f1 | tr '\n' ' ')
+pane_pids=$(printf '%s\n' "$panes" | cut -d' ' -f2 | tr '\n' ' ')
 
-# Decay stale `waiting` → idle. Claude Code doesn't fire a hook when a
-# notification is dismissed, so `waiting` can stick long after the user
-# responded. `thinking` must NOT decay (long tasks legitimately run for
-# minutes without firing another hook). `done`/`idle` are terminal.
-if [ "$status" = "waiting" ] && [ -f "$state_file" ]; then
-    age=$(( $(date +%s) - $(stat -f %m "$state_file" 2>/dev/null || stat -c %Y "$state_file" 2>/dev/null || echo 0) ))
-    [ "$age" -gt 30 ] && status="idle"
-fi
+has_agent_in_window "$pane_pids" || blank
+
+state_dir=$(agentbar_state_dir "$session_id" "$win_idx")
+# Word splitting is the point here: pane ids are `%N` tokens, never globs.
+# shellcheck disable=SC2086
+status=$(agentbar_window_status "$state_dir" $pane_ids)
 
 printf '%s  %s ' "$ROBOT" "$(icon_for "$status")"
