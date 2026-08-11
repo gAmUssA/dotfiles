@@ -34,7 +34,7 @@ If you already have config at any of those paths, back it up before running — 
 Claude Code settings live at `claude/settings.json`, symlinked to `~/.claude/settings.json`.
 The per-machine file `~/.claude/settings.local.json` stays local and is gitignored.
 
-### App preferences (Moom, Bartender, iStat Menus, PopClip, Marked, TaskPaper, Cyberduck)
+### App preferences (Moom, Bartender, iStat Menus, PopClip, Marked, TaskPaper, Cyberduck, iTerm2)
 
 GUI app plists can't be symlinked — cfprefsd caches and rewrites them, which is
 why the old Mackup setup silently died. Instead, snapshots:
@@ -48,6 +48,24 @@ Snapshots live in `prefs/` as XML plists. The backup script scans every export
 for license/serial/credential key names and refuses to write ones that match
 (this repo is public — that's also why TextExpander is excluded; its prefs
 carry its serial number, and it cloud-syncs itself anyway).
+
+iTerm2 is snapshotted the same way rather than through its own "load
+preferences from a custom folder" option — that writes on every quit with no
+review step, and this repo is public.
+
+### macOS system settings
+
+The layer the three mechanisms above don't cover: Dock, Finder, keyboard, hot
+corners, trackpad, screenshots.
+
+```bash
+./macos-defaults.sh --dry-run   # show current vs intended, change nothing
+./macos-defaults.sh             # apply, then restart Dock/Finder/SystemUIServer
+```
+
+55 settings, all read off this machine rather than copied from a generic
+"awesome macOS defaults" list — if it's not customised here, it's not in there.
+Idempotent. Tap-to-click and key-repeat rates need a logout to take effect.
 
 ### Ollama models
 
