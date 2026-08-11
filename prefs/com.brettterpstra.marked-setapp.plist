@@ -2,10 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AnnouncementsDismissedFilenames</key>
+	<array>
+		<string>2025-11-11_2.html</string>
+		<string>2025-11-11.html</string>
+	</array>
 	<key>AnnouncementsLastCheckDate</key>
-	<date>2026-05-24T15:05:32Z</date>
+	<date>2026-07-09T19:27:34Z</date>
 	<key>AnnouncementsLastShownFilename</key>
-	<string>2025-11-11_2.html</string>
+	<string>2025-11-11.html</string>
+	<key>LastRunAppVersion</key>
+	<string>3.1.17</string>
 	<key>NSNavPanelExpandedSizeForOpenMode</key>
 	<string>{880, 448}</string>
 	<key>NSOSPLastRootDirectory</key>
@@ -94,6 +101,24 @@
 	<string>Discount</string>
 	<key>enableMiniMap</key>
 	<true/>
+	<key>externalEditor</key>
+	<string>Ulysses</string>
+	<key>externalEditorURL</key>
+	<string>/Applications/Setapp/Ulysses.app</string>
+	<key>externalEditorUserCleared</key>
+	<false/>
+	<key>externalImageEditor</key>
+	<string>Pixelmator</string>
+	<key>externalImageEditorURL</key>
+	<string>/Applications/Pixelmator.app</string>
+	<key>externalImageEditorUserCleared</key>
+	<false/>
+	<key>externalMarkupEditor</key>
+	<string>CleanShot X</string>
+	<key>externalMarkupEditorURL</key>
+	<string>/Applications/Setapp/CleanShot X.app</string>
+	<key>externalMarkupEditorUserCleared</key>
+	<false/>
 	<key>firstRun</key>
 	<false/>
 	<key>hasCustomCSSPath</key>
@@ -421,55 +446,245 @@
 	<true/>
 	<key>syntaxStyles</key>
 	<array>
+		<string>1c-light</string>
+		<string>a11y-dark</string>
+		<string>a11y-light</string>
 		<string>agate</string>
+		<string>an-old-hope</string>
 		<string>androidstudio</string>
 		<string>arduino-light</string>
 		<string>arta</string>
 		<string>atom-one-dark</string>
+		<string>atom-one-dark-reasonable</string>
 		<string>atom-one-light</string>
+		<string>base16-3024</string>
+		<string>base16-apathy</string>
+		<string>base16-apprentice</string>
+		<string>base16-ashes</string>
+		<string>base16-atelier-cave</string>
+		<string>base16-atelier-cave-light</string>
+		<string>base16-atelier-dune</string>
+		<string>base16-atelier-dune-light</string>
+		<string>base16-atelier-estuary</string>
+		<string>base16-atelier-estuary-light</string>
+		<string>base16-atelier-forest</string>
+		<string>base16-atelier-forest-light</string>
+		<string>base16-atelier-heath</string>
+		<string>base16-atelier-heath-light</string>
+		<string>base16-atelier-lakeside</string>
+		<string>base16-atelier-lakeside-light</string>
+		<string>base16-atelier-plateau</string>
+		<string>base16-atelier-plateau-light</string>
+		<string>base16-atelier-savanna</string>
+		<string>base16-atelier-savanna-light</string>
+		<string>base16-atelier-seaside</string>
+		<string>base16-atelier-seaside-light</string>
+		<string>base16-atelier-sulphurpool</string>
+		<string>base16-atelier-sulphurpool-light</string>
+		<string>base16-atlas</string>
+		<string>base16-bespin</string>
+		<string>base16-black-metal</string>
+		<string>base16-black-metal-bathory</string>
+		<string>base16-black-metal-burzum</string>
+		<string>base16-black-metal-dark-funeral</string>
+		<string>base16-black-metal-gorgoroth</string>
+		<string>base16-black-metal-immortal</string>
+		<string>base16-black-metal-khold</string>
+		<string>base16-black-metal-marduk</string>
+		<string>base16-black-metal-mayhem</string>
+		<string>base16-black-metal-nile</string>
+		<string>base16-black-metal-venom</string>
+		<string>base16-brewer</string>
+		<string>base16-bright</string>
+		<string>base16-brogrammer</string>
+		<string>base16-brush-trees</string>
+		<string>base16-brush-trees-dark</string>
+		<string>base16-chalk</string>
+		<string>base16-circus</string>
+		<string>base16-classic-dark</string>
+		<string>base16-classic-light</string>
+		<string>base16-codeschool</string>
+		<string>base16-colors</string>
+		<string>base16-cupcake</string>
+		<string>base16-cupertino</string>
+		<string>base16-danqing</string>
+		<string>base16-darcula</string>
+		<string>base16-dark-violet</string>
+		<string>base16-darkmoss</string>
+		<string>base16-darktooth</string>
+		<string>base16-decaf</string>
+		<string>base16-default-dark</string>
+		<string>base16-default-light</string>
+		<string>base16-dirtysea</string>
+		<string>base16-dracula</string>
+		<string>base16-edge-dark</string>
+		<string>base16-edge-light</string>
+		<string>base16-eighties</string>
+		<string>base16-embers</string>
+		<string>base16-equilibrium-dark</string>
+		<string>base16-equilibrium-gray-dark</string>
+		<string>base16-equilibrium-gray-light</string>
+		<string>base16-equilibrium-light</string>
+		<string>base16-espresso</string>
+		<string>base16-eva</string>
+		<string>base16-eva-dim</string>
+		<string>base16-flat</string>
+		<string>base16-framer</string>
+		<string>base16-fruit-soda</string>
+		<string>base16-gigavolt</string>
+		<string>base16-github</string>
+		<string>base16-google-dark</string>
+		<string>base16-google-light</string>
+		<string>base16-grayscale-dark</string>
+		<string>base16-grayscale-light</string>
+		<string>base16-green-screen</string>
+		<string>base16-gruvbox-dark-hard</string>
+		<string>base16-gruvbox-dark-medium</string>
+		<string>base16-gruvbox-dark-pale</string>
+		<string>base16-gruvbox-dark-soft</string>
+		<string>base16-gruvbox-light-hard</string>
+		<string>base16-gruvbox-light-medium</string>
+		<string>base16-gruvbox-light-soft</string>
+		<string>base16-hardcore</string>
+		<string>base16-harmonic16-dark</string>
+		<string>base16-harmonic16-light</string>
+		<string>base16-heetch-dark</string>
+		<string>base16-heetch-light</string>
+		<string>base16-helios</string>
+		<string>base16-hopscotch</string>
+		<string>base16-horizon-dark</string>
+		<string>base16-horizon-light</string>
+		<string>base16-humanoid-dark</string>
+		<string>base16-humanoid-light</string>
+		<string>base16-ia-dark</string>
+		<string>base16-ia-light</string>
+		<string>base16-icy-dark</string>
+		<string>base16-ir-black</string>
+		<string>base16-isotope</string>
+		<string>base16-kimber</string>
+		<string>base16-london-tube</string>
+		<string>base16-macintosh</string>
+		<string>base16-marrakesh</string>
+		<string>base16-materia</string>
+		<string>base16-material</string>
+		<string>base16-material-darker</string>
+		<string>base16-material-lighter</string>
+		<string>base16-material-palenight</string>
+		<string>base16-material-vivid</string>
+		<string>base16-mellow-purple</string>
+		<string>base16-mexico-light</string>
+		<string>base16-mocha</string>
+		<string>base16-monokai</string>
+		<string>base16-nebula</string>
+		<string>base16-nord</string>
+		<string>base16-nova</string>
+		<string>base16-ocean</string>
+		<string>base16-oceanicnext</string>
+		<string>base16-one-light</string>
+		<string>base16-onedark</string>
+		<string>base16-outrun-dark</string>
+		<string>base16-papercolor-dark</string>
+		<string>base16-papercolor-light</string>
+		<string>base16-paraiso</string>
+		<string>base16-pasque</string>
+		<string>base16-phd</string>
+		<string>base16-pico</string>
+		<string>base16-pop</string>
+		<string>base16-porple</string>
+		<string>base16-qualia</string>
+		<string>base16-railscasts</string>
+		<string>base16-rebecca</string>
+		<string>base16-ros-pine</string>
+		<string>base16-ros-pine-dawn</string>
+		<string>base16-ros-pine-moon</string>
+		<string>base16-sagelight</string>
+		<string>base16-sandcastle</string>
+		<string>base16-seti-ui</string>
+		<string>base16-shapeshifter</string>
+		<string>base16-silk-dark</string>
+		<string>base16-silk-light</string>
+		<string>base16-snazzy</string>
+		<string>base16-solar-flare</string>
+		<string>base16-solar-flare-light</string>
+		<string>base16-solarized-dark</string>
+		<string>base16-solarized-light</string>
+		<string>base16-spacemacs</string>
+		<string>base16-summercamp</string>
+		<string>base16-summerfruit-dark</string>
+		<string>base16-summerfruit-light</string>
+		<string>base16-synth-midnight-terminal-dark</string>
+		<string>base16-synth-midnight-terminal-light</string>
+		<string>base16-tango</string>
+		<string>base16-tender</string>
+		<string>base16-tomorrow</string>
+		<string>base16-tomorrow-night</string>
+		<string>base16-twilight</string>
+		<string>base16-unikitty-dark</string>
+		<string>base16-unikitty-light</string>
+		<string>base16-vulcan</string>
+		<string>base16-windows-10</string>
+		<string>base16-windows-10-light</string>
+		<string>base16-windows-95</string>
+		<string>base16-windows-95-light</string>
+		<string>base16-windows-high-contrast</string>
+		<string>base16-windows-high-contrast-light</string>
+		<string>base16-windows-nt</string>
+		<string>base16-windows-nt-light</string>
+		<string>base16-woodland</string>
+		<string>base16-xcode-dusk</string>
+		<string>base16-zenburn</string>
 		<string>codepen-embed</string>
 		<string>color-brewer</string>
-		<string>darcula</string>
 		<string>dark</string>
 		<string>default</string>
-		<string>dracula</string>
 		<string>foundation</string>
 		<string>github</string>
-		<string>github-gist</string>
+		<string>github-dark</string>
+		<string>github-dark-dimmed</string>
 		<string>googlecode</string>
 		<string>grayscale</string>
-		<string>gruvbox-dark</string>
-		<string>gruvbox-light</string>
-		<string>hopscotch</string>
 		<string>hybrid</string>
 		<string>idea</string>
+		<string>intellij-light</string>
 		<string>ir-black</string>
+		<string>isbl-editor-dark</string>
+		<string>isbl-editor-light</string>
+		<string>kimbie-dark</string>
+		<string>kimbie-light</string>
 		<string>mono-blue</string>
 		<string>monokai</string>
 		<string>monokai-sublime</string>
+		<string>night-owl</string>
+		<string>nnfx-dark</string>
+		<string>nnfx-light</string>
+		<string>nord</string>
 		<string>obsidian</string>
-		<string>ocean</string>
+		<string>panda-syntax-dark</string>
+		<string>panda-syntax-light</string>
 		<string>paraiso-dark</string>
 		<string>paraiso-light</string>
 		<string>pojoaque</string>
 		<string>purebasic</string>
 		<string>qtcreator-dark</string>
 		<string>qtcreator-light</string>
-		<string>railscasts</string>
 		<string>rainbow</string>
+		<string>rose-pine</string>
+		<string>rose-pine-dawn</string>
+		<string>rose-pine-moon</string>
 		<string>school-book</string>
-		<string>solarized-dark</string>
-		<string>solarized-light</string>
+		<string>shades-of-purple</string>
+		<string>srcery</string>
+		<string>stackoverflow-dark</string>
+		<string>stackoverflow-light</string>
 		<string>sunburst</string>
-		<string>tomorrow</string>
-		<string>tomorrow-night</string>
+		<string>tokyo-night-dark</string>
+		<string>tokyo-night-light</string>
 		<string>tomorrow-night-blue</string>
 		<string>tomorrow-night-bright</string>
-		<string>tomorrow-night-eighties</string>
 		<string>vs</string>
+		<string>vs2015</string>
 		<string>xcode</string>
 		<string>xt256</string>
-		<string>zenburn</string>
 	</array>
 	<key>tempWords</key>
 	<string></string>

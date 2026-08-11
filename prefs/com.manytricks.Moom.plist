@@ -877,6 +877,8 @@
 					<false/>
 					<key>Generic</key>
 					<true/>
+					<key>Hide Other Applications</key>
+					<false/>
 					<key>Identifier</key>
 					<string>C9BE2F4E-FF0E-419B-897D-5737E66ED92D</string>
 					<key>Snapshot</key>
@@ -940,6 +942,8 @@
 					<false/>
 					<key>Generic</key>
 					<true/>
+					<key>Hide Other Applications</key>
+					<false/>
 					<key>Identifier</key>
 					<string>5C0F5C49-330D-475D-A6A1-68F5CE5600AF</string>
 					<key>Snapshot</key>
@@ -1003,6 +1007,8 @@
 					<false/>
 					<key>Generic</key>
 					<true/>
+					<key>Hide Other Applications</key>
+					<false/>
 					<key>Identifier</key>
 					<string>DA9FC30E-99F6-4B3B-B7E5-324F30631B91</string>
 					<key>Snapshot</key>
@@ -1393,7 +1399,7 @@
 	<key>NSStatusItem Preferred Position Item-0</key>
 	<real>5584</real>
 	<key>NSStatusItem Preferred Position com.manytricks.Moom.StatusItem</key>
-	<real>6139</real>
+	<real>6208</real>
 	<key>NSToolbar Configuration Preferences (App Store) 2.0</key>
 	<dict>
 		<key>TB Display Mode</key>
@@ -1430,13 +1436,13 @@
 	<key>NSWindow Frame NSSpellCheckerSpellingPanel</key>
 	<string>407 369 431 290 0 0 1496 939 </string>
 	<key>NSWindow Frame NSSpellCheckerSubstitutionsPanel2</key>
-	<string>842 474 359 150 0 0 1728 1085 </string>
+	<string>-954 808 359 150 -1920 352 1920 1049 </string>
 	<key>NSWindow Frame SUStatusFrame</key>
-	<string>672 710 384 139 0 0 1728 1085 </string>
+	<string>556 599 384 139 0 0 1496 937 </string>
 	<key>NSWindow Frame Settings Window (4001)</key>
 	<string>0 0 1496 939 0 0 1496 939 </string>
 	<key>PMSparkleWrapperUpdateStatus</key>
-	<string>4.4.2:1780757028:4.5</string>
+	<string>4.5.1:1786383624:</string>
 	<key>PMStatusItemCoveredNotificationsDisabled</key>
 	<true/>
 	<key>Palette</key>
@@ -1457,7 +1463,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2026-06-06T14:43:48Z</date>
+	<date>2026-08-10T17:40:23Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SUUpdateGroupIdentifier</key>

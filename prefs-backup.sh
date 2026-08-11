@@ -36,7 +36,20 @@ domains=(
   "com.brettterpstra.marked-setapp"      # Marked (Setapp)
   "com.hogbaysoftware.TaskPaper3.direct" # TaskPaper
   "ch.sudo.cyberduck"                    # Cyberduck (bookmarks live in App Support; passwords in keychain)
+  "com.googlecode.iterm2"                # iTerm2 — profiles, colours, keymaps, hotkey window
 )
+
+# On iTerm2 specifically: it also offers "Load preferences from a custom
+# folder" (Preferences > General > Settings), which writes its plist straight
+# into a directory of your choosing. That was deliberately NOT used here.
+# It saves on every quit with no review step, so anything iTerm decides to
+# persist would land in a PUBLIC repo unscanned. Going through this script
+# keeps the credential scan below in the loop, at the cost of running it by
+# hand after changing settings.
+#
+# Audited before adding: 9004 keys, no credentials. iTerm2 keeps AI API keys
+# and the password manager in the Keychain, not in this plist, and the only
+# `Command`/`Working Directory` values are shell paths and $HOME.
 
 # Key names that must never land in a public repo. Scans <key> names only —
 # values are allowed to contain these words (e.g. a snippet about "tokens").
