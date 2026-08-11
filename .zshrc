@@ -420,3 +420,11 @@ alias cd='z'
 # Kiro CLI post block. Keep at the bottom of this file.
 # Disabled (rarely used) — see the pre block note at the top to re-enable.
 # [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
+
+# >>> railway initialize >>>
+source "$HOME/.railway/env"
+# <<< railway initialize <<<
+
+# Composio CLI
+export COMPOSIO_INSTALL_DIR="/Users/vikgamov/.composio"
+export PATH="$COMPOSIO_INSTALL_DIR:$PATH"
