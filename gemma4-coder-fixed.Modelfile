@@ -1,0 +1,20 @@
+# gemma4-coder-fixed — wraps the yuxinlu1 gemma-4-12B coder GGUF (Q4_K_M) with a
+# template that primes the model's "final" channel, so the leaked harmony
+# control tokens (<|channel>thought / <channel|>) no longer appear in output.
+FROM hf.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF:Q4_K_M
+
+# Original template uses <|turn>role ... <turn|> delimiters. We prime the model
+# turn with an opened+closed "final" channel so generation begins in the answer
+# channel instead of emitting a (leaking) thought channel.
+TEMPLATE """{{ if .System }}<bos><|turn>system
+{{ .System }}<turn|>
+{{ end }}{{ if .Prompt }}<|turn>user
+{{ .Prompt }}<turn|>
+{{ end }}<|turn>model
+<|channel>final<channel|>{{ .Response }}<turn|>
+"""
+
+PARAMETER stop <bos>
+PARAMETER stop <|turn>
+PARAMETER stop <turn|>
+PARAMETER temperature 0.1
