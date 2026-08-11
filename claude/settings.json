@@ -33,6 +33,7 @@
     "deny": [],
     "defaultMode": "auto"
   },
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -194,6 +195,5 @@
         "NANOBANANA_MODEL": "gemini-3.1-flash-image-preview"
       }
     }
-  },
-  "model": "claude-fable-5[1m]"
+  }
 }
