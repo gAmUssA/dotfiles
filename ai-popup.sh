@@ -15,12 +15,27 @@
 
 set -u
 
-# Default: qwen2.5-coder:7b — best speed/quality balance in the 5-prompt suite
-# (see ollama-bench.sh): 4.5/5 correct at a 2.85s cold start, the only sub-9s
-# model to get stdlib code-gen, the debug fix, AND the BSD-vs-GNU trap right.
-# For top quality at the cost of a ~9s load, pass qwen3-coder:30b. Override by
-# passing any installed model as the first arg.
-MODEL="${1:-qwen2.5-coder:7b}"
+# Default: gemma4:26b. Changed 2026-08-11 from qwen2.5-coder:7b on the compile-
+# and-run bench (bench-results/m1-max-64gb.md), which grades by actually
+# building and executing the output rather than eyeballing it:
+#
+#   qwen2.5-coder:7b   1/3   49.2 tok/s   fails Kotlin AND Swift
+#   gemma4:26b         3/3   58.2 tok/s
+#
+# It wins on quality and throughput at once. Latency is a wash despite the size
+# — 26B total but ~4B active per token (MoE), so kotlin 4.5s vs 4.3s and swift
+# 5.0s vs 4.6s. Only Java is slower (16s vs 6.9s). Costs 17 GB resident instead
+# of 4.7 GB, which is nothing on 64 GB.
+#
+# gemma4:12b is the small-footprint alternative: also 3/3, but half the
+# throughput (27.8 tok/s) and roughly double the latency.
+#
+# NOT the right pick for agentic work — that bench is one-shot only and cannot
+# see tool use, where Gemma 4 is reported weak. OpenCode/Pi keep
+# qwen3-coder:30b-ctx64k.
+#
+# Override by passing any installed model as the first arg.
+MODEL="${1:-gemma4:26b}"
 
 # tmux session names can't contain `:`, `/`, or `.`; mangle for the model→name
 # map. (claude-dev.sh hits the same restriction with project paths.)
