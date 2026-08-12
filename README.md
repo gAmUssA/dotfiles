@@ -53,6 +53,12 @@ iTerm2 is snapshotted the same way rather than through its own "load
 preferences from a custom folder" option — that writes on every quit with no
 review step, and this repo is public.
 
+PopClip needs two things, not one. Its settings live in `com.pilotmoon.popclip`
+(98 keys); the `-setapp` domain holds only the menu-bar position. Its 53
+extensions are `.popclipext` bundles on disk, not plist entries, so they are
+rsynced to `popclip/Extensions/` and restored alongside the domain — without
+them you get settings pointing at extensions that aren't installed.
+
 ### macOS system settings
 
 The layer the three mechanisms above don't cover: Dock, Finder, keyboard, hot

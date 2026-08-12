@@ -29,6 +29,24 @@ for f in "$IN"/*.plist; do
   fi
 done
 
+# PopClip extensions are .popclipext bundles on disk, not plist entries, so the
+# domain import above restores settings that reference extensions this machine
+# may not have. Copy the bundles back too.
+#
+# No --delete here, unlike the backup side: this must not remove an extension
+# installed only on THIS machine. It adds and updates, never destroys.
+SRC="$HERE/popclip/Extensions"
+if [[ -d "$SRC" ]]; then
+  DST="$HOME/Library/Application Support/PopClip/Extensions"
+  mkdir -p "$DST"
+  if rsync -a "$SRC/" "$DST/"; then
+    printf '[ok]   popclip extensions (%s bundles -> %s)\n' \
+      "$(ls -1 "$SRC" | wc -l | tr -d ' ')" "$DST"
+  else
+    printf '[FAIL] popclip extensions\n'
+  fi
+fi
+
 echo
 echo "Done. Restart the affected apps (Moom, Bartender, iStat Menus, PopClip,"
-echo "Marked, TaskPaper, Cyberduck) — they read preferences at launch."
+echo "Marked, TaskPaper, Cyberduck, iTerm2) — they read preferences at launch."

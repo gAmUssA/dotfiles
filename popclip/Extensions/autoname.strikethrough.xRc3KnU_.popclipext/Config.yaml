@@ -1,0 +1,15 @@
+#popclip
+{
+  "name": "Strikethrough",
+  "requirements": [
+    "text",
+    "paste"
+  ],
+  "actions": [
+    {
+      "title": "Strikethrough",
+      "icon": "iconify:tabler:strikethrough",
+      "javascript": "popclip.pasteText(popclip.input.text.split('').map(char => char + '\\u0336').join(''));"
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Installed Extensions</key>
+	<array>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.copy-as-markdown</string>
+			<key>Extension Name</key>
+			<string>Copy Markdown</string>
+			<key>Package Name</key>
+			<string>CopyAsMarkdown.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.pasteplain</string>
+			<key>Extension Name</key>
+			<string>Paste =</string>
+			<key>Package Name</key>
+			<string>PasteAndMatch.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.short-menu</string>
+			<key>Extension Name</key>
+			<string>Short Menu</string>
+			<key>Package Name</key>
+			<string>ShortMenu.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.open-in-chrome</string>
+			<key>Extension Name</key>
+			<string>Open in Chrome</string>
+			<key>Package Name</key>
+			<string>OpenInChrome.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.fantastical</string>
+			<key>Extension Name</key>
+			<string>Fantastical 3</string>
+			<key>Package Name</key>
+			<string>Fantastical3.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.open-in-safari</string>
+			<key>Extension Name</key>
+			<string>Open in Safari</string>
+			<key>Package Name</key>
+			<string>OpenInSafari.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.charcount</string>
+			<key>Extension Name</key>
+			<string>Character Count</string>
+			<key>Package Name</key>
+			<string>CharCount.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.title-case</string>
+			<key>Extension Name</key>
+			<string>Title Case</string>
+			<key>Package Name</key>
+			<string>TitleCase.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.swap</string>
+			<key>Extension Name</key>
+			<string>Swap</string>
+			<key>Package Name</key>
+			<string>Swap.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.formatting</string>
+			<key>Extension Name</key>
+			<string>Formatting</string>
+			<key>Package Name</key>
+			<string>Formatting.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.wordcount</string>
+			<key>Extension Name</key>
+			<string>Word Count</string>
+			<key>Package Name</key>
+			<string>WordCount.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.pocket</string>
+			<key>Extension Name</key>
+			<string>Pocket</string>
+			<key>Package Name</key>
+			<string>Pocket.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.large-type</string>
+			<key>Extension Name</key>
+			<string>Large Type</string>
+			<key>Package Name</key>
+			<string>LargeType.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.google-translate</string>
+			<key>Extension Name</key>
+			<string>Google Translate</string>
+			<key>Package Name</key>
+			<string>GoogleTranslate.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.notes</string>
+			<key>Extension Name</key>
+			<string>Notes</string>
+			<key>Package Name</key>
+			<string>Notes.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.textexpander</string>
+			<key>Extension Name</key>
+			<string>TextExpander</string>
+			<key>Package Name</key>
+			<string>TextExpander.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.open-in-firefox</string>
+			<key>Extension Name</key>
+			<string>Open in Firefox</string>
+			<key>Package Name</key>
+			<string>OpenInFirefox.popclipext</string>
+		</dict>
+	</array>
+	<key>Version</key>
+	<integer>1</integer>
+</dict>
+</plist>

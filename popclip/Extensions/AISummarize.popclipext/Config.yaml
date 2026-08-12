@@ -1,0 +1,105 @@
+name: AI Summarize
+identifier: io.gamov.popclip.extension.ai-summarize
+description: Summarize the selected text with Claude (cloud) or Apple Intelligence (on-device).
+popclip version: 4586
+entitlements: [network]
+
+options:
+  - identifier: enginehead
+    type: heading
+    label: Claude
+
+  - identifier: apikey
+    type: secret
+    label: API Key
+    description: >-
+      Create a key at https://console.anthropic.com/settings/keys
+      Stored in the macOS Keychain. Only the Claude action uses it.
+
+  - identifier: model
+    type: multiple
+    label: Model
+    default value: claude-haiku-4-5
+    values:
+      - claude-haiku-4-5
+      - claude-sonnet-5
+      - claude-opus-5
+    value labels:
+      - Haiku 4.5 — fastest, cheapest
+      - Sonnet 5 — balanced
+      - Opus 5 — highest quality
+
+  - identifier: custommodel
+    type: string
+    label: Custom Model
+    description: >-
+      Optional. Any Anthropic model ID. Overrides the Model setting above.
+
+  - identifier: summaryhead
+    type: heading
+    label: Summary
+
+  - identifier: style
+    type: multiple
+    label: Style
+    default value: concise
+    values:
+      - concise
+      - bullets
+      - tldr
+    value labels:
+      - Concise paragraph
+      - Bullet points
+      - One-line TL;DR
+
+  - identifier: extra
+    type: string
+    label: Extra Instructions
+    description: >-
+      Optional. Appended to the prompt for both engines.
+      Example: "Reply in French." or "Keep all product names verbatim."
+
+  - identifier: output
+    type: multiple
+    label: Result
+    default value: window
+    values:
+      - window
+      - fullscreen
+      - copy
+    value labels:
+      - Summary window
+      - Full screen
+      - Copy to clipboard only
+    description: >-
+      The summary window is a floating panel you can select text in, resize,
+      and dismiss with Escape. Full screen is large type: the text scaled up to
+      fill the display, dismissed with Escape or a click. Every setting puts the
+      summary on the clipboard, so ⌘V works afterwards. Applies to both engines.
+
+  - identifier: actionshead
+    type: heading
+    label: Actions
+
+  - identifier: showapple
+    type: boolean
+    label: Show Apple Intelligence action
+    default value: true
+    description: >-
+      Requires macOS 26 or later on Apple silicon, with Apple Intelligence
+      turned on in System Settings. Runs fully on-device — no API key, no
+      network, no cost. Turn this off to hide the action on unsupported Macs.
+
+# Both actions are shell scripts because they present the result in a native
+# panel of their own, and PopClip's JavaScript environment cannot launch one.
+# Neither declares an `after:` key — the wrapper does its own delivering.
+actions:
+  - title: Summarize (Claude)
+    icon: symbol:sparkles
+    shell script file: summarize-claude.sh
+    requirements: [text]
+
+  - title: Summarize (Apple Intelligence)
+    icon: symbol:apple.logo
+    shell script file: summarize-apple.sh
+    requirements: [text, option-showapple=1]

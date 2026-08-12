@@ -1,0 +1,8 @@
+#popclip
+name: Iconify
+identifier: com.pilotmoon.popclip.extension.iconify    
+description: Search icons on Iconify
+popclip version: 4151
+icon: iconify:simple-icons:iconify
+app: { name: Iconify, link: https://icon-sets.iconify.design/ }
+url: https://icon-sets.iconify.design/?query=***

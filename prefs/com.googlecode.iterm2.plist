@@ -10383,7 +10383,7 @@ Respond with one or more commands. Do not include any explanation or additional 
 	<key>NSWindow Frame iTerm Profile B7F5FCD6-39CC-4204-8043-16AB4099B324 0</key>
 	<string>0 0 1728 1083 0 0 1728 1083 </string>
 	<key>NSWindow Frame iTerm Profile F5DD9FEE-4853-445C-A1C5-8EF02AC78D3D 0</key>
-	<string>1496 -740 2560 1676 1496 -740 2560 1676 </string>
+	<string>1496 -313 1920 1249 1496 -313 1920 1249 </string>
 	<key>NSWindow Frame iTerm Profile F5DD9FEE-4853-445C-A1C5-8EF02AC78D3D 1</key>
 	<string>0 214 1496 723 0 0 1496 937 </string>
 	<key>NSWindow Frame iTerm Profile F5DD9FEE-4853-445C-A1C5-8EF02AC78D3D 2</key>
@@ -18944,7 +18944,7 @@ Respond with one or more commands. Do not include any explanation or additional 
 	</array>
 	<key>NoSyncAllAppVersions</key>
 	<array>
-		<string>3.5.14</string>
+		<string>3.5.11beta2</string>
 		<string>3.6.3beta1</string>
 		<string>3.5.5beta2</string>
 		<string>3.5.0beta25</string>
@@ -18991,7 +18991,7 @@ Respond with one or more commands. Do not include any explanation or additional 
 		<string>3.5.12beta1</string>
 		<string>3.5.1beta2</string>
 		<string>3.6.7beta3</string>
-		<string>3.5.11beta2</string>
+		<string>3.5.14</string>
 	</array>
 	<key>NoSyncBFPRecents</key>
 	<array>
@@ -19057,7 +19057,7 @@ Respond with one or more commands. Do not include any explanation or additional 
 	<key>NoSyncLastTipTime</key>
 	<real>732567609.29258394</real>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>212</integer>
+	<integer>213</integer>
 	<key>NoSyncLocalNetworkPermissionPromptedVersion</key>
 	<string>3.7.0beta8</string>
 	<key>NoSyncLoggingStyle</key>
@@ -19077,7 +19077,7 @@ Respond with one or more commands. Do not include any explanation or additional 
 	<key>NoSyncPersistentRateLimitedUpdates</key>
 	<dict>
 		<key>CheckForUpdatedUv</key>
-		<real>807935300.74902403</real>
+		<real>808271998.77831399</real>
 	</dict>
 	<key>NoSyncRecordedVariables</key>
 	<dict>
@@ -20209,7 +20209,7 @@ Respond with one or more commands. Do not include any explanation or additional 
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2026-08-10T17:50:03Z</date>
+	<date>2026-08-11T23:59:59Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SUUpdateGroupIdentifier</key>
