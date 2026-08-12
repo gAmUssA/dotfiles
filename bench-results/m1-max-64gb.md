@@ -27,6 +27,9 @@ be the wrong choice for an OpenCode/Pi driver.
 | model | digest | size | score | java | kotlin | swift | mean tok/s |
 |---|---|---|---|---|---|---|---|
 | `qwen3-coder:30b` | `06c1097efce0` | 18 GB | **3/3** | ✅ 19.4s | ✅ 2.9s | ✅ 2.9s | 74.0 |
+| `gpt-oss:20b` | `17052f91a42e` | 13 GB | **3/3** | ✅ 23.7s | ✅ 9.3s | ✅ 17.5s | 62.2 |
+| `gemma4:26b` | `5571076f3d70` | 17 GB | **3/3** | ✅ 16.0s | ✅ 4.5s | ✅ 5.0s | 58.2 |
+| `gemma4:12b` | `4eb23ef187e2` | 7.6 GB | **3/3** | ✅ 17.2s | ✅ 8.7s | ✅ 9.8s | 27.8 |
 | `qwen3.6:27b` | `a50eda8ed977` | 17 GB | **3/3** | ✅ 26.8s | ✅ 16.9s | ✅ 21.6s | 12.6 |
 | `devstral:24b` | `9bd74193e939` | 14 GB | **2/3** | ✅ 34.6s | ✅ 16.9s | ❌ 17.8s | 12.7 |
 | `qwen2.5-coder:7b` | `dae161e27b0e` | 4.7 GB | **1/3** | ✅ 6.9s | ❌ 4.3s | ❌ 4.6s | 49.2 |
