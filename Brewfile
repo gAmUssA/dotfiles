@@ -323,8 +323,6 @@ brew "perl"
 brew "pipx"
 # Python package management tool
 brew "poetry"
-# Validating, recursive, caching DNS resolver
-brew "unbound"
 # PDF rendering library (based on the xpdf-3.0 code base)
 brew "poppler"
 # Terminal slideshow tool
@@ -399,6 +397,8 @@ brew "tmux-mem-cpu-load"
 brew "tree"
 # Encoding detector library
 brew "uchardet"
+# Validating, recursive, caching DNS resolver
+brew "unbound"
 # URL extractor/launcher
 brew "urlview"
 # Extremely fast Python package installer and resolver, written in Rust
