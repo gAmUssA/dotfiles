@@ -19,7 +19,7 @@
 
 set -uo pipefail
 
-# Source of truth: `ollama list` on the primary machine (2026-06-10).
+# Source of truth: `ollama list` on the primary machine (2026-08-11).
 # Roles (see ollama-bench.sh + ollama-code-bench.sh for the receipts):
 #   qwen2.5-coder:7b   — tmux popup default (best speed/quality balance)
 #   mistral:7b         — popup: fastest, terse
@@ -28,6 +28,10 @@ set -uo pipefail
 #   qwen3.6:27b        — best local code quality (3/3 on the coding bench)
 #   devstral:24b       — 3/3 on coding bench, smallest of the big three
 #   mxbai-embed-large  — embeddings
+#   gemma-4-12B-coder  — base for the gemma4-coder-fixed variant below
+#
+# The first four are exactly what the tmux popup menu offers (prefix + a,
+# see .tmux.conf) — keep them in sync with ai-popup.sh's model list.
 registry_models=(
   "qwen2.5-coder:7b"
   "mistral:7b"
@@ -36,6 +40,9 @@ registry_models=(
   "qwen3.6:27b"
   "devstral:24b"
   "mxbai-embed-large:latest"
+  # Pulled from Hugging Face rather than the ollama registry. Same `ollama
+  # pull` path, just a longer tag.
+  "hf.co/yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF:Q4_K_M"
 )
 
 installed() { ollama list 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$1"; }
@@ -71,6 +78,22 @@ else
   printf 'FROM qwen3-coder:30b\nPARAMETER num_ctx 65536\n' > "$tmpfile"
   ollama create qwen3-coder:30b-ctx64k -f "$tmpfile"
   rm -f "$tmpfile"
+fi
+
+# gemma4-coder-fixed — same base as above, wrapped in a template that primes
+# the "final" channel so leaked harmony control tokens stay out of the output.
+# Unlike the ctx64k variant, this recipe is long enough to live in its own file
+# (gemma4-coder-fixed.Modelfile, next to this script) rather than a heredoc.
+if installed "gemma4-coder-fixed:latest"; then
+  echo "[skip] gemma4-coder-fixed (already installed)"
+else
+  modelfile="$(cd "$(dirname "$0")" && pwd)/gemma4-coder-fixed.Modelfile"
+  if [ -r "$modelfile" ]; then
+    echo "[create] gemma4-coder-fixed"
+    ollama create gemma4-coder-fixed -f "$modelfile"
+  else
+    echo "  SKIPPED gemma4-coder-fixed — $modelfile not found" >&2
+  fi
 fi
 
 echo
