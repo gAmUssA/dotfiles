@@ -36,6 +36,33 @@ the result. Each record pins them:
 If the digests differ between two records, you are comparing two different
 models, not two machines. Fix that first.
 
+## Record on an idle machine, or the numbers are worthless
+
+Background load moves tok/s more than the hardware difference this benchmark
+is meant to measure. Observed on the M1 Max, same model, same weights, minutes
+apart:
+
+| `gemma4:12b` | mean tok/s |
+|---|---|
+| idle | 27.7 |
+| during a Time Machine backup (`backupd` ~49% CPU) | **16.9** |
+
+That is a 1.6x swing from load alone — larger than the entire M1 Max → M3 Pro
+gap this file reports. A contaminated run does not look wrong; it just looks
+like a slower chip.
+
+Before recording:
+
+```bash
+tmutil status | grep Running     # 1 means a backup is in flight
+sysctl -n vm.loadavg             # want the 1-minute figure near 0
+ollama ps                        # no other model resident
+```
+
+Stop a running backup with `sudo tmutil stopbackup` (it resumes later), and
+re-check after. `bench-record.sh` does not enforce this — it cannot tell a
+slow chip from a busy one, which is exactly why it is on you.
+
 ## What this bench does NOT measure
 
 **One-shot generation only** — three prompts, no tool calls, no iteration, no
