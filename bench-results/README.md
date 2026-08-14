@@ -95,39 +95,54 @@ Prompts live in `../ollama-code-bench-one.sh`. All run at `temperature 0.1`,
 | `m1-max-64gb.md` | Apple M1 Max, 64 GB | baseline |
 | `m2-pro-32gb.md` | Apple M2 Pro, 32 GB | recorded 2026-08-11 |
 | `m3-pro-36gb.md` | Apple M3 Pro, 36 GB | recorded 2026-08-12 |
+| `m5-max-36gb.md` | Apple M5 Max, 36 GB | recorded 2026-08-12 |
 | _(pending)_ | Apple M4, Mac mini | to record |
-| _(pending)_ | Apple M5, laptop | to record |
 
 ## Cross-machine comparison (as of 2026-08-12)
 
-All four shared model digests match across the three records, so this is the
-same set of weights everywhere. Toolchains (javac/kotlinc/swiftc) match too.
-Not fully pinned: the M1 Max runs ollama 0.32.6, the other two 0.32.9. The
-M1 Max record additionally covers `gpt-oss:20b`, `gemma4:26b`, and
-`gemma4:12b`, not yet recorded on the other machines.
+All four shared model digests match across all four records, so this is the
+same set of weights everywhere, and javac/kotlinc/swiftc match exactly
+(21 / 2.4.10 / 6.3.3). The **only** uncontrolled variable is the ollama
+version. The M1 Max record additionally covers `gpt-oss:20b`, `gemma4:26b`
+and `gemma4:12b`, not yet recorded elsewhere.
 
 Mean tok/s per machine, shared models only:
 
-| model | M1 Max 64 GB | M2 Pro 32 GB | M3 Pro 36 GB |
-|---|---|---|---|
-| `qwen3-coder:30b` | **72.1** | 50.3 | 47.6 |
-| `qwen2.5-coder:7b` | **49.3** | 31.7 | 27.1 |
-| `devstral:24b` | **13.4** | 10.1 | 8.8 |
-| `qwen3.6:27b` | **11.0** | 8.2 | 7.1 |
+| model | M5 Max 36 GB | M1 Max 64 GB | M2 Pro 32 GB | M3 Pro 36 GB |
+|---|---|---|---|---|
+| `qwen3-coder:30b` | **104.7** | 72.1 | 50.3 | 47.6 |
+| `qwen2.5-coder:7b` | **76.4** | 49.3 | 31.7 | 27.1 |
+| `devstral:24b` | **27.0** | 13.4 | 10.1 | 8.8 |
+| `qwen3.6:27b` | **21.7** | 11.0 | 8.2 | 7.1 |
 
 Takeaways:
 
-- **The M1 Max is the fastest machine for local inference by 1.5–1.8×**,
-  despite being the oldest chip. Decode is memory-bandwidth-bound, and the
-  bandwidth ordering — M1 Max 400 GB/s > M2 Pro 200 GB/s > M3 Pro 150 GB/s —
-  predicts the tok/s ordering exactly, including the M2 Pro edging out the
-  newer M3 Pro on every model. Chip generation is irrelevant here.
-- **RAM headroom didn't matter for this set**: the biggest model is 18 GB, so
-  it stays on-GPU even on the 32 GB machine. The 64 GB advantage would only
-  show up with larger models.
-- **Scores are near-identical**: 3/3 for the three big models and 1/3 for
-  `qwen2.5-coder:7b` everywhere, except `devstral:24b` fails the swift task
-  on the M1 Max (2/3) — reproduced across two independent M1 recordings, so
-  it isn't sampling noise. swiftc is 6.3.3 on all three machines; the one
-  remaining variable is ollama 0.32.6 vs 0.32.9. Upgrade ollama on the M1
-  Max and re-run to settle it.
+- **The M5 Max is fastest, and the ordering is still memory bandwidth, not
+  chip generation.** Max-tier parts beat Pro-tier ones regardless of age: the
+  five-year-old M1 Max stays ahead of both the M2 Pro and the M3 Pro on every
+  model, and the M2 Pro edges out the newer M3 Pro. Decode is bandwidth-bound,
+  so "Max vs Pro" predicts these numbers better than the generation number
+  does.
+- **The M5 Max lead is uneven, which is the interesting part.** It is 1.45x
+  the M1 Max on `qwen3-coder:30b` but ~2x on `devstral:24b` and `qwen3.6:27b`.
+  The two it doubles are the dense models; `qwen3-coder:30b` is MoE with ~3B
+  active per token, so it was already the least bandwidth-starved and had the
+  least headroom to gain.
+- **RAM headroom still didn't matter**: the biggest model is 18 GB, so it stays
+  on-GPU even at 32 GB. The M5 Max wins on 36 GB while the M1 Max has 64 GB.
+  A 64 GB advantage would only appear with larger models.
+- **`devstral:24b`'s Swift failure now tracks the ollama version cleanly.**
+  Four machines, identical toolchains and digests:
+
+  | ollama | machines | devstral swift |
+  |---|---|---|
+  | 0.32.6 | M1 Max | ❌ |
+  | 0.32.7 | M5 Max | ❌ |
+  | 0.32.9 | M2 Pro, M3 Pro | ✅ |
+
+  The split is perfect, and 0.32.6/0.32.7 failures reproduce across independent
+  runs, so it isn't sampling noise. Best current explanation: something fixed
+  in 0.32.8/0.32.9 changed devstral's Swift output. **Not yet proven** — no
+  machine has been tested at two different ollama versions. Upgrading the M1
+  Max or M5 Max to 0.32.9 and re-running settles it, and until someone does,
+  treat every tok/s figure here as version-tagged rather than purely hardware.
