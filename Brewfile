@@ -6,6 +6,7 @@ tap "confluentinc/confluent-hub-client"
 tap "confluentinc/tap"
 tap "derailed/k9s"
 tap "etolbakov/taps"
+tap "gamussa/worksync", "https://github.com/gAmUssA/homebrew-worksync"
 tap "hashicorp/tap"
 tap "hmans/beans"
 tap "kong/deck"
@@ -377,8 +378,12 @@ brew "socat"
 brew "stern"
 # Version control system designed to be a better CVS
 brew "subversion"
+# Formatting tool for reformatting Swift code
+brew "swiftformat"
 # Tool to enforce Swift style and conventions
 brew "swiftlint"
+# Easiest, most secure way to use WireGuard and 2FA
+brew "tailscale"
 # General purpose fuzzy finder TUI
 brew "television"
 # Send macOS User Notifications from the command-line
@@ -590,6 +595,10 @@ cask "mountain-duck"
 cask "multipass"
 # Reverse proxy, secure introspectable tunnels to localhost
 cask "ngrok"
+# Open-source software for live streaming and screen recording
+cask "obs"
+# Knowledge base that works on top of a local folder of plain text Markdown files
+cask "obsidian"
 # Interact with Ollama models
 cask "ollamac"
 # Replacement for Docker Desktop
@@ -609,6 +618,8 @@ cask "rocket"
 cask "shortcutdetective"
 # Native terminal coding agents command center
 cask "supacode"
+# Mesh VPN based on WireGuard
+cask "tailscale-app"
 # App to make lists and help with organisation
 cask "taskpaper"
 # JDK from the Eclipse Foundation (Adoptium)
@@ -631,6 +642,8 @@ cask "warp"
 cask "wezterm"
 # Network protocol analyzer
 cask "wireshark-app"
+# Menu bar app and CLI that mirrors busy time onto a work calendar
+cask "gamussa/worksync/worksync", trusted: true
 # Open-source version of the X.Org X Window System
 cask "xquartz"
 mas "1Blocker", id: 1365531024
@@ -672,8 +685,8 @@ mas "Moom Classic", id: 419330170
 mas "Numbers", id: 361304891
 mas "Numbers", id: 409203825
 mas "Okta Verify", id: 490179405
-mas "Pages", id: 361309726
 mas "Pages", id: 409201541
+mas "Pages", id: 361309726
 mas "PayPal Honey", id: 1472777122
 mas "Perplexity", id: 6714467650
 mas "Pixelmator", id: 407963104
@@ -706,6 +719,7 @@ vscode "aaron-bond.better-comments"
 vscode "adpyke.vscode-sql-formatter"
 vscode "anandabibekray.intellij-idea-new-ui-theme"
 vscode "andrewm098.onelight-pro"
+vscode "anthropic.claude-code"
 vscode "asciidoctor.asciidoctor-vscode"
 vscode "benjaminbenais.copilot-theme"
 vscode "brennondenny.vsc-jetbrains-icons-enhanced"
@@ -723,6 +737,7 @@ vscode "esbenp.prettier-vscode"
 vscode "euskadi31.json-pretty-printer"
 vscode "fabiospampinato.vscode-todo-plus"
 vscode "flobilosaurus.vscode-asciidoc-slides"
+vscode "foam.foam-vscode"
 vscode "gera2ld.markmap-vscode"
 vscode "github.codespaces"
 vscode "github.vscode-github-actions"
@@ -760,6 +775,7 @@ vscode "tamasfe.even-better-toml"
 vscode "tomaszbartoszewski.avro-tools"
 vscode "vikgamov.calliope-md"
 vscode "vikgamov.vscode-open-in-marked2"
+vscode "vscjava.migrate-java-to-azure"
 vscode "vscjava.vscode-gradle"
 vscode "vscjava.vscode-java-debug"
 vscode "vscjava.vscode-java-dependency"
@@ -797,6 +813,7 @@ cargo "cargo-generate"
 cargo "renvsubst"
 cargo "wasm-pack"
 uv "specify-cli", source: "git+https://github.com/github/spec-kit.git"
+uv "tavily-cli"
 krew "ctx"
 krew "krew"
 krew "neat"
@@ -812,6 +829,7 @@ npm "@tessl/cli"
 npm "@vscode/vsce"
 npm "bat"
 npm "bats"
+npm "bobshell"
 npm "cline"
 npm "csso-cli"
 npm "license-generator"
