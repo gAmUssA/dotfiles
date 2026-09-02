@@ -42,6 +42,11 @@ mkdir -p ~/.config/cmux
 rm -f ~/.config/cmux/settings.json
 ln -s ~/projects/dotfiles/cmux/settings.json ~/.config/cmux/settings.json
 
+# herdr — terminal workspace manager for AI agents (tmux-alike)
+mkdir -p ~/.config/herdr
+rm -f ~/.config/herdr/config.toml
+ln -s ~/projects/dotfiles/herdr/config.toml ~/.config/herdr/config.toml
+
 # sesh — tmux session manager config
 mkdir -p ~/.config/sesh
 rm -f ~/.config/sesh/sesh.toml

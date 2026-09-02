@@ -1,0 +1,92 @@
+# herdr configuration — mirrors ~/.tmux.conf muscle memory where herdr allows.
+# Symlinked to ~/.config/herdr/config.toml by linkall.sh.
+# Apply changes to a running server: herdr server reload-config
+# Validate: herdr config check
+
+[theme]
+# Matches the Dracula tmux theme.
+name = "dracula"
+
+[keys]
+# Same prefix as tmux (Ctrl-Space).
+prefix = "ctrl+space"
+
+# Splits: tmux `prefix |` (side-by-side) and `prefix _` (stacked).
+# herdr's split_vertical = new pane to the RIGHT, split_horizontal = BELOW,
+# so the tmux glyphs map straight across. Defaults v/minus kept as fallbacks.
+split_vertical = ["prefix+v", "prefix+shift+backslash"]
+split_horizontal = ["prefix+minus", "prefix+shift+minus"]
+
+# tmux rebinds `prefix x` from kill-pane to zoom; same here. `prefix z` kept.
+# Pane close moves to shift+x's neighborhood — but shift+x is close_tab, so
+# close_pane gets shift+q (panes die via exit/Ctrl-D anyway, as in tmux).
+zoom = ["prefix+z", "prefix+x"]
+close_pane = "prefix+shift+q"
+
+# Direct pane navigation without prefix, like tmux Alt+arrows.
+focus_pane_left = ["prefix+h", "alt+left"]
+focus_pane_down = ["prefix+j", "alt+down"]
+focus_pane_up = ["prefix+k", "alt+up"]
+focus_pane_right = ["prefix+l", "alt+right"]
+
+# Outer navigation, like tmux Shift+Alt+arrows:
+# horizontal = tabs (tmux windows), vertical = workspaces (tmux sessions).
+previous_tab = ["prefix+p", "alt+shift+left"]
+next_tab = ["prefix+n", "alt+shift+right"]
+previous_workspace = "alt+shift+up"
+next_workspace = "alt+shift+down"
+
+# Resize with the tmux chords (prefix + C-h/j/u/l), no resize mode needed.
+resize_pane_left = "prefix+ctrl+h"
+resize_pane_down = "prefix+ctrl+j"
+resize_pane_up = "prefix+ctrl+u"
+resize_pane_right = "prefix+ctrl+l"
+
+# Bounce to the last pane (tmux: double-prefix last-window). herdr reserves
+# double-prefix for sending a literal Ctrl-Space, so it lives on prefix+space.
+last_pane = "prefix+space"
+
+# Fuzzy goto picker on `o`, matching tmux sessionx; frees `g` for lazygit.
+goto = "prefix+o"
+
+# Rename pane on `t` like tmux; default shift+p kept as fallback.
+rename_pane = ["prefix+shift+p", "prefix+t"]
+
+# Lazygit popup — tmux `prefix g`, scoped to the focused pane's cwd.
+[[keys.command]]
+key = "prefix+g"
+type = "popup"
+command = "lazygit"
+width = "90%"
+height = "90%"
+description = "lazygit"
+
+# Ephemeral shell peek — tmux `prefix Enter`. Exit/Ctrl-D closes it.
+[[keys.command]]
+key = "prefix+enter"
+type = "popup"
+command = "exec \"${SHELL:-sh}\""
+width = "80%"
+height = "80%"
+description = "shell peek"
+
+# Claude Code — tmux `prefix y` opened a per-directory popup session.
+# herdr popups die with the popup, so open claude in a temporary zoomed pane
+# instead: it survives focus changes, and the sidebar tracks its state.
+[[keys.command]]
+key = "prefix+y"
+type = "pane"
+command = "claude"
+description = "claude here"
+
+[ui]
+# Small status area on the tab bar: zoom pill + military time (Dracula habit).
+tab_bar_right = [
+  { type = "zoom" },
+  { type = "datetime", format = "%H:%M" },
+]
+agent_panel_sort = "spaces"
+
+show_agent_labels_on_pane_borders = true
+[ui.toast]
+delivery = "herdr"
