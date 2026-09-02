@@ -27,6 +27,9 @@ end
 menu:setClickCallback(toggle)
 render()
 
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "C", toggle)
+-- Hotkey disabled 2026-08-18: ctrl+alt+cmd+C collided with another binding.
+-- Toggling still works by clicking the menu bar icon (setClickCallback above),
+-- so no functionality is lost. Re-enable by uncommenting.
+-- hs.hotkey.bind({"ctrl", "alt", "cmd"}, "C", toggle)
 
 return M
