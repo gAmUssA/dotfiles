@@ -161,3 +161,10 @@ function s() {
   picked=$(sesh list --icons | fzf --reverse --prompt="⚡ Session › " --height=40%)
   [[ -n "$picked" ]] && sesh connect "$picked"
 }
+
+# tmk — fuzzy tmux session killer. Tab to multi-select, Enter to kill.
+function tmk() {
+  local picked
+  picked=$(tmux ls -F '#S' 2>/dev/null | fzf --multi --reverse --prompt="💀 Kill session › " --height=40%)
+  [[ -n "$picked" ]] && echo "$picked" | xargs -I{} tmux kill-session -t {}
+}
