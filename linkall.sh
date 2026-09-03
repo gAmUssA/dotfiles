@@ -83,6 +83,17 @@ mkdir -p ~/.config/op
 rm -f ~/.config/op/agents.refs
 ln -s ~/projects/dotfiles/op/agents.refs ~/.config/op/agents.refs
 
+# 1Password SSH agent key list. No secrets — vault/item names only; the private
+# keys stay in 1Password and are served over the agent socket that
+# .ssh/config's `IdentityAgent` points at.
+#
+# This file existing means the agent offers ONLY the keys it lists, so a key
+# added in the 1Password UI but not here is invisible to ssh. Versioning it is
+# what stops a new Mac from re-hitting that.
+mkdir -p ~/.config/1Password/ssh
+rm -f ~/.config/1Password/ssh/agent.toml
+ln -s ~/projects/dotfiles/op/ssh-agent.toml ~/.config/1Password/ssh/agent.toml
+
 # Local AI coding agents — Ollama provider configs only. Machine state
 # (opencode node_modules/bun.lock, pi auth.json/sessions/settings.json) is
 # deliberately NOT versioned, so symlink the single config file in each.
@@ -142,6 +153,7 @@ ls -lah ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh
 ls -lah ~/.hammerspoon/init.lua ~/.hammerspoon/caffeine.lua ~/.hammerspoon/ollama.lua ~/.hammerspoon/claude_sessions.lua
 ls -lah ~/.config/opencode/opencode.json ~/.pi/agent/models.json ~/.agents/skills/tavily-search
 ls -lah ~/.config/op/agents.refs
+ls -lah ~/.config/1Password/ssh/agent.toml
 echo "git hooks -> $(git -C ~/projects/dotfiles config core.hooksPath) ($(ls ~/projects/dotfiles/githooks | tr '\n' ' '))"
 
 # thefuck — installed via pipx pinned to python@3.11 (the brew formula has a

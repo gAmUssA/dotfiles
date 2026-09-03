@@ -1,0 +1,29 @@
+# Keys the 1Password SSH agent offers, in this order.
+#
+# Contains NO secrets — only vault/item names, same as agents.refs. Private
+# keys never leave 1Password; the agent serves them over the socket that
+# .ssh/config points IdentityAgent at. Symlinked to
+# ~/.config/1Password/ssh/agent.toml by linkall.sh.
+#
+# IMPORTANT: the moment this file exists, 1Password offers ONLY what is listed
+# here — an unlisted key is invisible to ssh even though it sits in the vault.
+# That is the usual reason a brand-new key "does nothing". Add every key here.
+#
+# ssh tries these in order and sshd counts each attempt against MaxAuthTries
+# (default 6), so keep the list short and put the most-used keys first.
+
+# GitHub auth/signing.
+[[ssh-keys]]
+item = "Github"
+vault = "Private"
+
+[[ssh-keys]]
+item = "Github vikgamov"
+vault = "Private"
+
+# DS9 — the always-on Mac mini herdr host. This authenticates ME to DS9; it is
+# unrelated to DS9's host key (the SHA256:WKhWm… ed25519 that known_hosts
+# verifies). The public half must be in ~/.ssh/authorized_keys on DS9.
+[[ssh-keys]]
+item = "DS9 Mac Mini id_ed25519"
+vault = "Private"
