@@ -135,6 +135,14 @@ If a key is in the vault but missing from `ssh-add -l`, it is not in
 
 Everything else that is genuinely per-machine:
 
+**Apple signing / App Store Connect API keys** live in `~/.appstoreconnect` and
+are backed up as 1Password documents — restore steps, and why the local path
+matters, are in [SETUP-SIGNING-KEYS.md](SETUP-SIGNING-KEYS.md):
+
+```bash
+op item list --tags appstoreconnect      # what's backed up
+```
+
 ```bash
 # Cluster / registry credentials (never in the repo):
 #   ~/.kube/config      — copy from wherever your clusters live
