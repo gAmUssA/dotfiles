@@ -88,5 +88,16 @@ tab_bar_right = [
 agent_panel_sort = "spaces"
 
 show_agent_labels_on_pane_borders = true
+
+# Agent sidebar rows: default layout plus fleet metadata. $group/$role/$model
+# are metadata tokens agents report via `herdr pane report-metadata`; they
+# render empty for panes that never report them. No built-in model token
+# exists in 0.8.2 — agents must report model themselves.
+[ui.sidebar.agents]
+rows = [
+  ["state_icon", "workspace", "tab"],
+  ["agent", "$group", "$role", { token = "$model", dim = true }],
+]
+
 [ui.toast]
-delivery = "herdr"
+delivery = "terminal"
