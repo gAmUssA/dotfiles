@@ -119,13 +119,23 @@ Some Dock/Finder changes need a logout or `killall Dock Finder` to show.
 
 These are excluded from git on purpose — set them up by hand on DS9:
 
-```bash
-# Git identity is in the tracked .gitconfig, but SSH keys are not:
-#   - either create a new key and add it to GitHub,
-ssh-keygen -t ed25519 -C "ds9"
-gh ssh-key add ~/.ssh/id_ed25519.pub --title "ds9"
-#   - or copy your existing key over from another machine.
+**SSH keys come from 1Password, not `ssh-keygen`.** Install the app, sign in,
+then enable the agent (Settings → Developer → *Use the SSH agent*) — that
+creates `~/.1password/agent.sock`, which the tracked `.ssh/config` points every
+host at. `linkall.sh` already linked the key list. Verify:
 
+```bash
+ls -l ~/.1password/agent.sock                  # socket exists = agent is on
+SSH_AUTH_SOCK=~/.1password/agent.sock ssh-add -l   # lists keys from op/ssh-agent.toml
+ssh -T git@github.com                          # expect "Hi gAmUssA!"
+```
+
+If a key is in the vault but missing from `ssh-add -l`, it is not in
+`op/ssh-agent.toml` — add it there and re-check. That file is the allowlist.
+
+Everything else that is genuinely per-machine:
+
+```bash
 # Cluster / registry credentials (never in the repo):
 #   ~/.kube/config      — copy from wherever your clusters live
 #   ~/.docker/config.json — `docker login` as needed
@@ -155,11 +165,29 @@ sudo scutil --set ComputerName "DS9"
 sudo scutil --set LocalHostName  "ds9"
 sudo scutil --set HostName       "ds9"
 
-# Enable Remote Login: System Settings → General → Sharing → Remote Login (on)
+# Enable Remote Login (sshd). GUI equivalent: System Settings → General →
+# Sharing → Remote Login. The CLI needs Full Disk Access for Terminal on recent
+# macOS; if it errors, use the GUI toggle instead.
+sudo systemsetup -setremotelogin on
+sudo systemsetup -getremotelogin              # expect "Remote Login: On"
 
 # mosh needs its server half present (Brewfile installs it, just confirm):
 which mosh-server || brew install mosh
 ```
+
+Then authorize the key you log in *with*. Run this **from the laptop**, where
+the 1Password agent holds the key — it needs password auth for this one
+connection, so do it before turning password auth off:
+
+```bash
+op item get "DS9 Mac Mini id_ed25519" --fields "public key" \
+  | sed 's/[[:space:]]*$/ DS9-Mac-Mini/' \
+  | ssh ds9 'umask 077; mkdir -p ~/.ssh; cat >> ~/.ssh/authorized_keys'
+```
+
+The `sed` tags the line with a comment. `op` returns the key bare, and an
+untagged `authorized_keys` is a wall of anonymous base64 you cannot revoke
+selectively later. Always append a comment naming the device.
 
 Interactive use — no LaunchAgent needed. Your first `herdr --remote ds9` after a
 reboot starts the server. (A LaunchAgent only matters for background/scheduled
@@ -169,6 +197,23 @@ agents that must resume without you attaching; skip it for now.)
 
 Test one hop at a time — a failure three rungs up is unreadable if the bottom
 rungs were never checked. Run these **from the laptop**, against a fresh DS9:
+
+Rung 0 first, once per client: DS9's **host key** — its server identity, which
+is unrelated to the key you log in with. Print it on DS9, compare from the
+laptop, and only then accept:
+
+```bash
+# ON DS9:
+ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub
+# FROM THE LAPTOP — must print the same fingerprint:
+ssh-keyscan -t ed25519 ds9 2>/dev/null | ssh-keygen -lf -
+# match? then connect once and answer yes:
+ssh ds9
+```
+
+Current DS9 host key: `SHA256:WKhWmCMkSw8uY8a14LDoMzh1OY7tYjnvqga4cxQjDTg`.
+It changes only if macOS is reinstalled — a mismatch otherwise is worth stopping
+for, not clearing with `ssh-keygen -R ds9`.
 
 ```bash
 tailscale status | grep ds9              # 1. on the tailnet at all
@@ -223,12 +268,38 @@ store — the one place a private key legitimately leaves 1Password.
 
 Use a **separate key per iOS device** rather than pasting the Mac's DS9 key:
 
-1. In 1Password, create a new SSH key item, e.g. `DS9 iPad Moshi`.
-2. Append its public key to `~/.ssh/authorized_keys` on DS9 (one key per line —
-   `authorized_keys` takes any number).
-3. Copy its *private* key from the 1Password iOS app, paste into Moshi.
-4. Do **not** add it to `op/ssh-agent.toml` — that file is for Macs, and every
+```bash
+# 1. Generate the key straight into 1Password (or use the GUI: New Item → SSH Key):
+op item create --category "SSH Key" --title "DS9 iPad Moshi" \
+  --vault Private --ssh-generate-key ed25519
+
+# 2. Authorize it on DS9, tagged so it can be revoked by name later:
+op item get "DS9 iPad Moshi" --fields "public key" \
+  | sed 's/[[:space:]]*$/ DS9-iPad-Moshi/' \
+  | ssh ds9 'umask 077; mkdir -p ~/.ssh; cat >> ~/.ssh/authorized_keys'
+
+# 3. Confirm DS9 now lists both keys, by name:
+ssh ds9 'ssh-keygen -lf ~/.ssh/authorized_keys'
+```
+
+4. On the iPad: 1Password app → the `DS9 iPad Moshi` item → copy the **private
+   key** field → paste into Moshi's key store. This is a GUI step; iOS has no
+   agent to broker it. Don't route a private key through a desktop terminal to
+   get there.
+5. Do **not** add it to `op/ssh-agent.toml` — that file is for Macs, and every
    extra key there is another attempt against sshd's `MaxAuthTries` (default 6).
+
+To revoke that iPad later, remove its one line — the Mac key is untouched:
+
+```bash
+ssh ds9 "grep -v ' DS9-iPad-Moshi$' ~/.ssh/authorized_keys > ~/.ssh/ak.new && \
+         mv ~/.ssh/ak.new ~/.ssh/authorized_keys && \
+         ssh-keygen -lf ~/.ssh/authorized_keys"
+```
+
+That matches the comment appended in step 2 — which is exactly why the `sed`
+is not optional. Then delete the item in 1Password and remove the key from
+Moshi.
 
 Losing the iPad then costs one line in `authorized_keys`, and the Mac key is
 untouched. Full sequence on iOS: Tailscale connected → Moshi with the imported
