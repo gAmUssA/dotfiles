@@ -2,6 +2,7 @@
 # rm -f everywhere: quiet on a fresh machine (no "No such file" spam) and
 # guarantees the following ln -s can't silently no-op against a leftover file.
 rm -f ~/.zshrc
+rm -f ~/.zshenv
 rm -f ~/.gitconfig
 rm -f ~/.gitignore
 rm -f ~/.jshintrc
@@ -15,6 +16,7 @@ rm -f ~/.vimrc
 rm -f ~/.p10k.zsh
 
 ln -s ~/projects/dotfiles/.zshrc ~/.zshrc
+ln -s ~/projects/dotfiles/.zshenv ~/.zshenv
 ln -s ~/projects/dotfiles/.gitconfig ~/.gitconfig
 ln -s ~/projects/dotfiles/.gitignore ~/.gitignore
 ln -s ~/projects/dotfiles/.jshintrc ~/.jshintrc

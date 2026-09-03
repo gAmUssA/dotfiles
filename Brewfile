@@ -296,6 +296,8 @@ brew "mongocli"
 brew "node"
 # Atlas CLI enables you to manage your MongoDB Atlas
 brew "mongodb-atlas-cli"
+# Remote terminal application (mobile shell)
+brew "mosh"
 # Netwide Assembler (NASM) is an 80x86 assembler
 brew "nasm"
 # NCurses Disk Usage
@@ -364,8 +366,6 @@ brew "sesh"
 brew "sevenzip"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
-# Python 2 and 3 compatibility utilities
-brew "six"
 # Easy and Repeatable Kubernetes Development
 brew "skaffold"
 # Prints a steam locomotive if you type sl instead of ls
@@ -518,8 +518,6 @@ cask "cyberduck"
 cask "dash"
 # Voice and text chat software
 cask "discord"
-# App to build and share containerised applications and microservices
-cask "docker-desktop"
 # Developer platform
 cask "dotnet-sdk"
 # Web browser
@@ -615,7 +613,7 @@ cask "rar"
 cask "reaper"
 # Emoji picker optimised for blind people
 cask "rocket"
-cask "shortcutdetective"
+cask "shortcutor"
 # Native terminal coding agents command center
 cask "supacode"
 # Mesh VPN based on WireGuard
