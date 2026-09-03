@@ -1,8 +1,9 @@
 #!/bin/sh
 # herdr-model-report.sh <claude|codex|copilot>
 #
-# Report the session's model to herdr as a $model metadata token, shown in the
-# agent sidebar (ui.sidebar.agents.rows in herdr/config.toml). Registered as a
+# Report the session's model (and, for claude, a last-prompt summary) to herdr
+# as $model/$summary metadata tokens, shown in the agent sidebar
+# (ui.sidebar.agents.rows in herdr/config.toml). Registered as a
 # SessionStart-style hook in each agent's own config:
 #   claude:  claude/settings.json      (SessionStart + Stop; transcript_path on stdin)
 #   codex:   ~/.codex/hooks.json       (SessionStart; transcript_path on stdin)
@@ -38,6 +39,20 @@ case "$agent" in
 esac
 [ -n "$file" ] || exit 0
 
+# Last real user prompt, squashed to one line and truncated — rendered as the
+# $summary sidebar row. Skips tool results, meta rows, and <command>/Caveat
+# wrappers that also live in user-typed transcript entries.
+extract_summary() {
+  tail -200 "$file" | jq -rs '
+    [.[] | select(.type=="user" and (.isMeta | not)) | .message.content
+      | if type=="string" then .
+        elif type=="array" then ([.[] | select(.type=="text") | .text] | join(" "))
+        else empty end
+      | select(type=="string" and length>0)
+      | select(startswith("<") or startswith("Caveat:") | not)
+    ] | last // empty | gsub("\\s+"; " ") | .[0:48]'
+}
+
 extract_model() {
   case "$agent" in
     claude)
@@ -65,9 +80,18 @@ if [ "$agent" = "claude" ]; then tries=1; else tries=10; fi
     if [ -f "$file" ]; then
       model=$(extract_model 2>/dev/null) || model=""
       if [ -n "$model" ]; then
-        herdr pane report-metadata "$HERDR_PANE_ID" \
-          --source custom:model-report \
-          --token model="${model#claude-}" >/dev/null 2>&1 || true
+        summary=""
+        [ "$agent" = "claude" ] && { summary=$(extract_summary 2>/dev/null) || summary=""; }
+        if [ -n "$summary" ]; then
+          herdr pane report-metadata "$HERDR_PANE_ID" \
+            --source custom:model-report \
+            --token model="${model#claude-}" \
+            --token summary="$summary" >/dev/null 2>&1 || true
+        else
+          herdr pane report-metadata "$HERDR_PANE_ID" \
+            --source custom:model-report \
+            --token model="${model#claude-}" >/dev/null 2>&1 || true
+        fi
         exit 0
       fi
     fi

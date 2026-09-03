@@ -89,14 +89,20 @@ agent_panel_sort = "spaces"
 
 show_agent_labels_on_pane_borders = true
 
-# Agent sidebar rows: default layout plus fleet metadata. $group/$role/$model
-# are metadata tokens agents report via `herdr pane report-metadata`; they
-# render empty for panes that never report them. No built-in model token
-# exists in 0.8.2 — agents must report model themselves.
+# Agent sidebar rows, FleetView-style. Herdr joins adjacent tokens with `·`
+# (missing values and their separator vanish), so entries render as:
+#   ◐ claude · fable-5
+#   working · dotfiles
+# `agent` shows the detected name until renamed (herdr agent rename w1:p1
+# lead). $role/$model are metadata tokens (herdr pane report-metadata; $model
+# fed by herdr-model-report.sh) and drop out when unreported. state_text keeps
+# its per-state color; row_gap airs out the list.
 [ui.sidebar.agents]
+row_gap = 1
 rows = [
-  ["state_icon", "workspace", "tab"],
-  ["agent", "$group", "$role", { token = "$model", dim = true }],
+  ["state_icon", "agent", "$role", { token = "$model", dim = true }],
+  [{ token = "state_text", bold = true }, { token = "tab", dim = true }],
+  [{ token = "$summary", dim = true }],
 ]
 
 [ui.toast]
