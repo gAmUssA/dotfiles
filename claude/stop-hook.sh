@@ -54,7 +54,31 @@ CONTENT_IMAGE="$ICONS/claude.png"
 #
 # Everywhere else (bare terminal, or tmux) this hook owns the banner.
 if [[ -n "${HERDR_ENV:-}" ]]; then
-  exit 0
+  # ...but ONLY if the herdr-side notifier is actually live. Do not treat
+  # herdr's built-in [ui.toast] as the fallback: it requires an attached,
+  # foreground client — `herdr notification show` answers
+  # {"shown":false,"reason":"no_foreground_client"} when detached — so on an
+  # always-on host, blanket suppression here means a finished turn announces
+  # itself to nobody. That is worse than a duplicate banner.
+  #
+  # herdr-plugins/notify runs server-side and has no such gate, so it is the
+  # one thing that makes suppression safe. If it is unlinked or disabled, fall
+  # through and notify from here.
+  _herdr="${HERDR_BIN_PATH:-$HOME/.local/bin/herdr}"
+  if [[ -x "$_herdr" ]] && "$_herdr" plugin list --plugin gamussa.notify --json 2>/dev/null \
+       | grep -q '"enabled": *true'; then
+    # Logged so CLAUDE_STOP_HOOK_DEBUG can tell "suppressed here" apart from
+    # "hook never fired" — otherwise both look identical (an empty log).
+    if [[ -n "${CLAUDE_STOP_HOOK_DEBUG:-}" ]]; then
+      printf '[%s] stop-hook suppressed (HERDR_ENV=%s; gamussa.notify plugin owns the banner)\n' \
+        "$(date '+%FT%T')" "$HERDR_ENV" >> /tmp/claude-stop-hook.log
+    fi
+    exit 0
+  fi
+  if [[ -n "${CLAUDE_STOP_HOOK_DEBUG:-}" ]]; then
+    printf '[%s] in herdr but gamussa.notify inactive — notifying from the hook\n' \
+      "$(date '+%FT%T')" >> /tmp/claude-stop-hook.log
+  fi
 fi
 
 # --- Which terminal is actually hosting us? ---------------------------------

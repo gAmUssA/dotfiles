@@ -1,0 +1,24 @@
+# Rich desktop notifications for herdr agent state changes.
+#
+# WHY THIS EXISTS: herdr's built-in notifications (`[ui.toast]`) only fire when
+# a client is attached and focused — `herdr notification show` returns
+# {"reason":"no_foreground_client","shown":false} when detached. That is exactly
+# when you most want to be told an agent finished, and it is the normal state
+# for an always-on herdr server.
+#
+# A plugin event hook runs SERVER-SIDE, so it fires whether or not anyone is
+# attached, and it covers every agent (claude, codex, copilot) rather than only
+# the one that happens to have a Claude Code Stop hook.
+#
+# Install (local, from this repo — linkall.sh does it):
+#   herdr plugin link ~/projects/dotfiles/herdr-plugins/notify
+id = "gamussa.notify"
+name = "Agent notifications"
+version = "0.1.0"
+min_herdr_version = "0.8.0"
+description = "Desktop notification when a herdr agent finishes or needs input"
+platforms = ["macos"]
+
+[[events]]
+on = "pane.agent_status_changed"
+command = ["./notify.sh"]

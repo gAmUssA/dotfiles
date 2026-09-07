@@ -106,4 +106,16 @@ rows = [
 ]
 
 [ui.toast]
-delivery = "terminal"
+# "off" because herdr-plugins/notify owns desktop banners now. Leaving this on
+# would double-fire whenever a client IS attached: the plugin banner plus this
+# one, for the same state change.
+#
+# The plugin is strictly better as the single notifier — these built-in toasts
+# need an attached, FOREGROUND client (`herdr notification show` returns
+# {"shown":false,"reason":"no_foreground_client"} when detached), so they go
+# silent in exactly the always-on-host case where a notification matters most.
+# The plugin runs server-side and has no such gate.
+delivery = "off"
+
+[experimental]
+kitty_graphics = true

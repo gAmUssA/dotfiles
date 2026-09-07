@@ -49,6 +49,17 @@ mkdir -p ~/.config/herdr
 rm -f ~/.config/herdr/config.toml
 ln -s ~/projects/dotfiles/herdr/config.toml ~/.config/herdr/config.toml
 
+# herdr notification plugin. Not a symlink — herdr keeps its own plugin
+# registry, so the plugin is LINKED by id and points back at this repo.
+# It owns desktop banners for agents running inside herdr; claude/stop-hook.sh
+# checks that this plugin is enabled before staying quiet, so if this line is
+# skipped the hook notifies instead of going silent.
+if command -v herdr >/dev/null 2>&1; then
+  herdr plugin link ~/projects/dotfiles/herdr-plugins/notify >/dev/null 2>&1 \
+    && echo "herdr plugin -> gamussa.notify linked" \
+    || echo "skip: herdr plugin link (already linked, or server not running)"
+fi
+
 # sesh — tmux session manager config
 mkdir -p ~/.config/sesh
 rm -f ~/.config/sesh/sesh.toml
