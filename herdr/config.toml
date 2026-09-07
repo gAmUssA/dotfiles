@@ -91,18 +91,36 @@ show_agent_labels_on_pane_borders = true
 
 # Agent sidebar rows, FleetView-style. Herdr joins adjacent tokens with `·`
 # (missing values and their separator vanish), so entries render as:
-#   ◐ claude · fable-5
-#   working · dotfiles
+#   ◐ claude · lead · fable-5
+#   working · dotfiles · reviewing the diff
 # `agent` shows the detected name until renamed (herdr agent rename w1:p1
 # lead). $role/$model are metadata tokens (herdr pane report-metadata; $model
 # fed by herdr-model-report.sh) and drop out when unreported. state_text keeps
-# its per-state color; row_gap airs out the list.
+# its per-state color.
+#
+# Density: 2 lines per agent, no blank separator — was 3 rows + row_gap = 1,
+# i.e. 4 lines each, which with 8 agents ran past a screen and made the list
+# need scrolling to answer "who needs me". Halved to 2 lines by folding the
+# summary onto the state line. The state icon and its color still start every
+# entry, so rows stay scannable without the blank line to separate them.
+# Bump row_gap back to 1 if entries start running together.
 [ui.sidebar.agents]
-row_gap = 1
+row_gap = 0
 rows = [
   ["state_icon", "agent", "$role", { token = "$model", dim = true }],
-  [{ token = "state_text", bold = true }, { token = "tab", dim = true }],
-  [{ token = "$summary", dim = true }],
+  [
+    { token = "state_text", bold = true },
+    { token = "tab", dim = true },
+    { token = "$summary", dim = true },
+  ],
+]
+
+# Space (workspace) rows are already 2 lines; keep them tight to match.
+[ui.sidebar.spaces]
+row_gap = 0
+rows = [
+  ["state_icon", "workspace"],
+  [{ token = "branch", dim = true }, { token = "git_status", dim = true }],
 ]
 
 [ui.toast]
