@@ -13,8 +13,12 @@
 #      - click routes to the specific tmux pane in two steps:
 #        (1) tmux select-window/select-pane on $TMUX_PANE so the tmux
 #            server's idea of "active" matches where Claude is
-#        (2) AppleScript focuses the iTerm window/tab/pane via
-#            $ITERM_SESSION_ID, or plain `open -a iTerm` as fallback
+#        (2) focus the HOST terminal — AppleScript to the exact iTerm
+#            window/tab/pane via $ITERM_SESSION_ID, or `open -a Ghostty`
+#
+# Host-aware (see the detection block below): no banner at all inside herdr
+# (herdr raises its own, for every agent not just Claude), and the icon and
+# click target follow whichever terminal is actually attached.
 #
 # Terminal BEL is emitted by tmux-agentbar's `done` report (runs as a sibling
 # hook in settings.json), so this script deliberately does NOT write \a — that
@@ -35,8 +39,54 @@
 set -u
 
 ALERTER=/opt/homebrew/bin/alerter
-APP_ICON="$HOME/projects/dotfiles/iterm2-icons/iTerm2-nord-chevron.png"
-CONTENT_IMAGE="$HOME/projects/dotfiles/iterm2-icons/claude.png"
+ICONS="$HOME/projects/dotfiles/iterm2-icons"
+CONTENT_IMAGE="$ICONS/claude.png"
+
+# --- Who owns the desktop banner? -------------------------------------------
+#
+# Exactly one layer may raise a banner per turn, or you get duplicates.
+#
+# Inside herdr, herdr owns it: it already tracks agent state for the sidebar
+# and raises its own notification (`[ui.toast] delivery` in herdr/config.toml),
+# and unlike this hook it is agent-agnostic — it covers codex and grok too, not
+# just Claude. So bail out here rather than double-ringing. herdr sets
+# HERDR_ENV=1 in every pane it owns.
+#
+# Everywhere else (bare terminal, or tmux) this hook owns the banner.
+if [[ -n "${HERDR_ENV:-}" ]]; then
+  exit 0
+fi
+
+# --- Which terminal is actually hosting us? ---------------------------------
+#
+# NOT $TERM_PROGRAM: inside tmux that reads "tmux", masking the real terminal,
+# which is the common case here. Detect in this order:
+#
+#   1. In tmux, ask tmux what the ATTACHED CLIENT's terminal is. This is also
+#      correct after detach/reattach from a different terminal, which no
+#      inherited env var survives. Matches the same xterm-ghostty name that
+#      .tmux.conf keys terminal-overrides off.
+#   2. Outside tmux, $TERM_PROGRAM is trustworthy.
+#   3. $ITERM_SESSION_ID as a final hint (iTerm shell integration).
+host_term="unknown"
+if [[ -n "${TMUX:-}" ]] && command -v tmux >/dev/null 2>&1; then
+  case "$(tmux display-message -p '#{client_termname}' 2>/dev/null)" in
+    *ghostty*) host_term="ghostty" ;;
+    *)         [[ -n "${ITERM_SESSION_ID:-}" ]] && host_term="iterm" ;;
+  esac
+else
+  case "${TERM_PROGRAM:-}" in
+    ghostty|Ghostty) host_term="ghostty" ;;
+    iTerm.app)       host_term="iterm" ;;
+    *)               [[ -n "${ITERM_SESSION_ID:-}" ]] && host_term="iterm" ;;
+  esac
+fi
+
+case "$host_term" in
+  ghostty) APP_ICON="$ICONS/ghostty.png";             FOCUS_APP="Ghostty" ;;
+  iterm)   APP_ICON="$ICONS/iTerm2-nord-chevron.png"; FOCUS_APP="iTerm" ;;
+  *)       APP_ICON="$CONTENT_IMAGE";                 FOCUS_APP="" ;;
+esac
 
 # Capture both env vars NOW, before backgrounding alerter:
 #
@@ -99,10 +149,14 @@ fi
       fi
     fi
 
-    # Step 2 — focus the right iTerm window/tab/pane. Walk windows → tabs →
-    # sessions, match against the captured ITERM_SESSION_ID, select that one.
-    # Falls back to plain activate if no match (or no id at all — Ghostty etc.)
-    if [[ -n "$ITERM_SESSION" ]]; then
+    # Step 2 — focus the host terminal. Only iTerm can be driven down to the
+    # exact tab/pane (AppleScript + $ITERM_SESSION_ID); Ghostty has no such
+    # scripting interface, so it gets a plain activate and tmux step 1 above
+    # has already moved the right pane under the cursor.
+    #
+    # This used to hard-code iTerm, which meant clicking a banner raised iTerm
+    # even when the session was in Ghostty.
+    if [[ "$host_term" == "iterm" && -n "$ITERM_SESSION" ]]; then
       osascript <<APPLESCRIPT 2>/dev/null
 tell application "iTerm"
   activate
@@ -120,8 +174,8 @@ tell application "iTerm"
   end repeat
 end tell
 APPLESCRIPT
-    else
-      open -a iTerm
+    elif [[ -n "$FOCUS_APP" ]]; then
+      open -a "$FOCUS_APP"
     fi
   fi
 ) &
