@@ -10367,23 +10367,23 @@ Respond with one or more commands. Do not include any explanation or additional 
 		<integer>1</integer>
 	</dict>
 	<key>NSWindow Frame NSColorPanel</key>
-	<string>552 865 250 316 0 0 1728 1083 </string>
+	<string>2120 718 250 316 0 0 1728 1083 </string>
 	<key>NSWindow Frame NSNavPanelAutosaveName</key>
 	<string>464 477 800 448 0 0 1728 1085 </string>
 	<key>NSWindow Frame ProfilesPanel</key>
 	<string>289 646 735 392 0 0 1728 1085 </string>
 	<key>NSWindow Frame SUStatusFrame</key>
-	<string>2576 412 400 139 1496 -740 2560 1676 </string>
+	<string>664 708 400 139 0 0 1728 1083 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>2466 218 620 398 1496 -740 2560 1676 </string>
+	<string>2146 325 620 398 1496 -313 1920 1249 </string>
 	<key>NSWindow Frame iTerm Profile  0</key>
-	<string>1496 -740 2560 1676 1496 -740 2560 1676 </string>
+	<string>0 0 1728 1083 0 0 1728 1083 </string>
 	<key>NSWindow Frame iTerm Profile 27F77F16-78BF-4E24-9A78-7B08ED52CE6B 0</key>
 	<string>0 475 1728 610 0 0 1728 1085 </string>
 	<key>NSWindow Frame iTerm Profile B7F5FCD6-39CC-4204-8043-16AB4099B324 0</key>
 	<string>0 0 1728 1083 0 0 1728 1083 </string>
 	<key>NSWindow Frame iTerm Profile F5DD9FEE-4853-445C-A1C5-8EF02AC78D3D 0</key>
-	<string>1496 -313 1920 1249 1496 -313 1920 1249 </string>
+	<string>3 3 1722 1077 0 0 1728 1083 </string>
 	<key>NSWindow Frame iTerm Profile F5DD9FEE-4853-445C-A1C5-8EF02AC78D3D 1</key>
 	<string>0 214 1496 723 0 0 1496 937 </string>
 	<key>NSWindow Frame iTerm Profile F5DD9FEE-4853-445C-A1C5-8EF02AC78D3D 2</key>
@@ -18944,7 +18944,7 @@ Respond with one or more commands. Do not include any explanation or additional 
 	</array>
 	<key>NoSyncAllAppVersions</key>
 	<array>
-		<string>3.5.11beta2</string>
+		<string>3.5.14</string>
 		<string>3.6.3beta1</string>
 		<string>3.5.5beta2</string>
 		<string>3.5.0beta25</string>
@@ -18969,6 +18969,7 @@ Respond with one or more commands. Do not include any explanation or additional 
 		<string>3.6.0beta4</string>
 		<string>3.5.1beta1</string>
 		<string>3.6.7beta2</string>
+		<string>3.7.0beta12</string>
 		<string>3.5.0beta21</string>
 		<string>3.5.5beta1</string>
 		<string>3.6.9beta1</string>
@@ -18977,6 +18978,7 @@ Respond with one or more commands. Do not include any explanation or additional 
 		<string>3.5.0beta19</string>
 		<string>3.7.0beta9</string>
 		<string>3.6.6beta3</string>
+		<string>3.7.0beta11</string>
 		<string>3.5.0beta20</string>
 		<string>3.5.6beta3</string>
 		<string>3.5.13beta1</string>
@@ -18991,7 +18993,7 @@ Respond with one or more commands. Do not include any explanation or additional 
 		<string>3.5.12beta1</string>
 		<string>3.5.1beta2</string>
 		<string>3.6.7beta3</string>
-		<string>3.5.14</string>
+		<string>3.5.11beta2</string>
 	</array>
 	<key>NoSyncBFPRecents</key>
 	<array>
@@ -19025,9 +19027,9 @@ Respond with one or more commands. Do not include any explanation or additional 
 	<key>NoSyncFrame_SessionsPreferences</key>
 	<dict>
 		<key>screenFrame</key>
-		<string>{{0, 0}, {1728, 1117}}</string>
+		<string>{{1496, -313}, {1920, 1280}}</string>
 		<key>topLeft</key>
-		<string>{402, 798}</string>
+		<string>{1994, 569}</string>
 	</dict>
 	<key>NoSyncFrame_SharedPreferences</key>
 	<dict>
@@ -19049,7 +19051,7 @@ Respond with one or more commands. Do not include any explanation or additional 
 	<key>NoSyncKeyCode0MitigationDisabled_F5DD9FEE-4853-445C-A1C5-8EF02AC78D3D</key>
 	<true/>
 	<key>NoSyncLastOSVersion</key>
-	<string>Version 26.5.2 (Build 25F84)</string>
+	<string>Version 26.6.2 (Build 25G83)</string>
 	<key>NoSyncLastShutdownWasClean</key>
 	<false/>
 	<key>NoSyncLastSystemPythonVersionRequirement</key>
@@ -19057,7 +19059,7 @@ Respond with one or more commands. Do not include any explanation or additional 
 	<key>NoSyncLastTipTime</key>
 	<real>732567609.29258394</real>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>213</integer>
+	<integer>218</integer>
 	<key>NoSyncLocalNetworkPermissionPromptedVersion</key>
 	<string>3.7.0beta8</string>
 	<key>NoSyncLoggingStyle</key>
@@ -19073,11 +19075,11 @@ Respond with one or more commands. Do not include any explanation or additional 
 	<key>NoSyncPermissionToShowTip</key>
 	<true/>
 	<key>NoSyncPermissionsHelper_Accessibility</key>
-	<string>3.7.0beta6</string>
+	<string>3.7.0beta11</string>
 	<key>NoSyncPersistentRateLimitedUpdates</key>
 	<dict>
 		<key>CheckForUpdatedUv</key>
-		<real>808271998.77831399</real>
+		<real>810540555.69047105</real>
 	</dict>
 	<key>NoSyncRecordedVariables</key>
 	<dict>
@@ -20053,13 +20055,13 @@ Respond with one or more commands. Do not include any explanation or additional 
 	<key>NoSyncSavedWindowPositions</key>
 	<dict>
 		<key> 0</key>
-		<string>{1496, 936}</string>
+		<string>{0, 1083}</string>
 		<key>27F77F16-78BF-4E24-9A78-7B08ED52CE6B 0</key>
 		<string>{0, 1085}</string>
 		<key>B7F5FCD6-39CC-4204-8043-16AB4099B324 0</key>
 		<string>{0, 1083}</string>
 		<key>F5DD9FEE-4853-445C-A1C5-8EF02AC78D3D 0</key>
-		<string>{1496, 936}</string>
+		<string>{3, 1080}</string>
 		<key>F5DD9FEE-4853-445C-A1C5-8EF02AC78D3D 1</key>
 		<string>{0, 937}</string>
 		<key>F5DD9FEE-4853-445C-A1C5-8EF02AC78D3D 2</key>
@@ -20078,13 +20080,13 @@ Respond with one or more commands. Do not include any explanation or additional 
 		<key>NoSyncBrowserUpsell</key>
 		<dict>
 			<key>count</key>
-			<integer>8</integer>
+			<integer>47</integer>
 			<key>episode</key>
 			<string>permanent</string>
 			<key>heading</key>
 			<string>Plugin Required</string>
 			<key>lastSuppressed</key>
-			<real>807999487.12537503</real>
+			<real>810102593.45547402</real>
 			<key>selectionLabel</key>
 			<string>Use System Browser</string>
 			<key>title</key>
@@ -20127,6 +20129,8 @@ Respond with one or more commands. Do not include any explanation or additional 
 		<key>mask_32783_tv_0_os_26_5_scale_1.0</key>
 		<real>15</real>
 		<key>mask_32783_tv_0_os_26_5_scale_2.0</key>
+		<real>15.75</real>
+		<key>mask_32783_tv_0_os_26_6_scale_2.0</key>
 		<real>15.75</real>
 		<key>mask_32783_tv_1_os_26_5_scale_2.0</key>
 		<real>15.75</real>
@@ -20209,11 +20213,11 @@ Respond with one or more commands. Do not include any explanation or additional 
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2026-08-11T23:59:59Z</date>
+	<date>2026-09-07T06:09:16Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SUUpdateGroupIdentifier</key>
-	<integer>2228926949</integer>
+	<integer>1123530358</integer>
 	<key>SUUpdateRelaunchingMarker</key>
 	<false/>
 	<key>SavePasteHistory</key>
@@ -20301,7 +20305,7 @@ Respond with one or more commands. Do not include any explanation or additional 
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.7.0beta9</string>
+	<string>3.7.0beta12</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>4</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>

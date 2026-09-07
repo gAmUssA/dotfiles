@@ -13,8 +13,9 @@ The repo's model, so the steps make sense:
 - **`prefs-restore.sh`** — GUI app preferences (Moom, PopClip, iStat, …).
 - **`macos-defaults.sh`** — 55 system settings (Dock, Finder, keyboard, …).
 - **Git submodules** — zsh plugins (kafka-zsh-completions).
-- Deliberately **NOT in git**: kube/docker credentials, TextExpander serial,
-  Claude Code's `settings.local.json`. Those are per-machine on purpose.
+- Deliberately **NOT in git**: kube/docker credentials, Apple signing keys
+  (see [SETUP-SIGNING-KEYS.md](SETUP-SIGNING-KEYS.md)), Claude Code's
+  `settings.local.json`. Those are per-machine on purpose.
 
 ---
 
@@ -150,8 +151,6 @@ op item list --tags appstoreconnect      # what's backed up
 
 # Claude Code:
 claude          # run once, authenticate. Creates per-machine settings.local.json.
-
-# TextExpander: install, sign in — it has its own cloud sync.
 ```
 
 ---

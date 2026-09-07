@@ -6,13 +6,14 @@
 	<array>
 		<string>2025-11-11_2.html</string>
 		<string>2025-11-11.html</string>
+		<string>2026-06-13.html</string>
 	</array>
 	<key>AnnouncementsLastCheckDate</key>
-	<date>2026-07-09T19:27:34Z</date>
+	<date>2026-09-06T07:29:23Z</date>
 	<key>AnnouncementsLastShownFilename</key>
-	<string>2025-11-11.html</string>
+	<string>2026-06-13.html</string>
 	<key>LastRunAppVersion</key>
-	<string>3.1.17</string>
+	<string>3.2.3</string>
 	<key>NSNavPanelExpandedSizeForOpenMode</key>
 	<string>{880, 448}</string>
 	<key>NSOSPLastRootDirectory</key>
@@ -41,11 +42,11 @@
 	<key>NSWindow Frame NSNavPanelAutosaveName</key>
 	<string>2241 209 430 188 1496 -313 1920 1280 </string>
 	<key>NSWindow Frame internalhelppanel</key>
-	<string>161 493 1000 838 0 0 1728 1083 </string>
+	<string>1699 346 1000 838 1496 -313 1920 1249 </string>
 	<key>NSWindow Frame markdownpreview</key>
 	<string>0 0 1728 1083 0 0 1728 1083 </string>
 	<key>NSWindow Frame ministatswindow</key>
-	<string>1006 80 223 364 0 0 1728 1083 </string>
+	<string>2630 -215 223 364 1496 -313 1920 1249 </string>
 	<key>STP_is_first_launch</key>
 	<false/>
 	<key>STP_last_used_version</key>
@@ -90,11 +91,11 @@
 	<key>customPreprocessorArguments</key>
 	<string></string>
 	<key>customPreprocessorDefault</key>
-	<true/>
+	<false/>
 	<key>customProcessorArguments</key>
 	<string></string>
 	<key>customProcessorDefault</key>
-	<true/>
+	<false/>
 	<key>defaultPreviewStyle</key>
 	<integer>10</integer>
 	<key>defaultProcessor</key>
@@ -691,9 +692,9 @@
 	<key>textZoom</key>
 	<real>1</real>
 	<key>useCustomMarkdownProcessor</key>
-	<true/>
+	<false/>
 	<key>useCustomPreprocessor</key>
-	<true/>
+	<false/>
 	<key>wordStyles</key>
 	<array>
 		<string>Chill</string>

@@ -46,8 +46,10 @@ why the old Mackup setup silently died. Instead, snapshots:
 
 Snapshots live in `prefs/` as XML plists. The backup script scans every export
 for license/serial/credential key names and refuses to write ones that match
-(this repo is public — that's also why TextExpander is excluded; its prefs
-carry its serial number, and it cloud-syncs itself anyway).
+(this repo is public). That scan reads key *names* only, so domains that bury
+PII in a `<data>` blob also get a per-domain drop list — see
+`domain_strip_keys` in `prefs-backup.sh`, which is what keeps OpenUsage's
+account email and its ~40 KB of churning usage snapshots out of the repo.
 
 iTerm2 is snapshotted the same way rather than through its own "load
 preferences from a custom folder" option — that writes on every quit with no

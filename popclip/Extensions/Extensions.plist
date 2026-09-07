@@ -158,16 +158,6 @@
 			<key>Enabled</key>
 			<true/>
 			<key>Extension Identifier</key>
-			<string>com.pilotmoon.popclip.extension.open-in-firefox</string>
-			<key>Extension Name</key>
-			<string>Open in Firefox</string>
-			<key>Package Name</key>
-			<string>OpenInFirefox.popclipext</string>
-		</dict>
-		<dict>
-			<key>Enabled</key>
-			<true/>
-			<key>Extension Identifier</key>
 			<string>com.pilotmoon.popclip.extension.open-in-browser</string>
 			<key>Extension Name</key>
 			<string>Open in Browser</string>
@@ -183,6 +173,16 @@
 			<string>TextExpander</string>
 			<key>Package Name</key>
 			<string>TextExpander.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.open-in-firefox</string>
+			<key>Extension Name</key>
+			<string>Open in Firefox</string>
+			<key>Package Name</key>
+			<string>OpenInFirefox.popclipext</string>
 		</dict>
 		<dict>
 			<key>Enabled</key>
