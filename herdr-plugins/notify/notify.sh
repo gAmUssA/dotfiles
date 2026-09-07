@@ -43,6 +43,109 @@ log() {
   printf '[%s] %s\n' "$(date '+%FT%T')" "$*" >> "$log_dir/notify.log"
 }
 
+# --- Raise the terminal window that actually hosts this herdr session --------
+#
+# `herdr agent focus` moves focus INSIDE herdr, but the herdr client is just a
+# process in some terminal window — if that window isn't frontmost you see
+# nothing. So find the client and raise its real window.
+#
+# The first version here ran `open -a Ghostty || open -a iTerm`, which is wrong
+# twice over: it assumed Ghostty, and `open -a` LAUNCHES a missing app and
+# reports success, so the `||` fallback could never run. It reliably raised the
+# wrong terminal.
+focus_client() {
+  # Which herdr session fired this? Derive from the socket the server gave us:
+  #   default -> ~/.config/herdr/herdr.sock
+  #   named   -> ~/.config/herdr/sessions/<name>/herdr.sock
+  local sock="${HERDR_SOCKET_PATH:-}" sess="" tty_dev="" app=""
+  case "$sock" in
+    */sessions/*) sess="${sock#*/sessions/}"; sess="${sess%%/*}" ;;
+  esac
+
+  # The client for that session — `herdr` or `herdr --session <name>`, never
+  # `herdr server`. Its controlling tty is the terminal window we want.
+  if [[ -n "$sess" ]]; then
+    tty_dev=$(ps -eo tty=,command= \
+      | awk -v s="--session $sess" '/herdr/ && !/herdr server/ && index($0,s) {print $1; exit}')
+  else
+    tty_dev=$(ps -eo tty=,command= \
+      | awk '/herdr/ && !/herdr server/ && !/--session/ {print $1; exit}')
+  fi
+  log "focus_client session='${sess:-default}' tty='${tty_dev:-none}'"
+
+  # No tty means NO CLIENT IS ATTACHED to this session — the normal state for
+  # an always-on herdr host. There is no window to raise, so open one and
+  # attach. Clicking "agent finished" and getting nothing would be a dead end.
+  if [[ -z "$tty_dev" || "$tty_dev" == "??" ]]; then
+    local cmd="herdr"
+    [[ -n "$sess" ]] && cmd="herdr --session $sess"
+    log "no client attached; opening one with: $cmd"
+    osascript -e "tell application \"iTerm\"
+        activate
+        set w to (create window with default profile)
+        tell current session of w to write text \"$cmd\"
+      end tell" >/dev/null 2>&1 \
+      || open -na Ghostty --args -e "$cmd" >/dev/null 2>&1 || true
+    return 0
+  fi
+
+  # iTerm can be driven down to the exact window/tab/session by tty, so try it
+  # first and only accept it if a session actually matched.
+  if osascript <<OSA 2>/dev/null | grep -q '^matched'
+tell application "iTerm"
+  repeat with w in windows
+    repeat with t in tabs of w
+      repeat with s in sessions of t
+        if (tty of s) is "/dev/$tty_dev" then
+          activate
+          select w
+          select t
+          select s
+          return "matched"
+        end if
+      end repeat
+    end repeat
+  end repeat
+  return "nomatch"
+end tell
+OSA
+  then
+    log "focused iTerm session on /dev/$tty_dev"
+    return 0
+  fi
+
+  # Otherwise identify the owning app from the client's ancestry and just raise
+  # it — Ghostty has no per-session scripting, so app-level is the best we get.
+  local p ppid comm
+  p=$(ps -eo pid=,tty= | awk -v t="$tty_dev" '$2==t {print $1; exit}')
+  for _ in 1 2 3 4 5 6 7 8; do
+    [[ -z "$p" || "$p" == "1" ]] && break
+    read -r ppid comm <<<"$(ps -o ppid=,comm= -p "$p" 2>/dev/null)"
+    [[ -z "$ppid" ]] && break
+    case "$comm" in
+      *Ghostty*)  app="Ghostty"; break ;;
+      *iTerm*)    app="iTerm";   break ;;
+      *WezTerm*)  app="WezTerm"; break ;;
+      *kitty*)    app="kitty";   break ;;
+      *Alacritty*) app="Alacritty"; break ;;
+    esac
+    p="$ppid"
+  done
+  if [[ -n "$app" ]]; then
+    open -a "$app" 2>/dev/null || true
+    log "raised app=$app for /dev/$tty_dev"
+  else
+    log "no owning terminal app found for /dev/$tty_dev"
+  fi
+}
+
+# Standalone check: `notify.sh --focus-test` exercises the routing above
+# without waiting for a real notification click.
+if [[ "${1:-}" == "--focus-test" ]]; then
+  HERDR_NOTIFY_DEBUG=1 log_dir="${HERDR_PLUGIN_STATE_DIR:-/tmp}" focus_client
+  exit 0
+fi
+
 # --- Which states are worth interrupting for? -------------------------------
 #
 # `done` and `blocked` only. `working`, `idle`, and `unknown` are transitions
@@ -101,11 +204,8 @@ log "notify status=$status agent=$label pane=$pane project=$project"
     2>/dev/null)
 
   if [[ "$result" == "@CONTENTCLICKED" && -n "$pane" ]]; then
-    # Focus the pane inside herdr first, then raise a terminal so the focused
-    # pane is actually on screen. herdr knows its own layout; we just ask.
-    "$HERDR_BIN" agent focus "$pane" >/dev/null 2>&1 \
-      || "$HERDR_BIN" pane zoom "$pane" --off >/dev/null 2>&1 || true
-    open -a Ghostty 2>/dev/null || open -a iTerm 2>/dev/null || true
+    "$HERDR_BIN" agent focus "$pane" >/dev/null 2>&1 || true
+    focus_client
     log "clicked -> focused $pane"
   fi
 ) &
