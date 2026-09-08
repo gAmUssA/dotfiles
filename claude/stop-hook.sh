@@ -14,11 +14,11 @@
 #        (1) tmux select-window/select-pane on $TMUX_PANE so the tmux
 #            server's idea of "active" matches where Claude is
 #        (2) focus the HOST terminal — AppleScript to the exact iTerm
-#            window/tab/pane via $ITERM_SESSION_ID, or `open -a Ghostty`
+#            window/tab/pane via $ITERM_SESSION_ID
 #
-# Host-aware (see the detection block below): no banner at all inside herdr
-# (herdr raises its own, for every agent not just Claude), and the icon and
-# click target follow whichever terminal is actually attached.
+# No banner at all inside herdr — herdr-plugins/notify raises its own there,
+# for every agent rather than only Claude. iTerm is the only terminal this
+# routes to; see the host block below.
 #
 # Terminal BEL is emitted by tmux-agentbar's `done` report (runs as a sibling
 # hook in settings.json), so this script deliberately does NOT write \a — that
@@ -81,36 +81,22 @@ if [[ -n "${HERDR_ENV:-}" ]]; then
   fi
 fi
 
-# --- Which terminal is actually hosting us? ---------------------------------
+# --- Host terminal: iTerm only ----------------------------------------------
 #
-# NOT $TERM_PROGRAM: inside tmux that reads "tmux", masking the real terminal,
-# which is the common case here. Detect in this order:
+# Deliberately iTerm-only. Everything that raises a window here runs in iTerm —
+# Claude in tmux, and herdr in its own iTerm window — and iTerm is the only
+# terminal that can be driven to an exact window/tab/session, so a click lands
+# on the right split instead of merely raising an app. Ghostty support was
+# dropped rather than left as a half-working branch nothing exercises.
 #
-#   1. In tmux, ask tmux what the ATTACHED CLIENT's terminal is. This is also
-#      correct after detach/reattach from a different terminal, which no
-#      inherited env var survives. Matches the same xterm-ghostty name that
-#      .tmux.conf keys terminal-overrides off.
-#   2. Outside tmux, $TERM_PROGRAM is trustworthy.
-#   3. $ITERM_SESSION_ID as a final hint (iTerm shell integration).
-host_term="unknown"
-if [[ -n "${TMUX:-}" ]] && command -v tmux >/dev/null 2>&1; then
-  case "$(tmux display-message -p '#{client_termname}' 2>/dev/null)" in
-    *ghostty*) host_term="ghostty" ;;
-    *)         [[ -n "${ITERM_SESSION_ID:-}" ]] && host_term="iterm" ;;
-  esac
+# $ITERM_SESSION_ID is set by iTerm's shell integration and survives into tmux,
+# so it identifies the hosting session in both cases. If it is absent we are
+# not in iTerm: still notify (the banner is the point), just without routing.
+if [[ -n "${ITERM_SESSION_ID:-}" ]]; then
+  APP_ICON="$ICONS/iTerm2-nord-chevron.png"; FOCUS_APP="iTerm"
 else
-  case "${TERM_PROGRAM:-}" in
-    ghostty|Ghostty) host_term="ghostty" ;;
-    iTerm.app)       host_term="iterm" ;;
-    *)               [[ -n "${ITERM_SESSION_ID:-}" ]] && host_term="iterm" ;;
-  esac
+  APP_ICON="$CONTENT_IMAGE";                 FOCUS_APP=""
 fi
-
-case "$host_term" in
-  ghostty) APP_ICON="$ICONS/ghostty.png";             FOCUS_APP="Ghostty" ;;
-  iterm)   APP_ICON="$ICONS/iTerm2-nord-chevron.png"; FOCUS_APP="iTerm" ;;
-  *)       APP_ICON="$CONTENT_IMAGE";                 FOCUS_APP="" ;;
-esac
 
 # Capture both env vars NOW, before backgrounding alerter:
 #
@@ -120,8 +106,8 @@ esac
 #   pane where Claude is running. Format: %<n>, e.g. %5.
 #
 # Both are inherited through the shell → claude → stop-hook chain. Either
-# can be empty (Ghostty has no ITERM_SESSION_ID; running outside tmux has no
-# TMUX_PANE) and we fall back accordingly.
+# can be empty (not in iTerm; running outside tmux has no TMUX_PANE) and we
+# fall back accordingly.
 ITERM_SESSION="${ITERM_SESSION_ID:-}"
 TMUX_PANE_CAPTURED="${TMUX_PANE:-}"
 
@@ -174,13 +160,9 @@ fi
     fi
 
     # Step 2 — focus the host terminal. Only iTerm can be driven down to the
-    # exact tab/pane (AppleScript + $ITERM_SESSION_ID); Ghostty has no such
-    # scripting interface, so it gets a plain activate and tmux step 1 above
-    # has already moved the right pane under the cursor.
-    #
-    # This used to hard-code iTerm, which meant clicking a banner raised iTerm
-    # even when the session was in Ghostty.
-    if [[ "$host_term" == "iterm" && -n "$ITERM_SESSION" ]]; then
+    # exact tab/pane (AppleScript + $ITERM_SESSION_ID). tmux step 1 above has
+    # already moved the right pane under the cursor inside that session.
+    if [[ -n "$ITERM_SESSION" ]]; then
       osascript <<APPLESCRIPT 2>/dev/null
 tell application "iTerm"
   activate

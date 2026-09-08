@@ -57,7 +57,7 @@ focus_client() {
   # Which herdr session fired this? Derive from the socket the server gave us:
   #   default -> ~/.config/herdr/herdr.sock
   #   named   -> ~/.config/herdr/sessions/<name>/herdr.sock
-  local sock="${HERDR_SOCKET_PATH:-}" sess="" tty_dev="" app=""
+  local sock="${HERDR_SOCKET_PATH:-}" sess="" tty_dev=""
   case "$sock" in
     */sessions/*) sess="${sock#*/sessions/}"; sess="${sess%%/*}" ;;
   esac
@@ -91,10 +91,10 @@ focus_client() {
     local cmd="herdr"
     [[ -n "$sess" ]] && cmd="herdr --session $sess"
     log "no client attached; opening one with: $cmd"
-    # iTerm first: it can create a window AND run the command in it. Ghostty is
-    # the fallback and needs --command=; `open -na Ghostty --args -e ...` opens
-    # a window that does not run the command, which is how a click ended up
-    # raising an empty Ghostty.
+    # iTerm creates the window AND runs the command in it. iTerm-only by
+    # choice: a previous Ghostty fallback used `open -na Ghostty --args -e`,
+    # which opens a window WITHOUT running the command — that is how a click
+    # ended up raising an empty Ghostty.
     if osascript -e "tell application \"iTerm\"
           activate
           set w to (create window with default profile)
@@ -102,9 +102,7 @@ focus_client() {
         end tell" >/dev/null 2>&1; then
       log "opened iTerm client for session ${sess}"
     else
-      open -na Ghostty --args --command="$cmd" >/dev/null 2>&1 \
-        && log "opened Ghostty client for session ${sess}" \
-        || log "could not open any client (check Automation permission)"
+      log "could not open an iTerm client (check Automation permission)"
     fi
     return 0
   fi
@@ -134,29 +132,11 @@ OSA
     return 0
   fi
 
-  # Otherwise identify the owning app from the client's ancestry and just raise
-  # it — Ghostty has no per-session scripting, so app-level is the best we get.
-  local p ppid comm
-  p=$(ps -eo pid=,tty= | awk -v t="$tty_dev" '$2==t {print $1; exit}')
-  for _ in 1 2 3 4 5 6 7 8; do
-    [[ -z "$p" || "$p" == "1" ]] && break
-    read -r ppid comm <<<"$(ps -o ppid=,comm= -p "$p" 2>/dev/null)"
-    [[ -z "$ppid" ]] && break
-    case "$comm" in
-      *Ghostty*)  app="Ghostty"; break ;;
-      *iTerm*)    app="iTerm";   break ;;
-      *WezTerm*)  app="WezTerm"; break ;;
-      *kitty*)    app="kitty";   break ;;
-      *Alacritty*) app="Alacritty"; break ;;
-    esac
-    p="$ppid"
-  done
-  if [[ -n "$app" ]]; then
-    open -a "$app" 2>/dev/null || true
-    log "raised app=$app for /dev/$tty_dev"
-  else
-    log "no owning terminal app found for /dev/$tty_dev"
-  fi
+  # The tty exists but no iTerm session owns it. iTerm is the only terminal
+  # this routes to (see the header), so just raise iTerm — a stale tty here
+  # means the window was closed, and activating iTerm is the useful answer.
+  open -a iTerm 2>/dev/null || true
+  log "no iTerm session for /dev/$tty_dev; raised iTerm"
 }
 
 # Standalone check: `notify.sh --focus-test` exercises the routing above
