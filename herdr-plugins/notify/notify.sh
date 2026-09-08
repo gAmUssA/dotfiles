@@ -39,8 +39,15 @@ payload="${HERDR_PLUGIN_EVENT_JSON:-}"
 
 log_dir="${HERDR_PLUGIN_STATE_DIR:-/tmp}"
 log() {
-  [[ -n "${HERDR_NOTIFY_DEBUG:-}" ]] || return 0
+  # Enabled by env OR a marker file, because the herdr server does not pass
+  # HERDR_NOTIFY_DEBUG into plugin hooks — `touch $HERDR_PLUGIN_STATE_DIR/debug`
+  # is the only way to get logs out of a real event.
+  [[ -n "${HERDR_NOTIFY_DEBUG:-}" || -f "$log_dir/debug" ]] || return 0
   printf '[%s] %s\n' "$(date '+%FT%T')" "$*" >> "$log_dir/notify.log"
+}
+
+log_env() {
+  log "env HERDR_SOCKET_PATH='${HERDR_SOCKET_PATH:-UNSET}' HERDR_PANE_ID='${HERDR_PANE_ID:-UNSET}' HERDR_WORKSPACE_ID='${HERDR_WORKSPACE_ID:-UNSET}' HERDR_BIN_PATH='${HERDR_BIN_PATH:-UNSET}'"
 }
 
 # --- Raise the terminal window that actually hosts this herdr session --------
@@ -109,7 +116,8 @@ focus_client() {
 
   # iTerm can be driven down to the exact window/tab/session by tty, so try it
   # first and only accept it if a session actually matched.
-  if osascript <<OSA 2>/dev/null | grep -q '^matched'
+  local osa
+  osa=$(osascript <<OSA 2>&1
 tell application "iTerm"
   repeat with w in windows
     repeat with t in tabs of w
@@ -119,7 +127,11 @@ tell application "iTerm"
           select w
           select t
           select s
-          return "matched"
+          -- Raise the window explicitly: `select` makes it current inside
+          -- iTerm, but does not always bring it to the front when the window
+          -- lives on another macOS Space or behind other apps.
+          set index of w to 1
+          return "matched|" & (id of w) & "|" & (name of s)
         end if
       end repeat
     end repeat
@@ -127,7 +139,9 @@ tell application "iTerm"
   return "nomatch"
 end tell
 OSA
-  then
+)
+  log "osascript -> $osa"
+  if [[ "$osa" == matched* ]]; then
     log "focused iTerm session on /dev/$tty_dev"
     return 0
   fi
@@ -187,6 +201,8 @@ else
 fi
 
 log "notify status=$status agent=$label pane=$pane project=$project"
+log_env
+[[ -f "$log_dir/focus-on-done" ]] && { log "marker: exercising focus_client from the SERVER context"; focus_client; }
 
 # --group keyed per pane so back-to-back turns in ONE pane replace each other,
 # while different panes still get their own banner — with several agents running
