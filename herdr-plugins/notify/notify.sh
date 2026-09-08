@@ -62,15 +62,26 @@ focus_client() {
     */sessions/*) sess="${sock#*/sessions/}"; sess="${sess%%/*}" ;;
   esac
 
-  # The client for that session — `herdr` or `herdr --session <name>`, never
-  # `herdr server`. Its controlling tty is the terminal window we want.
-  if [[ -n "$sess" ]]; then
-    tty_dev=$(ps -eo tty=,command= \
-      | awk -v s="--session $sess" '/herdr/ && !/herdr server/ && index($0,s) {print $1; exit}')
-  else
-    tty_dev=$(ps -eo tty=,command= \
-      | awk '/herdr/ && !/herdr server/ && !/--session/ {print $1; exit}')
-  fi
+  # The client for that session. Match precisely on argv[0] being the herdr
+  # binary, NOT a substring of the whole line: this plugin's own path contains
+  # "herdr" (herdr-plugins/notify/notify.sh), as does `alerter --title herdr`,
+  # and both run with tty "??" — a loose /herdr/ match picked one of those
+  # first and concluded "no client attached" while a client was right there.
+  #
+  # Session matching also has to accept `herdr --session default`, which is a
+  # normal way to attach to the DEFAULT session (`herdr session list` shows
+  # "default" living at ~/.config/herdr, not under sessions/). Treating any
+  # --session as "named" sent default-session clicks down the no-client path.
+  [[ -z "$sess" ]] && sess="default"
+  tty_dev=$(ps -eo tty=,command= | awk -v s="$sess" '
+    $1 == "??" { next }                       # no controlling terminal
+    {
+      n = split($2, parts, "/")
+      if (parts[n] != "herdr") next           # argv[0] must BE herdr
+      if ($3 == "server") next                # the daemon, not a client
+      if (index($0, "--session " s)) { print $1; exit }
+      if (s == "default" && $0 !~ /--session/) { print $1; exit }
+    }')
   log "focus_client session='${sess:-default}' tty='${tty_dev:-none}'"
 
   # No tty means NO CLIENT IS ATTACHED to this session — the normal state for
@@ -80,12 +91,21 @@ focus_client() {
     local cmd="herdr"
     [[ -n "$sess" ]] && cmd="herdr --session $sess"
     log "no client attached; opening one with: $cmd"
-    osascript -e "tell application \"iTerm\"
-        activate
-        set w to (create window with default profile)
-        tell current session of w to write text \"$cmd\"
-      end tell" >/dev/null 2>&1 \
-      || open -na Ghostty --args -e "$cmd" >/dev/null 2>&1 || true
+    # iTerm first: it can create a window AND run the command in it. Ghostty is
+    # the fallback and needs --command=; `open -na Ghostty --args -e ...` opens
+    # a window that does not run the command, which is how a click ended up
+    # raising an empty Ghostty.
+    if osascript -e "tell application \"iTerm\"
+          activate
+          set w to (create window with default profile)
+          tell current session of w to write text \"$cmd\"
+        end tell" >/dev/null 2>&1; then
+      log "opened iTerm client for session ${sess}"
+    else
+      open -na Ghostty --args --command="$cmd" >/dev/null 2>&1 \
+        && log "opened Ghostty client for session ${sess}" \
+        || log "could not open any client (check Automation permission)"
+    fi
     return 0
   fi
 
