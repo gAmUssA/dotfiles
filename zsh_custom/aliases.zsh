@@ -153,6 +153,11 @@ alias yolo='claude --dangerously-skip-permissions'
 # Spawn a project-scoped tmux session with Claude Code, a shell, and (if detected) a test runner window
 alias cdev='~/projects/dotfiles/claude-dev.sh'
 
+# Same idea in herdr instead of tmux: workspace per project, tabs for
+# claude/shell/tests. Claude starts as a tracked herdr AGENT, so the sidebar
+# shows its live state — the reason to reach for hdev over cdev.
+alias hdev='~/projects/dotfiles/herdr-dev.sh'
+
 # sesh — fuzzy session switcher, works both outside and inside tmux.
 # Sources: config pins (~/.config/sesh/sesh.toml) + zoxide + existing tmux sessions.
 # Inside tmux, sesh switch-client's instead of attaching, so this works from within a pane.
