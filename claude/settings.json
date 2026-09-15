@@ -61,11 +61,25 @@
             "type": "command",
             "command": "bash '/Users/vikgamov/.claude/hooks/herdr-agent-state.sh' session",
             "timeout": 10
-          },
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
           {
             "type": "command",
             "command": "~/projects/dotfiles/herdr-model-report.sh claude",
             "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME\"'/.tmux/plugins/tmux-assistant-resurrect/hooks/claude-session-track.sh'"
           }
         ]
       }
@@ -78,6 +92,16 @@
             "command": "~/projects/dotfiles/tmux-agentbar/scripts/agentbar-report.sh thinking"
           }
         ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$PASEO_TERMINAL_ID\" ]; then \"${PASEO_HOOK_CLI:-paseo}\" hooks claude UserPromptSubmit; fi",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "Notification": [
@@ -86,6 +110,16 @@
           {
             "type": "command",
             "command": "~/projects/dotfiles/tmux-agentbar/scripts/agentbar-report.sh waiting"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$PASEO_TERMINAL_ID\" ]; then \"${PASEO_HOOK_CLI:-paseo}\" hooks claude Notification; fi",
+            "timeout": 10
           }
         ]
       }
@@ -97,15 +131,66 @@
             "type": "command",
             "command": "~/projects/dotfiles/claude/stop-hook.sh",
             "timeout": 10
-          },
+          }
+        ]
+      },
+      {
+        "hooks": [
           {
             "type": "command",
             "command": "~/projects/dotfiles/tmux-agentbar/scripts/agentbar-report.sh done"
-          },
+          }
+        ]
+      },
+      {
+        "hooks": [
           {
             "type": "command",
             "command": "~/projects/dotfiles/herdr-model-report.sh claude",
             "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$PASEO_TERMINAL_ID\" ]; then \"${PASEO_HOOK_CLI:-paseo}\" hooks claude Stop; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME\"'/.tmux/plugins/tmux-assistant-resurrect/hooks/claude-session-cleanup.sh'"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$PASEO_TERMINAL_ID\" ]; then \"${PASEO_HOOK_CLI:-paseo}\" hooks claude SessionEnd; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$PASEO_TERMINAL_ID\" ]; then \"${PASEO_HOOK_CLI:-paseo}\" hooks claude StopFailure; fi",
+            "timeout": 10
           }
         ]
       }
@@ -203,28 +288,28 @@
   "autoMode": {
     "environment": [
       "### Org-wide",
-      "**Organization**: None configured — this is a personal dotfiles repo (github.com/gAmUssA/dotfiles); no employer org evidence in scope",
+      "**Organization**: None configured \u2014 this is a personal dotfiles repo (github.com/gAmUssA/dotfiles); no employer org evidence in scope",
       "**Cloud provider(s)**: None configured",
-      "**Repository visibility**: gAmUssA/dotfiles on github.com is PUBLIC (confirmed via gh) — any commit or push to this repo is publishing; only this repo's own work belongs there",
-      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Repository visibility**: gAmUssA/dotfiles on github.com is PUBLIC (confirmed via gh) \u2014 any commit or push to this repo is publishing; only this repo's own work belongs there",
+      "**Internal sharing / snippet hosting**: None configured \u2014 treat public paste/gist services as outside the trust boundary",
       "**Secrets management**: None configured",
-      "**Default / protected branches**: Default branch is master; no rulesets and no protected branches configured (via gh) — pushes to master land directly on the public default branch",
+      "**Default / protected branches**: Default branch is master; no rulesets and no protected branches configured (via gh) \u2014 pushes to master land directly on the public default branch",
       "**CI/CD deploy targets**: None configured",
       "**Network posture**: None configured",
-      "**Source control**: The trusted repo and its remote(s) only — github.com/gAmUssA/dotfiles (public); no additional orgs configured",
+      "**Source control**: The trusted repo and its remote(s) only \u2014 github.com/gAmUssA/dotfiles (public); no additional orgs configured",
       "**Trusted internal domains**: None configured",
-      "**Trusted cloud buckets**: None configured — no bucket names found in config scans or usage",
+      "**Trusted cloud buckets**: None configured \u2014 no bucket names found in config scans or usage",
       "**Key internal services**: None configured",
       "**Internal package registry**: None configured",
-      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar. Known local sensitive stores referenced by this repo's tooling: ~/Library/Safari/CloudTabs.db (personal browsing data read by cloud-tabs-to-notes.sh), shell history files ($HISTFILE, ~/.bash_history — carry inline secrets, never read or publish their contents), and ~/.claude/settings.local.json (per-machine, gitignored — keep it out of the public repo)",
+      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar. Known local sensitive stores referenced by this repo's tooling: ~/Library/Safari/CloudTabs.db (personal browsing data read by cloud-tabs-to-notes.sh), shell history files ($HISTFILE, ~/.bash_history \u2014 carry inline secrets, never read or publish their contents), and ~/.claude/settings.local.json (per-machine, gitignored \u2014 keep it out of the public repo)",
       "**Data retention / declassification**: None configured",
-      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment (hyphen/underscore/dot-delimited — e.g. matches `prod-db`, not `producer`)",
-      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment (hyphen/underscore/dot-delimited \u2014 e.g. matches `prod-db`, not `producer`)",
+      "**Protected deployment namespaces / environments**: None configured \u2014 fall back to the Sensitive remote targets heuristic",
       "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
       "### User-specific",
-      "**Primary use of Claude Code**: personal/hobby software development — maintaining macOS dotfiles and tooling (zsh, tmux, iTerm2, Ghostty, Hammerspoon, Homebrew, Claude Code config) in this repo",
-      "**Trusted repo**: /Users/vikgamov/projects/dotfiles with remote github.com/gAmUssA/dotfiles. This repo is PUBLIC: only its own work is OK to commit or push there; content ported, repointed, or first read from outside this session's repo is not its own work, whoever directed the port. Secrets and sensitive data (personal & entrusted) are never cleared into any repo by its visibility — in particular, shell history contents, CloudTabs.db contents, and ~/.claude/settings.local.json must never land in this public repo",
-      "**Org-specific CLIs**: None configured — heavy tools seen (brew 90×/12×, mas, pipx, uv, tmutil, mackup, tailscale) are all standard macOS/homebrew tooling, not org-internal CLIs"
+      "**Primary use of Claude Code**: personal/hobby software development \u2014 maintaining macOS dotfiles and tooling (zsh, tmux, iTerm2, Ghostty, Hammerspoon, Homebrew, Claude Code config) in this repo",
+      "**Trusted repo**: /Users/vikgamov/projects/dotfiles with remote github.com/gAmUssA/dotfiles. This repo is PUBLIC: only its own work is OK to commit or push there; content ported, repointed, or first read from outside this session's repo is not its own work, whoever directed the port. Secrets and sensitive data (personal & entrusted) are never cleared into any repo by its visibility \u2014 in particular, shell history contents, CloudTabs.db contents, and ~/.claude/settings.local.json must never land in this public repo",
+      "**Org-specific CLIs**: None configured \u2014 heavy tools seen (brew 90\u00d7/12\u00d7, mas, pipx, uv, tmutil, mackup, tailscale) are all standard macOS/homebrew tooling, not org-internal CLIs"
     ]
   },
   "voiceEnabled": true,
@@ -241,5 +326,10 @@
       }
     }
   },
-  "model": "opus[1m]"
+  "model": "opus[1m]",
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "medium"
+    }
+  }
 }
