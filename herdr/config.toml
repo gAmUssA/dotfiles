@@ -87,7 +87,7 @@ tab_bar_right = [
   { type = "zoom" },
   { type = "datetime", format = "%H:%M" },
 ]
-agent_panel_sort = "spaces"
+agent_panel_sort = "priority"
 
 show_agent_labels_on_pane_borders = true
 
