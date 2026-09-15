@@ -428,3 +428,9 @@ source "$HOME/.railway/env"
 # Composio CLI
 export COMPOSIO_INSTALL_DIR="/Users/vikgamov/.composio"
 export PATH="$COMPOSIO_INSTALL_DIR:$PATH"
+
+# >>> grok installer >>>
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=(~/.grok/completions/zsh $fpath)
+autoload -Uz compinit && compinit -C
+# <<< grok installer <<<
