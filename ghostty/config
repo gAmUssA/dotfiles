@@ -3,7 +3,7 @@
 
 # Font (matching iTerm2 "IosevkaTermNF 20")
 font-family = IosevkaTerm Nerd Font
-font-size = 20
+font-size = 16
 font-feature = calt
 font-feature = liga
 
@@ -68,3 +68,4 @@ palette = 12=#49b9fe
 palette = 13=#fb4cb3
 palette = 14=#8be9fd
 palette = 15=#ededec
+
