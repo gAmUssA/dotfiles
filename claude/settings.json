@@ -50,6 +50,15 @@
         "hooks": [
           {
             "type": "command",
+            "command": "~/projects/dotfiles/claude/settings-link-guard.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
             "command": "~/projects/dotfiles/tmux-agentbar/scripts/agentbar-report.sh idle"
           }
         ]

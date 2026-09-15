@@ -68,11 +68,17 @@ ln -s ~/projects/dotfiles/sesh/sesh.toml ~/.config/sesh/sesh.toml
 # Claude Code config (settings + custom statusline + stop hook script)
 # Skips settings.local.json — that's meant to stay per-machine.
 mkdir -p ~/.claude
-rm -f ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh ~/.claude/block-secrets.py
+rm -f ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh ~/.claude/block-secrets.py ~/.claude/settings-link-guard.sh
 ln -s ~/projects/dotfiles/claude/settings.json ~/.claude/settings.json
 ln -s ~/projects/dotfiles/claude/statusline.sh ~/.claude/statusline.sh
 ln -s ~/projects/dotfiles/claude/stop-hook.sh ~/.claude/stop-hook.sh
 ln -s ~/projects/dotfiles/claude/block-secrets.py ~/.claude/block-secrets.py
+ln -s ~/projects/dotfiles/claude/settings-link-guard.sh ~/.claude/settings-link-guard.sh
+
+# Tools that write Claude's settings by replacing the file (Paseo,
+# tmux-assistant-resurrect) turn the symlink above back into a plain file, after
+# which the live config and this repo drift apart silently. settings-link-guard.sh
+# runs as a SessionStart hook and says so.
 
 # Git hooks for THIS repo. Not a symlink into .git/hooks — core.hooksPath points
 # git at the version-tracked githooks/ directory instead, so the hooks travel
