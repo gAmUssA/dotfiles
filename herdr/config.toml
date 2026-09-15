@@ -1,3 +1,4 @@
+onboarding = false
 # herdr configuration — mirrors ~/.tmux.conf muscle memory where herdr allows.
 # Symlinked to ~/.config/herdr/config.toml by linkall.sh.
 # Apply changes to a running server: herdr server reload-config
@@ -7,6 +8,7 @@
 # Matches the Dracula tmux theme.
 name = "dracula"
 
+auto_switch = false
 [keys]
 # Same prefix as tmux (Ctrl-Space).
 prefix = "ctrl+space"
