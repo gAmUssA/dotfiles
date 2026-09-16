@@ -34,7 +34,7 @@ Press the prefix key before any of the shortcuts listed below.
 - **`<prefix> + _`** - Split window vertically
 
 ### **Pane Navigation**
-- **`Alt + Arrow Keys`** - Navigate between panes (no prefix needed)
+- **`Ctrl + Alt + h/j/k/l`** - Navigate between panes (no prefix needed)
 - **`<prefix> + Ctrl-A`** - Cycle through panes
 
 ### **Pane Resizing**
@@ -58,7 +58,7 @@ Press the prefix key before any of the shortcuts listed below.
 
 ## 🧹 **Utility**
 - **`<prefix> + r`** - Reload tmux configuration
-- **`Ctrl-Alt-k`** - Clear pane history (no prefix needed)
+- **`<prefix> + Ctrl-k`** - Clear pane history
 
 ## 🎨 **Theme & Plugins**
 Your configuration uses:

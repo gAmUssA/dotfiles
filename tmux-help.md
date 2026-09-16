@@ -5,7 +5,7 @@
 ## Panes (inside one window)
 | Key | Action |
 |---|---|
-| `Alt + ← → ↑ ↓` *(no prefix)* | jump between panes |
+| `Ctrl + Alt + h j k l` *(no prefix)* | jump between panes (vim dirs) |
 | `prefix + x` | zoom / unzoom (toggle fullscreen) |
 | `prefix + \|` | split horizontally |
 | `prefix + _` | split vertically |
@@ -19,7 +19,7 @@
 ## Windows (tabs)
 | Key | Action |
 |---|---|
-| `Shift + Alt + ← / →` *(no prefix)* | prev / next window |
+| `Ctrl + Alt + p / n` *(no prefix)* | prev / next window |
 | `prefix + prefix` (double Ctrl-Space) | toggle last window |
 | `prefix + 1..9` | jump directly to window N |
 | `prefix + n` / `prefix + p` | next / previous window |
@@ -31,7 +31,7 @@
 ## Sessions
 | Key | Action |
 |---|---|
-| `Shift + Alt + ↑ / ↓` *(no prefix)* | prev / next session |
+| `Ctrl + Alt + Shift + P / N` *(no prefix)* | prev / next session |
 | `prefix + s` | native session picker |
 | `prefix + o` | **sessionx** popup (fuzzy, with preview) |
 | `prefix + y` | per-dir **Claude** popup (spawns/reattaches) |
@@ -55,7 +55,7 @@
 | `prefix + [` | enter copy mode (vi keys, `q` to exit) |
 | Mouse wheel | scroll history |
 | `prefix + ]` | paste |
-| `Ctrl-Alt-k` *(no prefix)* | clear pane AND history |
+| `prefix + Ctrl-k` | clear pane AND history |
 
 ## Layouts
 | Key | Action |
@@ -82,9 +82,13 @@
 | `z <dir>` | zoxide jump |
 
 ## Gotchas worth remembering
-- **Right Option** key in iTerm2 must be set to **"Esc+"** (not Normal) for Shift+Alt+arrow to fire.
+- No binding uses **Alt** any more. Alt chords were swallowed by tmux before
+  the pane's program saw them, which made `Alt+↑` unreachable in codex; the
+  whole Alt family now belongs to whatever runs in the pane. Everything
+  prefix-free sits on **Ctrl+Alt**, the one modifier family terminals and
+  desktops leave alone. herdr uses the identical chords.
 - `prefix + l` is **next layout**, NOT "last window". Use `prefix + prefix` to toggle, or `prefix + p` for previous.
-- `prefix + (` / `prefix + )` swap **panes**, not sessions. Use Shift+Alt+↑/↓ for sessions.
+- `prefix + (` / `prefix + )` swap **panes**, not sessions. Use Ctrl+Alt+Shift+P/N for sessions.
 - Powerline chevrons require IosevkaTermNF or another Nerd Font.
 
 ## Notifications & persistence
