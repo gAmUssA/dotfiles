@@ -25,11 +25,21 @@ split_horizontal = ["prefix+minus", "prefix+shift+minus"]
 zoom = ["prefix+z", "prefix+x"]
 close_pane = "prefix+shift+q"
 
-# Direct pane navigation without prefix, like tmux Alt+arrows.
-focus_pane_left = ["prefix+h", "alt+left"]
-focus_pane_down = ["prefix+j", "alt+down"]
-focus_pane_up = ["prefix+k", "alt+up"]
-focus_pane_right = ["prefix+l", "alt+right"]
+# Direct pane navigation without prefix.
+#
+# ctrl+alt+h/j/k/l, NOT alt+arrows. A direct chord is consumed by herdr and
+# never reaches the program in the pane, so binding alt+up here meant codex
+# (and anything else wanting alt+arrows) simply never received it. ctrl+alt is
+# the one modifier family terminals and OSes leave essentially untouched, which
+# is why herdr's own keyboard guide recommends exactly this set. Letters rather
+# than ctrl+alt+arrows: those ARE claimed elsewhere (GNOME workspaces, Konsole,
+# Ghostty defaults).
+#
+# .tmux.conf uses the same chords, so pane movement is identical in both.
+focus_pane_left = ["prefix+h", "ctrl+alt+h"]
+focus_pane_down = ["prefix+j", "ctrl+alt+j"]
+focus_pane_up = ["prefix+k", "ctrl+alt+k"]
+focus_pane_right = ["prefix+l", "ctrl+alt+l"]
 
 # Outer navigation, like tmux Shift+Alt+arrows:
 # horizontal = tabs (tmux windows), vertical = workspaces (tmux sessions).
