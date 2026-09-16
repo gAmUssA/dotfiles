@@ -41,12 +41,18 @@ focus_pane_down = ["prefix+j", "ctrl+alt+j"]
 focus_pane_up = ["prefix+k", "ctrl+alt+k"]
 focus_pane_right = ["prefix+l", "ctrl+alt+l"]
 
-# Outer navigation, like tmux Shift+Alt+arrows:
-# horizontal = tabs (tmux windows), vertical = workspaces (tmux sessions).
-previous_tab = ["prefix+p", "alt+shift+left"]
-next_tab = ["prefix+n", "alt+shift+right"]
-previous_workspace = "alt+shift+up"
-next_workspace = "alt+shift+down"
+# Outer navigation. Same reasoning as the pane block above: alt+shift+arrows
+# were swallowed here and never reached the pane's program, so they move onto
+# ctrl+alt too. p/n mirror prefix+p / prefix+n for tabs; adding shift escalates
+# the same motion from tab to workspace.
+#
+# NOT ctrl+alt+[ / ctrl+alt+] (which herdr's guide suggests): ctrl+[ is literally
+# Escape in a terminal, so that chord is ambiguous with alt+Esc and depends on
+# the extended-keys protocol surviving every layer. Letters have no such problem.
+previous_tab = ["prefix+p", "ctrl+alt+p"]
+next_tab = ["prefix+n", "ctrl+alt+n"]
+previous_workspace = "ctrl+alt+shift+p"
+next_workspace = "ctrl+alt+shift+n"
 
 # Resize with the tmux chords (prefix + C-h/j/u/l), no resize mode needed.
 resize_pane_left = "prefix+ctrl+h"
