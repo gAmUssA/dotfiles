@@ -61,6 +61,26 @@ symlinks. Use `prefs-backup.sh` (`defaults export` / `import`) instead.
 - `tmux source-file` does **not** remove bindings deleted from the config —
   `unbind -n <key>` explicitly, or the old chord lingers in the running server.
 
+## Modifier layers: one owner per family
+
+Keys are claimed at different layers, and an outer layer steals a chord before
+an inner one ever sees it. Each modifier family has exactly one owner:
+
+| Family | Owner | Why |
+|---|---|---|
+| **Alt** | the program in the pane (codex, editors) | multiplexers swallowed it before |
+| **Ctrl+Alt** | tmux + herdr (panes, tabs, workspaces) | terminals and desktops leave it free |
+| **Hyper** (cmd+ctrl+alt+shift) | AeroSpace (`aerospace/aerospace.toml`) | OS-level WM — must not touch Ctrl+Alt |
+
+Hyper comes from **holding** Caps Lock (Karabiner). **Tapping** Caps Lock sends
+F19, which is macOS "Select previous input source" — the EN/RU layout switch.
+Every keyboard's `simple_modifications` maps caps_lock→f19 *before* complex
+rules run, so the Hyper rule matches **f19**, not caps_lock. Do not "simplify"
+that away or language switching breaks.
+
+AeroSpace grabs keys at the OS level, before iTerm. A Ctrl+Alt binding there
+silently breaks tmux/herdr navigation even though every config file looks fine.
+
 ## herdr
 
 - One server **per session**: default plus each named session. `herdr server
