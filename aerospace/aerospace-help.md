@@ -32,8 +32,9 @@ them. Caps Lock is not involved — it still switches EN/RU, instantly.
 
 | Key | Action | What should happen |
 |---|---|---|
-| `space` | **tile ↔ float** this window | Opts one window into tiling (it snaps into the layout), or back out to float freely. This is how you tile now — it is off by default. |
-| `t` | **t**ile them | Arranges the tiled windows of this workspace side by side. Floating windows are unaffected. |
+| `space` | **tile ↔ float** this window | Opts one window into tiling (it snaps into the layout), or back out to float freely. |
+| `t` | **t**ile everything here | Pulls every window on this workspace into the layout, splits them evenly, and balances. The one-key way to go from scattered to tiled. |
+| `⇧T` | float everything here | Undoes `t` — all windows on this workspace go back to floating where they were. |
 | `a` | **a**ccordion | Tiled windows stack; one visible, the rest collapse to slivers. |
 | `f` | **f**ullscreen | The focused window fills the screen. Press again to restore it. |
 | `-` / `=` | shrink / grow | The focused window changes size; neighbours take up the slack. **Stays in AERO mode** so you can press it repeatedly. |
@@ -43,6 +44,10 @@ them. Caps Lock is not involved — it still switches EN/RU, instantly.
 
 | Key | Action | What should happen |
 |---|---|---|
+| `x` | spread out | Sends each window here to its own **empty** workspace, keeping the first in place. Occupied workspaces are never touched. |
+| `g` | **g**ather | Pulls every window from all other workspaces onto this one. The inverse of `x`. |
+| `m` | **m**ove workspace to other display | The whole workspace — every window on it — jumps to the other monitor. |
+| `c` | focus other display | Moves focus to the other monitor without moving anything. |
 | `r` | reset layout | A mangled workspace flattens back to a plain, even split. |
 | `/` | this cheat sheet | Opens in Marked. It live-reloads, so edits show up immediately. |
 | `esc` | leave AERO mode | Nothing happens to your windows. |
@@ -91,7 +96,14 @@ layout ever looks broken. *These three get you out of any visual mess.*
 
 ### 8. The other display
 `⇧, d` throws the focused window to the other monitor, and again brings it back.
+`⇧, c` just moves focus there; `⇧, m` sends the whole workspace across.
 *The one thing Raycast's window commands handle less directly.*
+
+### 9. Bulk moves
+On a workspace with several windows: `⇧, t` tiles them all at once, `⇧, ⇧T`
+floats them back. Then `⇧, x` scatters them one per empty workspace, and
+`⇧, g` pulls everything back to where you are. *`x` never writes over a
+workspace that is already in use — it only fills empty ones.*
 
 ### A first real setup
 Once the keys feel automatic, give workspaces fixed jobs — for example herdr on
