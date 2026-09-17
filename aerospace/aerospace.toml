@@ -108,6 +108,8 @@ on-window-detected = [
     t = ['exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-bulk.sh tile-all', 'mode main']
     shift-t = ['exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-bulk.sh float-all', 'mode main']
     a = ['layout accordion horizontal vertical', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Accordion" "a"', 'mode main']
+    o = ['layout horizontal vertical', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Flip split direction" "o"', 'mode main']
+    j = ['mode join', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "JOIN — arrow picks the neighbour" "j"']
     r = ['flatten-workspace-tree', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Reset layout" "r"', 'mode main']
     x = ['exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-bulk.sh distribute', 'mode main']
     g = ['exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-bulk.sh gather', 'mode main']
@@ -117,3 +119,21 @@ on-window-detected = [
     equal = ['resize smart +50', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Bigger" "="']
     b = ['balance-sizes', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Even sizes" "b"']
     slash = ['exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-help.sh', 'mode main']
+
+# JOIN — a one-shot sub-mode reached with `j` from aero mode.
+#
+# `join-with <dir>` puts the focused window and the neighbour in that direction
+# into a shared container, which is how nested (BSP-like) arrangements are built:
+# join two windows, then the pair behaves as one slot in the parent. Arrows read
+# the same as everywhere else, so the only thing to remember is "j, then point".
+#
+# i3's `split` is deliberately NOT bound: AeroSpace documents it as compatibility
+# only, and it is a no-op while enable-normalization-flatten-containers is on
+# (it is, above). `o` flips the orientation instead, which is what `split` is
+# usually reached for.
+[mode.join.binding]
+    esc = ['mode main', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "" ""']
+    left = ['join-with left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Join ←" "j ←"', 'mode main']
+    down = ['join-with down', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Join ↓" "j ↓"', 'mode main']
+    up = ['join-with up', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Join ↑" "j ↑"', 'mode main']
+    right = ['join-with right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Join →" "j →"', 'mode main']

@@ -36,6 +36,8 @@ them. Caps Lock is not involved — it still switches EN/RU, instantly.
 | `t` | **t**ile everything here | Pulls every window on this workspace into the layout, splits them evenly, and balances. The one-key way to go from scattered to tiled. |
 | `⇧T` | float everything here | Undoes `t` — all windows on this workspace go back to floating where they were. |
 | `a` | **a**ccordion | Tiled windows stack; one visible, the rest collapse to slivers. |
+| `o` | flip split direction | The tiled windows in the current container swap between side-by-side and stacked. Nothing is added or removed — only the axis changes. |
+| `j` then an arrow | **j**oin with that neighbour | The focused window and the neighbour you point at become one group, which then behaves as a single slot in the parent. This is how a column-next-to-a-stack is built. The HUD stays up until you pick a direction; `esc` cancels. |
 | `f` | **f**ullscreen | The focused window fills the screen. Press again to restore it. |
 | `-` / `=` | shrink / grow | The focused window changes size; neighbours take up the slack. **Stays in AERO mode** so you can press it repeatedly. |
 | `b` | balance sizes | All windows in the workspace become equal. Also stays in the mode. |
@@ -104,6 +106,15 @@ On a workspace with several windows: `⇧, t` tiles them all at once, `⇧, ⇧T
 floats them back. Then `⇧, x` scatters them one per empty workspace, and
 `⇧, g` pulls everything back to where you are. *`x` never writes over a
 workspace that is already in use — it only fills empty ones.*
+
+### 10. Nested layouts
+Tile three windows (`⇧, t`). Focus the second and `⇧, j` — the HUD waits — then
+`→`. The second and third are now a group: `⇧, o` flips just that group between
+side-by-side and stacked, leaving the first window alone. That is the classic
+"editor on the left, two panes stacked on the right". `⇧, r` undoes all of it.
+*`join-with` builds structure; `o` chooses its direction. i3's `split` is not
+bound — AeroSpace calls it compatibility-only and it does nothing with the
+container normalization this config uses.*
 
 ### A first real setup
 Once the keys feel automatic, give workspaces fixed jobs — for example herdr on
