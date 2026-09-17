@@ -86,6 +86,13 @@ switching gets a hold-timeout delay.
 AeroSpace grabs keys at the OS level, before iTerm. A Ctrl+Alt binding there
 silently breaks tmux/herdr navigation even though every config file looks fine.
 
+AeroSpace runs **float-by-default**: auto-tiling was tried and rejected, so
+windows stay where they are put and tiling is opt-in per window. Raycast keeps
+snapping duty (Center, halves); AeroSpace covers workspaces, focus and
+display-to-display moves. Do not "fix" the float rule into tiling — it is the
+deliberate choice, recorded after two keymap rewrites that missed the real
+problem.
+
 ## herdr
 
 - One server **per session**: default plus each named session. `herdr server

@@ -51,40 +51,17 @@ gaps.outer.bottom     = 0
 gaps.outer.top        = 0
 gaps.outer.right      = 0
 
-# Apps that should float instead of tile. MUST sit above the first [table]
-# header: TOML scopes every key after a header into that table, so placed at
-# the bottom this silently became mode.service.binding.on-window-detected and
-# AeroSpace never saw it. Dialogs already float via AeroSpace's own heuristic;
-# this list is for whole apps.
+# FLOAT BY DEFAULT. Auto-tiling — every window resizing itself when you open an
+# app — is the thing that felt wrong, so it is off: windows stay exactly where
+# you put them, and Raycast keeps doing the snapping (Center, halves, Reasonable
+# Size). AeroSpace is here for what Raycast cannot do: workspaces, focus, and
+# throwing a window to the other display.
 #
-# Starter list — expect to add a few in
-# the first days; `aerospace list-apps` prints the bundle id of anything running.
-# Raycast's own Center / Reasonable Size commands handle placing these.
+# Tiling is now opt-in: `space` in AERO mode tiles/untiles the focused window.
+# To make a specific app always tile, add a rule BELOW this one with
+# run = 'layout tiling' (check-further-callbacks keeps this list processing).
 on-window-detected = [
-    { if.app-id = 'com.1password.1password',           run = 'layout floating' },
-    { if.app-id = 'com.raycast.macos',                 run = 'layout floating' },
-    { if.app-id = 'com.apple.systempreferences',       run = 'layout floating' },
-    { if.app-id = 'com.apple.finder',                  run = 'layout floating' },
-    { if.app-id = 'us.zoom.xos',                       run = 'layout floating' },
-    { if.app-id = 'com.robinebers.openusage',          run = 'layout floating' },
-    { if.app-id = 'org.hammerspoon.Hammerspoon',       run = 'layout floating' },
-    { if.app-id = 'org.pqrs.Karabiner-Elements.Settings', run = 'layout floating' },
-    { if.app-id = 'com.apple.calculator',              run = 'layout floating' },
-    { if.app-id = 'com.apple.QuickTimePlayerX',        run = 'layout floating' },
-    { if.app-id = 'com.obsproject.obs-studio',         run = 'layout floating' },
-    { if.app-id = 'com.manytricks.Moom',               run = 'layout floating' },  # during the Moom trial-removal only
-
-    # Added from what was actually running at first launch — utility/overlay
-    # windows that tiling makes worse rather than better.
-    { if.app-id = 'com.granola.app',                   run = 'layout floating' },  # meeting-note overlay
-    { if.app-id = 'com.flexibits.fantastical2.mac',    run = 'layout floating' },  # calendar popover
-    { if.app-id = 'com.apple.MobileSMS',               run = 'layout floating' },  # Messages
-    { if.app-id = 'com.apple.Keynote',                 run = 'layout floating' },  # presenting beats tiling
-
-    # The cheat-sheet window (Hyper+/) — float it instead of tiling it over the
-    # workspace you opened it from. Matched by title because it is an ordinary
-    # iTerm window; the script sets that title explicitly.
-    { if.app-id = 'com.brettterpstra.marked-setapp',   run = 'layout floating' },  # cheat sheet (AERO /) — Setapp Marked
+    { check-further-callbacks = true, run = 'layout floating' },
 ]
 
 # Leader, not a held modifier. Karabiner turns a TAP of right Shift into f18;
@@ -98,14 +75,14 @@ on-window-detected = [
 # the mode, because repeating is the whole point there. esc leaves without acting.
 [mode.aero.binding]
     esc = ['mode main', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "" ""']
-    h = ['focus left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ←" "h"', 'mode main']
-    j = ['focus down', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ↓" "j"', 'mode main']
-    k = ['focus up', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ↑" "k"', 'mode main']
-    l = ['focus right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus →" "l"', 'mode main']
-    shift-h = ['move left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ←" "⇧H"', 'mode main']
-    shift-j = ['move down', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ↓" "⇧J"', 'mode main']
-    shift-k = ['move up', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ↑" "⇧K"', 'mode main']
-    shift-l = ['move right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move →" "⇧L"', 'mode main']
+    left = ['focus left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ←" "←"', 'mode main']
+    down = ['focus down', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ↓" "↓"', 'mode main']
+    up = ['focus up', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ↑" "↑"', 'mode main']
+    right = ['focus right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus →" "→"', 'mode main']
+    shift-left = ['move left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ←" "⇧←"', 'mode main']
+    shift-down = ['move down', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ↓" "⇧↓"', 'mode main']
+    shift-up = ['move up', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ↑" "⇧↑"', 'mode main']
+    shift-right = ['move right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move →" "⇧→"', 'mode main']
     1 = ['workspace 1', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 1" "1"', 'mode main']
     2 = ['workspace 2', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 2" "2"', 'mode main']
     3 = ['workspace 3', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 3" "3"', 'mode main']
@@ -125,15 +102,13 @@ on-window-detected = [
     shift-8 = ['move-node-to-workspace 8', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 8" "⇧8"', 'mode main']
     shift-9 = ['move-node-to-workspace 9', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 9" "⇧9"', 'mode main']
     tab = ['workspace-back-and-forth', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Previous workspace" "tab"', 'mode main']
+    d = ['move-node-to-monitor --wrap-around next', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Other display" "d"', 'mode main']
     f = ['fullscreen', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Fullscreen" "f"', 'mode main']
-    space = ['layout floating tiling', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Float ↔ tile" "space"', 'mode main']
-    comma = ['layout tiles horizontal vertical', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Layout: tiles" ","', 'mode main']
-    period = ['layout accordion horizontal vertical', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Layout: accordion" "."', 'mode main']
-    leftSquareBracket = ['move-node-to-monitor --wrap-around left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "To display ←" "["', 'mode main']
-    rightSquareBracket = ['move-node-to-monitor --wrap-around right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "To display →" "]"', 'mode main']
+    space = ['layout floating tiling', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Tile ↔ float this window" "space"', 'mode main']
+    t = ['layout tiles horizontal vertical', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Tile them" "t"', 'mode main']
+    a = ['layout accordion horizontal vertical', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Accordion" "a"', 'mode main']
     r = ['flatten-workspace-tree', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Reset layout" "r"', 'mode main']
-    backspace = ['close-all-windows-but-current', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Closed all but current" "⌫"', 'mode main']
-    minus = ['resize smart -50', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Shrink" "-"']
-    equal = ['resize smart +50', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Grow" "="']
-    b = ['balance-sizes', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Balance" "b"']
+    minus = ['resize smart -50', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Smaller" "-"']
+    equal = ['resize smart +50', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Bigger" "="']
+    b = ['balance-sizes', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Even sizes" "b"']
     slash = ['exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-help.sh', 'mode main']

@@ -3,6 +3,12 @@
 **Tap right Shift** → AERO mode → press one key → it acts and returns you to
 normal typing. Nothing is held down. `esc` leaves without doing anything.
 
+**Windows float by default.** Nothing rearranges itself when you open an app —
+your windows stay where you put them. **Raycast still does the snapping**
+(Center, halves, Reasonable Size); AeroSpace is here for what Raycast cannot do:
+workspaces, focus, and throwing a window to the other display. Tiling is opt-in
+per window with `space`.
+
 A HUD flashes the name of whatever just ran, so you can learn the keys by using
 them. Caps Lock is not involved — it still switches EN/RU, instantly.
 
@@ -10,9 +16,9 @@ them. Caps Lock is not involved — it still switches EN/RU, instantly.
 
 | Key | Action | What should happen |
 |---|---|---|
-| `h` `j` `k` `l` | focus left / down / up / right | The highlight jumps to the neighbouring window. Nothing moves or resizes. |
-| `⇧H` `⇧J` `⇧K` `⇧L` | move the window | The focused window swaps places with its neighbour; the others reflow to fill. |
-| `[` / `]` | send to the other display | The window disappears from this screen and appears on the BenQ / built-in. Focus follows it. |
+| `←` `↓` `↑` `→` | focus left / down / up / right | The highlight jumps to the next window in that direction. Nothing moves or resizes. |
+| `⇧←` `⇧↓` `⇧↑` `⇧→` | move the window | The focused window moves that way. Floating windows shift; tiled ones swap with a neighbour. |
+| `d` | send to the other **d**isplay | The window disappears from this screen and appears on the BenQ / built-in. Focus follows it. |
 
 ## Workspaces
 
@@ -26,10 +32,10 @@ them. Caps Lock is not involved — it still switches EN/RU, instantly.
 
 | Key | Action | What should happen |
 |---|---|---|
-| `,` | tiles | Windows split the screen side by side, all visible at once. |
-| `.` | accordion | Windows stack; one is visible and the rest collapse to slivers at the edge. |
-| `f` | fullscreen | The focused window fills the screen. Press again to restore it. |
-| `space` | float ↔ tile | The window pops out of the layout (drag/resize it freely), or snaps back in. |
+| `space` | **tile ↔ float** this window | Opts one window into tiling (it snaps into the layout), or back out to float freely. This is how you tile now — it is off by default. |
+| `t` | **t**ile them | Arranges the tiled windows of this workspace side by side. Floating windows are unaffected. |
+| `a` | **a**ccordion | Tiled windows stack; one visible, the rest collapse to slivers. |
+| `f` | **f**ullscreen | The focused window fills the screen. Press again to restore it. |
 | `-` / `=` | shrink / grow | The focused window changes size; neighbours take up the slack. **Stays in AERO mode** so you can press it repeatedly. |
 | `b` | balance sizes | All windows in the workspace become equal. Also stays in the mode. |
 
@@ -38,8 +44,7 @@ them. Caps Lock is not involved — it still switches EN/RU, instantly.
 | Key | Action | What should happen |
 |---|---|---|
 | `r` | reset layout | A mangled workspace flattens back to a plain, even split. |
-| `⌫` | close all but focused | Every other window in this workspace closes. Destructive — there is no undo. |
-| `/` | this cheat sheet | Opens in Marked 3. Marked live-reloads, so edits show up immediately. |
+| `/` | this cheat sheet | Opens in Marked. It live-reloads, so edits show up immediately. |
 | `esc` | leave AERO mode | Nothing happens to your windows. |
 
 ---
@@ -59,33 +64,34 @@ windows. Do it twice. *You now know how to back out of a mistake.*
 expected. `⇧, tab` flips back to the previous one. *This is the key you will use
 most.*
 
-### 3. Collect some windows
-Open two apps. On workspace 1, `⇧, ,` (that is the comma) to force **tiles** —
-now both share the screen. Then `⇧, .` for accordion and back to `⇧, ,`. *You
-have just seen the two layouts that matter.*
+### 3. Focus without the mouse
+With two windows open: `⇧, ←` and `⇧, →` move the highlight between them,
+`⇧, ↑` / `⇧, ↓` for stacked ones. *Nothing moves or resizes — this only changes
+which window is listening to your keyboard.*
 
-### 4. Focus without the mouse
-With two tiled windows: `⇧, h` and `⇧, l` move the highlight left and right;
-`⇧, j` / `⇧, k` for down and up. *Same letters as tmux and herdr panes — that is
-deliberate.*
+### 4. Move a window
+`⇧, ⇧←` and `⇧, ⇧→`. Compare with drill 3: plain arrows move your **attention**,
+shifted arrows move the **window**. *Use Raycast for exact halves and centring;
+this is for coarse placement.*
 
-### 5. Rearrange
-`⇧, ⇧H` and `⇧, ⇧L` — the window itself swaps sides. Compare with drill 4:
-lowercase moves your **attention**, uppercase moves the **window**. *This
-replaces Moom's halves: two tiled windows already are halves.*
+### 5. Opt one window into tiling
+Focus a window and `⇧, space` — it snaps into the layout instead of floating.
+Do the same to a second window, then `⇧, t`: those two now share the screen,
+and everything else stays floating. `⇧, space` again releases a window.
+*Tiling is opt-in here; nothing tiles unless you ask.*
 
 ### 6. Send work away and get it back
 Focus a window, `⇧, ⇧3` — it vanishes to workspace 3. `⇧, 3` to follow it,
 `⇧, tab` to come back. *This is the real workflow: park things by project.*
 
 ### 7. Size and rescue
-`⇧, -` a few times: the window shrinks each press, without leaving the mode.
-`esc` to leave. Then `⇧, b` to even everything out, and `⇧, r` if a layout ever
-looks broken. *These three get you out of any visual mess.*
+`⇧, -` a few times: the focused window shrinks each press, without leaving the
+mode. `esc` to leave. Then `⇧, b` to even up the tiled ones, and `⇧, r` if a
+layout ever looks broken. *These three get you out of any visual mess.*
 
-### 8. Floating
-`⇧, space` on a window — it lifts out of the tiling and you can drag it. `⇧,
-space` again puts it back. *Use it for anything you want to place by hand.*
+### 8. The other display
+`⇧, d` throws the focused window to the other monitor, and again brings it back.
+*The one thing Raycast's window commands handle less directly.*
 
 ### A first real setup
 Once the keys feel automatic, give workspaces fixed jobs — for example herdr on
@@ -96,7 +102,7 @@ press, and everything else is occasional.
 
 ## When something is wrong
 
-- **Layout mangled** → `⇧, r`
+- **Layout mangled** → `⇧, r` (only affects tiled windows)
 - **A window tiles that should float** → `aerospace list-apps` to get its bundle
   id, then add an `on-window-detected` rule in `aerospace/aerospace.toml`.
   `auto-reload-config` is on, so saving is enough — no reload command needed.
@@ -112,6 +118,9 @@ press, and everything else is occasional.
   iTerm sees them, so a Ctrl+Alt binding here silently breaks pane navigation.
 - The leader exists so nothing is held **and** Shift stays free for the move
   variants. A four-modifier Hyper was tried first and dropped for both reasons.
+- **Float is the default on purpose.** Auto-tiling everything felt wrong, so
+  tiling is opt-in per window. Raycast keeps snapping duty; if you want an app
+  to always tile, add a `run = 'layout tiling'` rule in `aerospace.toml`.
 - Caps Lock is deliberately untouched: it is the EN/RU switch.
 
 Config: `aerospace/aerospace.toml` · HUD: `hammerspoon/aerospace_hud.lua` ·
