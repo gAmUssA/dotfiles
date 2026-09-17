@@ -131,6 +131,13 @@ rm -f ~/.config/micro/settings.json ~/.config/micro/bindings.json
 ln -s ~/projects/dotfiles/micro/settings.json ~/.config/micro/settings.json
 ln -s ~/projects/dotfiles/micro/bindings.json ~/.config/micro/bindings.json
 
+# AeroSpace — tiling WM. A plain file it reads directly (not a cfprefsd plist),
+# so a symlink is safe. ~/.aerospace.toml would take precedence over the XDG path,
+# so make sure a stray one can't shadow the repo copy.
+mkdir -p ~/.config/aerospace
+rm -f ~/.config/aerospace/aerospace.toml ~/.aerospace.toml
+ln -s ~/projects/dotfiles/aerospace/aerospace.toml ~/.config/aerospace/aerospace.toml
+
 # Karabiner-Elements — whole-directory symlink (the approach Karabiner's sync
 # docs support; file-level symlinks are risky because the GUI rewrites
 # karabiner.json on every change). automatic_backups/ inside is gitignored.

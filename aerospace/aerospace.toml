@@ -1,0 +1,142 @@
+# AeroSpace — i3-style tiling window manager.
+# Symlinked to ~/.config/aerospace/aerospace.toml by linkall.sh.
+# Syntax verified against AeroSpace's own default-config.toml and keysMap.swift.
+#
+# ── MODIFIER LAYERS (read before adding a binding) ───────────────────────────
+#   Alt          belongs to the program in the pane (codex, editors). Never bind.
+#   Ctrl+Alt     tmux + herdr pane/tab/workspace navigation. Never bind here:
+#                AeroSpace grabs keys at the OS level, BEFORE iTerm sees them,
+#                so a ctrl-alt binding here silently breaks tmux/herdr nav.
+#   Hyper        AeroSpace. Hyper = cmd+alt+ctrl+shift, produced by HOLDING
+#                Caps Lock (Karabiner rule; TAPPING Caps still switches EN/RU).
+#
+# Hyper uses all four modifiers, so there is no "shift variant" left for
+# move-to-workspace. That lives in the `move` binding mode (Hyper+M) instead —
+# the i3 way, and it keeps every chord one modifier deep.
+#
+# AeroSpace binds by key code, so bindings work with the Russian layout active.
+
+config-version = 2
+
+start-at-login = true
+auto-reload-config = true           # edits to this file apply on save
+after-startup-command = []
+
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+accordion-padding = 30
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+automatically-unhide-macos-hidden-apps = false
+
+# Nine workspaces, bound to Hyper+1..9. The default config declares 31; nothing
+# here uses letters, so the rest would just be clutter in `list-workspaces`.
+persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+
+focus-follows-mouse.enabled = false
+key-mapping.preset = 'qwerty'
+
+# Dense, no gaps — same taste as the herdr sidebar.
+gaps.inner.horizontal = 0
+gaps.inner.vertical   = 0
+gaps.outer.left       = 0
+gaps.outer.bottom     = 0
+gaps.outer.top        = 0
+gaps.outer.right      = 0
+
+# Apps that should float instead of tile. MUST sit above the first [table]
+# header: TOML scopes every key after a header into that table, so placed at
+# the bottom this silently became mode.service.binding.on-window-detected and
+# AeroSpace never saw it. Dialogs already float via AeroSpace's own heuristic;
+# this list is for whole apps.
+#
+# Starter list — expect to add a few in
+# the first days; `aerospace list-apps` prints the bundle id of anything running.
+# Raycast's own Center / Reasonable Size commands handle placing these.
+on-window-detected = [
+    { if.app-id = 'com.1password.1password',           run = 'layout floating' },
+    { if.app-id = 'com.raycast.macos',                 run = 'layout floating' },
+    { if.app-id = 'com.apple.systempreferences',       run = 'layout floating' },
+    { if.app-id = 'com.apple.finder',                  run = 'layout floating' },
+    { if.app-id = 'us.zoom.xos',                       run = 'layout floating' },
+    { if.app-id = 'com.robinebers.openusage',          run = 'layout floating' },
+    { if.app-id = 'org.hammerspoon.Hammerspoon',       run = 'layout floating' },
+    { if.app-id = 'org.pqrs.Karabiner-Elements.Settings', run = 'layout floating' },
+    { if.app-id = 'com.apple.calculator',              run = 'layout floating' },
+    { if.app-id = 'com.apple.QuickTimePlayerX',        run = 'layout floating' },
+    { if.app-id = 'com.obsproject.obs-studio',         run = 'layout floating' },
+    { if.app-id = 'com.manytricks.Moom',               run = 'layout floating' },  # during the Moom trial-removal only
+]
+
+[mode.main.binding]
+    # Focus: letters, vim directions — same muscle memory as tmux/herdr panes.
+    cmd-alt-ctrl-shift-h = 'focus left'
+    cmd-alt-ctrl-shift-j = 'focus down'
+    cmd-alt-ctrl-shift-k = 'focus up'
+    cmd-alt-ctrl-shift-l = 'focus right'
+
+    # Move the window: arrows. Replaces Moom's ⌘⌥⌃+arrow halves — in a tiler,
+    # "put it on the left" is a move, and two tiled windows ARE halves.
+    cmd-alt-ctrl-shift-left  = 'move left'
+    cmd-alt-ctrl-shift-down  = 'move down'
+    cmd-alt-ctrl-shift-up    = 'move up'
+    cmd-alt-ctrl-shift-right = 'move right'
+
+    # Replaces Moom ⌘⌥⌃F (fill).
+    cmd-alt-ctrl-shift-f = 'fullscreen'
+
+    # Replaces Moom ⌘⌃←/→ (move to other display).
+    cmd-alt-ctrl-shift-leftSquareBracket  = 'move-node-to-monitor --wrap-around left'
+    cmd-alt-ctrl-shift-rightSquareBracket = 'move-node-to-monitor --wrap-around right'
+    # (ctrl+[ being Escape only matters inside a terminal; AeroSpace reads key
+    # codes at the OS level, so [ and ] are safe here.)
+
+    # Layout.
+    cmd-alt-ctrl-shift-slash  = 'layout tiles horizontal vertical'
+    cmd-alt-ctrl-shift-period = 'layout accordion horizontal vertical'
+    cmd-alt-ctrl-shift-space  = 'layout floating tiling'     # float / unfloat
+    cmd-alt-ctrl-shift-minus  = 'resize smart -50'
+    cmd-alt-ctrl-shift-equal  = 'resize smart +50'
+    cmd-alt-ctrl-shift-b      = 'balance-sizes'
+
+    # Workspaces.
+    cmd-alt-ctrl-shift-1 = 'workspace 1'
+    cmd-alt-ctrl-shift-2 = 'workspace 2'
+    cmd-alt-ctrl-shift-3 = 'workspace 3'
+    cmd-alt-ctrl-shift-4 = 'workspace 4'
+    cmd-alt-ctrl-shift-5 = 'workspace 5'
+    cmd-alt-ctrl-shift-6 = 'workspace 6'
+    cmd-alt-ctrl-shift-7 = 'workspace 7'
+    cmd-alt-ctrl-shift-8 = 'workspace 8'
+    cmd-alt-ctrl-shift-9 = 'workspace 9'
+    cmd-alt-ctrl-shift-tab = 'workspace-back-and-forth'
+
+    cmd-alt-ctrl-shift-m         = 'mode move'
+    cmd-alt-ctrl-shift-semicolon = 'mode service'
+
+# Hyper+M, then a digit: send the focused window to that workspace.
+[mode.move.binding]
+    1 = ['move-node-to-workspace 1', 'mode main']
+    2 = ['move-node-to-workspace 2', 'mode main']
+    3 = ['move-node-to-workspace 3', 'mode main']
+    4 = ['move-node-to-workspace 4', 'mode main']
+    5 = ['move-node-to-workspace 5', 'mode main']
+    6 = ['move-node-to-workspace 6', 'mode main']
+    7 = ['move-node-to-workspace 7', 'mode main']
+    8 = ['move-node-to-workspace 8', 'mode main']
+    9 = ['move-node-to-workspace 9', 'mode main']
+    h = ['join-with left',  'mode main']
+    j = ['join-with down',  'mode main']
+    k = ['join-with up',    'mode main']
+    l = ['join-with right', 'mode main']
+    esc = 'mode main'
+
+# Hyper+; — maintenance.
+[mode.service.binding]
+    esc       = ['reload-config', 'mode main']
+    r         = ['flatten-workspace-tree', 'mode main']      # reset layout
+    f         = ['layout floating tiling', 'mode main']
+    backspace = ['close-all-windows-but-current', 'mode main']

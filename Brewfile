@@ -13,6 +13,7 @@ tap "kong/deck"
 tap "kordamp/tap"
 tap "koyeb/tap"
 tap "ktr0731/evans"
+tap "nikitabobko/tap"
 tap "olets/tap"
 tap "pg83/tap"
 tap "productdevbook/tap"
@@ -500,6 +501,8 @@ cask "1password-cli"
 # GPU-accelerated terminal emulator
 cask "alacritty"
 # Enable Windows-like alt-tab
+# i3-style tiling WM on Hyper (hold Caps Lock). Config: aerospace/aerospace.toml
+cask "nikitabobko/tap/aerospace"
 cask "alt-tab"
 # Agentic-first issue tracker
 cask "hmans/beans/beans", trusted: true
