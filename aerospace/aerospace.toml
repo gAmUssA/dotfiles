@@ -84,7 +84,7 @@ on-window-detected = [
     # The cheat-sheet window (Hyper+/) — float it instead of tiling it over the
     # workspace you opened it from. Matched by title because it is an ordinary
     # iTerm window; the script sets that title explicitly.
-    { if.app-id = 'com.brettterpstra.marked',          run = 'layout floating' },  # cheat sheet (Hyper+/)
+    { if.app-id = 'com.brettterpstra.marked-setapp',   run = 'layout floating' },  # cheat sheet (AERO /) — Setapp Marked
 ]
 
 # Leader, not a held modifier. Karabiner turns a TAP of right Shift into f18;
