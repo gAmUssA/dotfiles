@@ -70,13 +70,18 @@ an inner one ever sees it. Each modifier family has exactly one owner:
 |---|---|---|
 | **Alt** | the program in the pane (codex, editors) | multiplexers swallowed it before |
 | **Ctrl+Alt** | tmux + herdr (panes, tabs, workspaces) | terminals and desktops leave it free |
-| **Hyper** (cmd+ctrl+alt+shift) | AeroSpace (`aerospace/aerospace.toml`) | OS-level WM — must not touch Ctrl+Alt |
+| **f18 leader** (tap right Shift) | AeroSpace (`aerospace/aerospace.toml`) | OS-level WM — must not touch Ctrl+Alt |
 
-Hyper comes from **holding** Caps Lock (Karabiner). **Tapping** Caps Lock sends
-F19, which is macOS "Select previous input source" — the EN/RU layout switch.
-Every keyboard's `simple_modifications` maps caps_lock→f19 *before* complex
-rules run, so the Hyper rule matches **f19**, not caps_lock. Do not "simplify"
-that away or language switching breaks.
+AeroSpace uses a **leader**, not a held modifier: Karabiner turns a *tap* of
+right Shift into `f18` (holding it still types Shift), and `f18` enters aero
+mode where bare keys act and Shift gives the move-variants. A held four-modifier
+Hyper was tried first and dropped — holding was awkward and it ate Shift, which
+forced move-to-workspace into a second mode.
+
+Caps Lock is **not** involved: it maps to `f19` = macOS "Select previous input
+source", the EN/RU switch. Every keyboard's `simple_modifications` does that
+before complex rules run. Do not route a modifier through Caps or language
+switching gets a hold-timeout delay.
 
 AeroSpace grabs keys at the OS level, before iTerm. A Ctrl+Alt binding there
 silently breaks tmux/herdr navigation even though every config file looks fine.

@@ -87,77 +87,53 @@ on-window-detected = [
     { if.app-id = 'com.brettterpstra.marked',          run = 'layout floating' },  # cheat sheet (Hyper+/)
 ]
 
+# Leader, not a held modifier. Karabiner turns a TAP of right Shift into f18;
+# holding it still types Shift. Nothing to hold while pressing the action key,
+# and because Shift is no longer eaten by the modifier, move-variants are just
+# shifted letters — no second mode for move-to-workspace.
 [mode.main.binding]
-    # Focus: letters, vim directions — same muscle memory as tmux/herdr panes.
-    cmd-alt-ctrl-shift-h = ['focus left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ←" "Hyper+h"']
-    cmd-alt-ctrl-shift-j = ['focus down', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ↓" "Hyper+j"']
-    cmd-alt-ctrl-shift-k = ['focus up', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ↑" "Hyper+k"']
-    cmd-alt-ctrl-shift-l = ['focus right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus →" "Hyper+l"']
+    f18 = ['mode aero', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "AERO" "hjkl focus · ⇧ moves · 1-9 workspace · esc"']
 
-    # Move the window: arrows. Replaces Moom's ⌘⌥⌃+arrow halves — in a tiler,
-    # "put it on the left" is a move, and two tiled windows ARE halves.
-    cmd-alt-ctrl-shift-left = ['move left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ←" "Hyper+←"']
-    cmd-alt-ctrl-shift-down = ['move down', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ↓" "Hyper+↓"']
-    cmd-alt-ctrl-shift-up = ['move up', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ↑" "Hyper+↑"']
-    cmd-alt-ctrl-shift-right = ['move right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move →" "Hyper+→"']
-
-    # Replaces Moom ⌘⌥⌃F (fill).
-    cmd-alt-ctrl-shift-f = ['fullscreen', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Fullscreen" "Hyper+f"']
-
-    # Replaces Moom ⌘⌃←/→ (move to other display).
-    cmd-alt-ctrl-shift-leftSquareBracket = ['move-node-to-monitor --wrap-around left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "To display ←" "Hyper+["']
-    cmd-alt-ctrl-shift-rightSquareBracket = ['move-node-to-monitor --wrap-around right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "To display →" "Hyper+]"']
-    # (ctrl+[ being Escape only matters inside a terminal; AeroSpace reads key
-    # codes at the OS level, so [ and ] are safe here.)
-
-    # Layout. Tiles moved off slash so that key can be the cheat sheet: Hyper
-    # already contains shift, so Hyper+? and Hyper+/ are the same keypress and
-    # AeroSpace sees `slash`. Comma/period now pair as the two layouts.
-    cmd-alt-ctrl-shift-comma = ['layout tiles horizontal vertical', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Layout: tiles" "Hyper+,"']
-    cmd-alt-ctrl-shift-period = ['layout accordion horizontal vertical', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Layout: accordion" "Hyper+."']
-
-    # Hyper+/ ( = Hyper+? ) — cheat sheet, mirroring tmux's prefix + ?
-    cmd-alt-ctrl-shift-slash  = 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-help.sh'
-    cmd-alt-ctrl-shift-space = ['layout floating tiling', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Float ↔ tile" "Hyper+space"']     # float / unfloat
-    cmd-alt-ctrl-shift-minus = ['resize smart -50', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Shrink" "Hyper+-"']
-    cmd-alt-ctrl-shift-equal = ['resize smart +50', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Grow" "Hyper+="']
-    cmd-alt-ctrl-shift-b = ['balance-sizes', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Balance sizes" "Hyper+b"']
-
-    # Workspaces.
-    cmd-alt-ctrl-shift-1 = 'workspace 1'
-    cmd-alt-ctrl-shift-2 = 'workspace 2'
-    cmd-alt-ctrl-shift-3 = 'workspace 3'
-    cmd-alt-ctrl-shift-4 = 'workspace 4'
-    cmd-alt-ctrl-shift-5 = 'workspace 5'
-    cmd-alt-ctrl-shift-6 = 'workspace 6'
-    cmd-alt-ctrl-shift-7 = 'workspace 7'
-    cmd-alt-ctrl-shift-8 = 'workspace 8'
-    cmd-alt-ctrl-shift-9 = 'workspace 9'
-    cmd-alt-ctrl-shift-tab = 'workspace-back-and-forth'
-
-    cmd-alt-ctrl-shift-m = ['mode move', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move mode — press 1-9" "Hyper+m"']
-    cmd-alt-ctrl-shift-semicolon = ['mode service', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Service mode — r reset, esc reload" "Hyper+;"']
-
-# Hyper+M, then a digit: send the focused window to that workspace.
-[mode.move.binding]
-    1 = ['move-node-to-workspace 1', 'mode main']
-    2 = ['move-node-to-workspace 2', 'mode main']
-    3 = ['move-node-to-workspace 3', 'mode main']
-    4 = ['move-node-to-workspace 4', 'mode main']
-    5 = ['move-node-to-workspace 5', 'mode main']
-    6 = ['move-node-to-workspace 6', 'mode main']
-    7 = ['move-node-to-workspace 7', 'mode main']
-    8 = ['move-node-to-workspace 8', 'mode main']
-    9 = ['move-node-to-workspace 9', 'mode main']
-    h = ['join-with left',  'mode main']
-    j = ['join-with down',  'mode main']
-    k = ['join-with up',    'mode main']
-    l = ['join-with right', 'mode main']
-    esc = 'mode main'
-
-# Hyper+; — maintenance.
-[mode.service.binding]
-    esc       = ['reload-config', 'mode main']
-    r         = ['flatten-workspace-tree', 'mode main']      # reset layout
-    f         = ['layout floating tiling', 'mode main']
-    backspace = ['close-all-windows-but-current', 'mode main']
+# aero mode — bare keys, one action then straight back to main. Resize stays in
+# the mode, because repeating is the whole point there. esc leaves without acting.
+[mode.aero.binding]
+    esc = ['mode main', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "" ""']
+    h = ['focus left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ←" "h"', 'mode main']
+    j = ['focus down', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ↓" "j"', 'mode main']
+    k = ['focus up', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ↑" "k"', 'mode main']
+    l = ['focus right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus →" "l"', 'mode main']
+    shift-h = ['move left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ←" "⇧H"', 'mode main']
+    shift-j = ['move down', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ↓" "⇧J"', 'mode main']
+    shift-k = ['move up', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ↑" "⇧K"', 'mode main']
+    shift-l = ['move right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move →" "⇧L"', 'mode main']
+    1 = ['workspace 1', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 1" "1"', 'mode main']
+    2 = ['workspace 2', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 2" "2"', 'mode main']
+    3 = ['workspace 3', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 3" "3"', 'mode main']
+    4 = ['workspace 4', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 4" "4"', 'mode main']
+    5 = ['workspace 5', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 5" "5"', 'mode main']
+    6 = ['workspace 6', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 6" "6"', 'mode main']
+    7 = ['workspace 7', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 7" "7"', 'mode main']
+    8 = ['workspace 8', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 8" "8"', 'mode main']
+    9 = ['workspace 9', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 9" "9"', 'mode main']
+    shift-1 = ['move-node-to-workspace 1', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 1" "⇧1"', 'mode main']
+    shift-2 = ['move-node-to-workspace 2', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 2" "⇧2"', 'mode main']
+    shift-3 = ['move-node-to-workspace 3', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 3" "⇧3"', 'mode main']
+    shift-4 = ['move-node-to-workspace 4', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 4" "⇧4"', 'mode main']
+    shift-5 = ['move-node-to-workspace 5', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 5" "⇧5"', 'mode main']
+    shift-6 = ['move-node-to-workspace 6', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 6" "⇧6"', 'mode main']
+    shift-7 = ['move-node-to-workspace 7', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 7" "⇧7"', 'mode main']
+    shift-8 = ['move-node-to-workspace 8', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 8" "⇧8"', 'mode main']
+    shift-9 = ['move-node-to-workspace 9', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 9" "⇧9"', 'mode main']
+    tab = ['workspace-back-and-forth', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Previous workspace" "tab"', 'mode main']
+    f = ['fullscreen', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Fullscreen" "f"', 'mode main']
+    space = ['layout floating tiling', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Float ↔ tile" "space"', 'mode main']
+    comma = ['layout tiles horizontal vertical', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Layout: tiles" ","', 'mode main']
+    period = ['layout accordion horizontal vertical', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Layout: accordion" "."', 'mode main']
+    leftSquareBracket = ['move-node-to-monitor --wrap-around left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "To display ←" "["', 'mode main']
+    rightSquareBracket = ['move-node-to-monitor --wrap-around right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "To display →" "]"', 'mode main']
+    r = ['flatten-workspace-tree', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Reset layout" "r"', 'mode main']
+    backspace = ['close-all-windows-but-current', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Closed all but current" "⌫"', 'mode main']
+    minus = ['resize smart -50', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Shrink" "-"']
+    equal = ['resize smart +50', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Grow" "="']
+    b = ['balance-sizes', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Balance" "b"']
+    slash = ['exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-help.sh', 'mode main']

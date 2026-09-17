@@ -4,20 +4,15 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Caps Lock: hold = Hyper (cmd+ctrl+opt+shift) for AeroSpace, tap = F19 (switch input source EN/RU)",
+                        "description": "Right Shift: tap = F18 (AeroSpace leader), hold = Shift",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "f19",
+                                    "key_code": "right_shift",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [
-                                    {
-                                        "key_code": "left_shift",
-                                        "modifiers": ["left_command", "left_control", "left_option"]
-                                    }
-                                ],
-                                "to_if_alone": [{ "key_code": "f19" }],
+                                "to": [{ "key_code": "right_shift" }],
+                                "to_if_alone": [{ "key_code": "f18" }],
                                 "type": "basic"
                             }
                         ]

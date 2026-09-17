@@ -1,29 +1,31 @@
 # AeroSpace cheat sheet — my config
 
-**Hyper = hold Caps Lock** (⌘⌥⌃⇧). *Tapping* Caps still switches EN/RU.
+**Tap right Shift** to enter AERO mode, then press one key. Nothing is held.
+The mode exits by itself after each action (`esc` leaves without acting).
+Caps Lock is untouched — it still switches EN/RU, instantly.
 
 | Key | Action |
 |---|---|
-| `Hyper + h j k l` | focus left / down / up / right |
-| `Hyper + ← ↓ ↑ →` | **move** the window (letters move focus, arrows move windows) |
-| `Hyper + 1..9` | switch workspace |
-| `Hyper + Tab` | previous workspace (back-and-forth) |
-| `Hyper + m` then `1..9` | send window to workspace |
-| `Hyper + f` | fullscreen / restore |
-| `Hyper + space` | float ↔ tile the focused window |
-| `Hyper + [` / `]` | move window to other display |
+| `h j k l` | focus left / down / up / right |
+| `⇧H ⇧J ⇧K ⇧L` | **move** the window |
+| `1..9` | switch workspace |
+| `tab` | previous workspace (back-and-forth) |
+| `⇧1..⇧9` | send window to workspace |
+| `f` | fullscreen / restore |
+| `space` | float ↔ tile the focused window |
+| `[` / `]` | move window to other display |
 
 ## Layout & size
 
 | Key | Action |
 |---|---|
-| `Hyper + ,` | tiles (side by side) |
-| `Hyper + .` | accordion (stacked, one visible) |
-| `Hyper + -` / `Hyper + =` | shrink / grow focused window |
-| `Hyper + b` | balance all sizes |
-| `Hyper + /` | this cheat sheet |
+| `,` | tiles (side by side) |
+| `.` | accordion (stacked, one visible) |
+| `-` / `=` | shrink / grow focused window |
+| `b` | balance all sizes |
+| `/` | this cheat sheet |
 
-## Service mode — `Hyper + ;` then
+## Also in AERO mode
 
 | Key | Action |
 |---|---|
@@ -32,13 +34,10 @@
 | `backspace` | close all windows but the focused one |
 | `esc` | reload config |
 
-## Move mode — `Hyper + m` then
-
-`1`–`9` send window to that workspace · `h j k l` join with neighbour · `esc` cancel
 
 ## When something is wrong
 
-- Layout mangled → `Hyper + ;` then `r`
+- Layout mangled → `;` then `r`
 - A window shouldn't tile → `aerospace list-apps` for its bundle id, add an
   `on-window-detected` float rule in `aerospace/aerospace.toml`. `auto-reload-config`
   is on, so saving applies it.
@@ -50,7 +49,7 @@
 - **No Ctrl+Alt bindings.** That's tmux and herdr. AeroSpace grabs keys before
   iTerm, so a Ctrl+Alt binding here silently breaks pane navigation.
 - Hyper uses all four modifiers, so there is no shift-variant: that's why
-  move-to-workspace lives in a mode (`Hyper + m`) instead of `Hyper+Shift+N`.
-- `Hyper + ?` and `Hyper + /` are the same key — Shift is already in Hyper.
+  move-to-workspace lives in a mode (`m`) instead of `Hyper+Shift+N`.
+- `esc` exits the mode; unbound keys do nothing.
 
 Config: `aerospace/aerospace.toml` · tmux equivalent: `prefix + ?`
