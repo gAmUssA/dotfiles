@@ -11,11 +11,12 @@
 # the one that happens to have a Claude Code Stop hook.
 #
 # Install (local, from this repo — linkall.sh does it):
-#   herdr plugin link ~/projects/dotfiles/herdr-plugins/notify
+#   herdr plugin install gAmUssA/herdr-notify
+# Local development: herdr plugin link /path/to/checkout
 id = "gamussa.notify"
 name = "Agent notifications"
-version = "0.1.0"
-min_herdr_version = "0.8.0"
+version = "0.1.1"
+min_herdr_version = "0.9.0"  # the only version pane.focus routing was verified on
 description = "Desktop notification when a herdr agent finishes or needs input"
 platforms = ["macos"]
 

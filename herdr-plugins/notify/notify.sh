@@ -17,6 +17,7 @@
 # silently.
 #
 # Environment provided by herdr:
+#   HERDR_SOCKET_PATH       originating session's API socket (required)
 #   HERDR_PLUGIN_EVENT       "pane.agent_status_changed"
 #   HERDR_PLUGIN_EVENT_JSON  full payload (agent, status, previous status)
 #   HERDR_PANE_ID            e.g. w6:pC   — what click-to-focus needs
@@ -29,11 +30,21 @@
 
 set -u
 
-ALERTER=/opt/homebrew/bin/alerter
-ICONS="$HOME/projects/dotfiles/iterm2-icons"
-APP_ICON="$ICONS/herdr.png"          # herdr's own logo, from herdr.dev
-HERDR_BIN="${HERDR_BIN_PATH:-$HOME/.local/bin/herdr}"
+PLUGIN_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 
+# alerter: explicit override, else PATH, else the two standard Homebrew
+# prefixes (Apple Silicon, Intel). Plugin hooks run with the herdr SERVER's
+# environment, not your shell's, so PATH alone is not guaranteed to have it.
+ALERTER="${HERDR_NOTIFY_ALERTER:-$(command -v alerter 2>/dev/null)}"
+for candidate in /opt/homebrew/bin/alerter /usr/local/bin/alerter; do
+  [[ -x "$ALERTER" ]] && break
+  ALERTER="$candidate"
+done
+
+# Icon ships inside the plugin, so it works wherever the plugin is installed.
+APP_ICON="${HERDR_NOTIFY_ICON:-$PLUGIN_DIR/icon.png}"
+HERDR_BIN="${HERDR_BIN_PATH:-$HOME/.local/bin/herdr}"
+socket_path="${HERDR_SOCKET_PATH:-}"
 payload="${HERDR_PLUGIN_EVENT_JSON:-}"
 
 
@@ -50,114 +61,30 @@ log_env() {
   log "env HERDR_SOCKET_PATH='${HERDR_SOCKET_PATH:-UNSET}' HERDR_PANE_ID='${HERDR_PANE_ID:-UNSET}' HERDR_WORKSPACE_ID='${HERDR_WORKSPACE_ID:-UNSET}' HERDR_BIN_PATH='${HERDR_BIN_PATH:-UNSET}'"
 }
 
-# --- Raise the terminal window that actually hosts this herdr session --------
-#
-# `herdr agent focus` moves focus INSIDE herdr, but the herdr client is just a
-# process in some terminal window — if that window isn't frontmost you see
-# nothing. So find the client and raise its real window.
-#
-# The first version here ran `open -a Ghostty || open -a iTerm`, which is wrong
-# twice over: it assumed Ghostty, and `open -a` LAUNCHES a missing app and
-# reports success, so the `||` fallback could never run. It reliably raised the
-# wrong terminal.
-focus_client() {
-  # Which herdr session fired this? Derive from the socket the server gave us:
-  #   default -> ~/.config/herdr/herdr.sock
-  #   named   -> ~/.config/herdr/sessions/<name>/herdr.sock
-  local sock="${HERDR_SOCKET_PATH:-}" sess="" tty_dev=""
-  case "$sock" in
-    */sessions/*) sess="${sock#*/sessions/}"; sess="${sess%%/*}" ;;
-  esac
-
-  # The client for that session. Match precisely on argv[0] being the herdr
-  # binary, NOT a substring of the whole line: this plugin's own path contains
-  # "herdr" (herdr-plugins/notify/notify.sh), as does `alerter --title herdr`,
-  # and both run with tty "??" — a loose /herdr/ match picked one of those
-  # first and concluded "no client attached" while a client was right there.
-  #
-  # Session matching also has to accept `herdr --session default`, which is a
-  # normal way to attach to the DEFAULT session (`herdr session list` shows
-  # "default" living at ~/.config/herdr, not under sessions/). Treating any
-  # --session as "named" sent default-session clicks down the no-client path.
-  [[ -z "$sess" ]] && sess="default"
-  tty_dev=$(ps -eo tty=,command= | awk -v s="$sess" '
-    $1 == "??" { next }                       # no controlling terminal
-    {
-      n = split($2, parts, "/")
-      if (parts[n] != "herdr") next           # argv[0] must BE herdr
-      if ($3 == "server") next                # the daemon, not a client
-      if (index($0, "--session " s)) { print $1; exit }
-      if (s == "default" && $0 !~ /--session/) { print $1; exit }
-    }')
-  log "focus_client session='${sess:-default}' tty='${tty_dev:-none}'"
-
-  # No tty means NO CLIENT IS ATTACHED to this session — the normal state for
-  # an always-on herdr host. There is no window to raise, so open one and
-  # attach. Clicking "agent finished" and getting nothing would be a dead end.
-  if [[ -z "$tty_dev" || "$tty_dev" == "??" ]]; then
-    local cmd="herdr"
-    [[ -n "$sess" ]] && cmd="herdr --session $sess"
-    log "no client attached; opening one with: $cmd"
-    # iTerm creates the window AND runs the command in it. iTerm-only by
-    # choice: a previous Ghostty fallback used `open -na Ghostty --args -e`,
-    # which opens a window WITHOUT running the command — that is how a click
-    # ended up raising an empty Ghostty.
-    if osascript -e "tell application \"iTerm\"
-          activate
-          set w to (create window with default profile)
-          tell current session of w to write text \"$cmd\"
-        end tell" >/dev/null 2>&1; then
-      log "opened iTerm client for session ${sess}"
-    else
-      log "could not open an iTerm client (check Automation permission)"
-    fi
-    return 0
+# Route through the exact originating socket and the captured terminal identity.
+# --focus-test now exercises the same workspace/tab/pane + iTerm path as a click:
+#   HERDR_PANE_ID=w1:p1 notify.sh --focus-test
+route_click() {
+  local result
+  if [[ -z "$socket_path" || -z "$terminal_id" ]]; then
+    log "routing failed: missing originating socket or terminal identity"
+    return 1
   fi
-
-  # iTerm can be driven down to the exact window/tab/session by tty, so try it
-  # first and only accept it if a session actually matched.
-  local osa
-  osa=$(osascript <<OSA 2>&1
-tell application "iTerm"
-  repeat with w in windows
-    repeat with t in tabs of w
-      repeat with s in sessions of t
-        if (tty of s) is "/dev/$tty_dev" then
-          activate
-          select w
-          select t
-          select s
-          -- Raise the window explicitly: `select` makes it current inside
-          -- iTerm, but does not always bring it to the front when the window
-          -- lives on another macOS Space or behind other apps.
-          set index of w to 1
-          return "matched|" & (id of w) & "|" & (name of s)
-        end if
-      end repeat
-    end repeat
-  end repeat
-  return "nomatch"
-end tell
-OSA
-)
-  log "osascript -> $osa"
-  if [[ "$osa" == matched* ]]; then
-    log "focused iTerm session on /dev/$tty_dev"
-    return 0
+  if result=$(python3 "$PLUGIN_DIR/focus.py" --socket "$socket_path" \
+      --terminal "$terminal_id" --herdr-bin "$HERDR_BIN" 2>&1); then
+    log "clicked -> $result"
+  else
+    log "$result"
+    return 1
   fi
-
-  # The tty exists but no iTerm session owns it. iTerm is the only terminal
-  # this routes to (see the header), so just raise iTerm — a stale tty here
-  # means the window was closed, and activating iTerm is the useful answer.
-  open -a iTerm 2>/dev/null || true
-  log "no iTerm session for /dev/$tty_dev; raised iTerm"
 }
 
-# Standalone check: `notify.sh --focus-test` exercises the routing above
-# without waiting for a real notification click.
 if [[ "${1:-}" == "--focus-test" ]]; then
-  HERDR_NOTIFY_DEBUG=1 log_dir="${HERDR_PLUGIN_STATE_DIR:-/tmp}" focus_client
-  exit 0
+  HERDR_NOTIFY_DEBUG=1
+  detail=$("$HERDR_BIN" pane get "${HERDR_PANE_ID:?set HERDR_PANE_ID}" 2>/dev/null)
+  terminal_id=$(printf '%s' "$detail" | jq -r '.result.pane.terminal_id // empty')
+  route_click
+  exit $?
 fi
 
 # --- Which states are worth interrupting for? -------------------------------
@@ -184,9 +111,11 @@ esac
 
 # Only now (a state we WILL notify for) pay for a lookup, to turn "claude" into
 # the renamed label ("architect", "reviewer") and to get the project directory.
-detail=$("$HERDR_BIN" agent get "$pane" 2>/dev/null)
+detail=$("$HERDR_BIN" agent get "$pane" 2>/dev/null) ||
+  detail=$("$HERDR_BIN" pane get "$pane" 2>/dev/null)
+terminal_id=$(printf '%s' "$detail" | jq -r '(.result.agent // .result.pane).terminal_id // empty' 2>/dev/null)
 name=$(printf '%s' "$detail" | jq -r '.result.agent.name // empty' 2>/dev/null)
-cwd=$(printf '%s'  "$detail" | jq -r '.result.agent.cwd // empty' 2>/dev/null)
+cwd=$(printf '%s'  "$detail" | jq -r '(.result.agent // .result.pane).cwd // empty' 2>/dev/null)
 
 label="${name:-${agent:-agent}}"
 project=$(basename "${cwd:-}" 2>/dev/null)
@@ -202,11 +131,11 @@ fi
 
 log "notify status=$status agent=$label pane=$pane project=$project"
 log_env
-[[ -f "$log_dir/focus-on-done" ]] && { log "marker: exercising focus_client from the SERVER context"; focus_client; }
 
-# --group keyed per pane so back-to-back turns in ONE pane replace each other,
-# while different panes still get their own banner — with several agents running
-# a single shared group would silently swallow all but the newest.
+# Pane IDs are scoped to a server. Include the socket so w1:p1 in two sessions
+# cannot replace each other's banners (and hence their click destinations).
+group=$(printf '%s\0%s' "$socket_path" "$pane" | shasum -a 256)
+group="herdr-${group%% *}"
 (
   result=$("$ALERTER" \
     --title "herdr · $label" \
@@ -215,14 +144,12 @@ log_env
     --sound "$sound" \
     --app-icon "$APP_ICON" \
     --ignore-dnd \
-    --group "herdr-${pane:-all}" \
+    --group "$group" \
     --timeout 30 \
     2>/dev/null)
 
   if [[ "$result" == "@CONTENTCLICKED" && -n "$pane" ]]; then
-    "$HERDR_BIN" agent focus "$pane" >/dev/null 2>&1 || true
-    focus_client
-    log "clicked -> focused $pane"
+    route_click
   fi
 ) &
 
