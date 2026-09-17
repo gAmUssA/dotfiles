@@ -159,11 +159,12 @@ launchctl kickstart -k "gui/$(id -u)/org.pqrs.service.agent.karabiner_console_us
 # File-level symlinks so anything else in ~/.hammerspoon (Spoons/, scratch
 # files, Hammerspoon's own state) is left alone.
 mkdir -p ~/.hammerspoon
-rm -f ~/.hammerspoon/init.lua ~/.hammerspoon/caffeine.lua ~/.hammerspoon/ollama.lua ~/.hammerspoon/claude_sessions.lua
+rm -f ~/.hammerspoon/init.lua ~/.hammerspoon/caffeine.lua ~/.hammerspoon/ollama.lua ~/.hammerspoon/claude_sessions.lua ~/.hammerspoon/aerospace_hud.lua
 ln -s ~/projects/dotfiles/hammerspoon/init.lua ~/.hammerspoon/init.lua
 ln -s ~/projects/dotfiles/hammerspoon/caffeine.lua ~/.hammerspoon/caffeine.lua
 ln -s ~/projects/dotfiles/hammerspoon/ollama.lua ~/.hammerspoon/ollama.lua
 ln -s ~/projects/dotfiles/hammerspoon/claude_sessions.lua ~/.hammerspoon/claude_sessions.lua
+ln -s ~/projects/dotfiles/hammerspoon/aerospace_hud.lua ~/.hammerspoon/aerospace_hud.lua
 
 ls -lah ~/.zshrc
 ls -lah ~/.gitconfig

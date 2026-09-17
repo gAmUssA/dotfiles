@@ -30,6 +30,10 @@ default-root-container-layout = 'tiles'
 default-root-container-orientation = 'auto'
 
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+# Workspace changes announce themselves once here rather than annotating all
+# nine bindings — this also covers Hyper+Tab and moves that change workspace.
+exec-on-workspace-change = ['/bin/bash', '-c', '/Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace $AEROSPACE_FOCUSED_WORKSPACE" ""']
 automatically-unhide-macos-hidden-apps = false
 
 # Nine workspaces, bound to Hyper+1..9. The default config declares 31; nothing
@@ -69,38 +73,55 @@ on-window-detected = [
     { if.app-id = 'com.apple.QuickTimePlayerX',        run = 'layout floating' },
     { if.app-id = 'com.obsproject.obs-studio',         run = 'layout floating' },
     { if.app-id = 'com.manytricks.Moom',               run = 'layout floating' },  # during the Moom trial-removal only
+
+    # Added from what was actually running at first launch — utility/overlay
+    # windows that tiling makes worse rather than better.
+    { if.app-id = 'com.granola.app',                   run = 'layout floating' },  # meeting-note overlay
+    { if.app-id = 'com.flexibits.fantastical2.mac',    run = 'layout floating' },  # calendar popover
+    { if.app-id = 'com.apple.MobileSMS',               run = 'layout floating' },  # Messages
+    { if.app-id = 'com.apple.Keynote',                 run = 'layout floating' },  # presenting beats tiling
+
+    # The cheat-sheet window (Hyper+/) — float it instead of tiling it over the
+    # workspace you opened it from. Matched by title because it is an ordinary
+    # iTerm window; the script sets that title explicitly.
+    { if.app-id = 'com.brettterpstra.marked',          run = 'layout floating' },  # cheat sheet (Hyper+/)
 ]
 
 [mode.main.binding]
     # Focus: letters, vim directions — same muscle memory as tmux/herdr panes.
-    cmd-alt-ctrl-shift-h = 'focus left'
-    cmd-alt-ctrl-shift-j = 'focus down'
-    cmd-alt-ctrl-shift-k = 'focus up'
-    cmd-alt-ctrl-shift-l = 'focus right'
+    cmd-alt-ctrl-shift-h = ['focus left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ←" "Hyper+h"']
+    cmd-alt-ctrl-shift-j = ['focus down', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ↓" "Hyper+j"']
+    cmd-alt-ctrl-shift-k = ['focus up', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus ↑" "Hyper+k"']
+    cmd-alt-ctrl-shift-l = ['focus right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Focus →" "Hyper+l"']
 
     # Move the window: arrows. Replaces Moom's ⌘⌥⌃+arrow halves — in a tiler,
     # "put it on the left" is a move, and two tiled windows ARE halves.
-    cmd-alt-ctrl-shift-left  = 'move left'
-    cmd-alt-ctrl-shift-down  = 'move down'
-    cmd-alt-ctrl-shift-up    = 'move up'
-    cmd-alt-ctrl-shift-right = 'move right'
+    cmd-alt-ctrl-shift-left = ['move left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ←" "Hyper+←"']
+    cmd-alt-ctrl-shift-down = ['move down', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ↓" "Hyper+↓"']
+    cmd-alt-ctrl-shift-up = ['move up', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move ↑" "Hyper+↑"']
+    cmd-alt-ctrl-shift-right = ['move right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move →" "Hyper+→"']
 
     # Replaces Moom ⌘⌥⌃F (fill).
-    cmd-alt-ctrl-shift-f = 'fullscreen'
+    cmd-alt-ctrl-shift-f = ['fullscreen', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Fullscreen" "Hyper+f"']
 
     # Replaces Moom ⌘⌃←/→ (move to other display).
-    cmd-alt-ctrl-shift-leftSquareBracket  = 'move-node-to-monitor --wrap-around left'
-    cmd-alt-ctrl-shift-rightSquareBracket = 'move-node-to-monitor --wrap-around right'
+    cmd-alt-ctrl-shift-leftSquareBracket = ['move-node-to-monitor --wrap-around left', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "To display ←" "Hyper+["']
+    cmd-alt-ctrl-shift-rightSquareBracket = ['move-node-to-monitor --wrap-around right', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "To display →" "Hyper+]"']
     # (ctrl+[ being Escape only matters inside a terminal; AeroSpace reads key
     # codes at the OS level, so [ and ] are safe here.)
 
-    # Layout.
-    cmd-alt-ctrl-shift-slash  = 'layout tiles horizontal vertical'
-    cmd-alt-ctrl-shift-period = 'layout accordion horizontal vertical'
-    cmd-alt-ctrl-shift-space  = 'layout floating tiling'     # float / unfloat
-    cmd-alt-ctrl-shift-minus  = 'resize smart -50'
-    cmd-alt-ctrl-shift-equal  = 'resize smart +50'
-    cmd-alt-ctrl-shift-b      = 'balance-sizes'
+    # Layout. Tiles moved off slash so that key can be the cheat sheet: Hyper
+    # already contains shift, so Hyper+? and Hyper+/ are the same keypress and
+    # AeroSpace sees `slash`. Comma/period now pair as the two layouts.
+    cmd-alt-ctrl-shift-comma = ['layout tiles horizontal vertical', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Layout: tiles" "Hyper+,"']
+    cmd-alt-ctrl-shift-period = ['layout accordion horizontal vertical', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Layout: accordion" "Hyper+."']
+
+    # Hyper+/ ( = Hyper+? ) — cheat sheet, mirroring tmux's prefix + ?
+    cmd-alt-ctrl-shift-slash  = 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-help.sh'
+    cmd-alt-ctrl-shift-space = ['layout floating tiling', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Float ↔ tile" "Hyper+space"']     # float / unfloat
+    cmd-alt-ctrl-shift-minus = ['resize smart -50', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Shrink" "Hyper+-"']
+    cmd-alt-ctrl-shift-equal = ['resize smart +50', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Grow" "Hyper+="']
+    cmd-alt-ctrl-shift-b = ['balance-sizes', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Balance sizes" "Hyper+b"']
 
     # Workspaces.
     cmd-alt-ctrl-shift-1 = 'workspace 1'
@@ -114,8 +135,8 @@ on-window-detected = [
     cmd-alt-ctrl-shift-9 = 'workspace 9'
     cmd-alt-ctrl-shift-tab = 'workspace-back-and-forth'
 
-    cmd-alt-ctrl-shift-m         = 'mode move'
-    cmd-alt-ctrl-shift-semicolon = 'mode service'
+    cmd-alt-ctrl-shift-m = ['mode move', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Move mode — press 1-9" "Hyper+m"']
+    cmd-alt-ctrl-shift-semicolon = ['mode service', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Service mode — r reset, esc reload" "Hyper+;"']
 
 # Hyper+M, then a digit: send the focused window to that workspace.
 [mode.move.binding]
