@@ -89,9 +89,12 @@ silently breaks tmux/herdr navigation even though every config file looks fine.
 - Plugin state lives in `~/.local/state/herdr/plugins/<id>`, not under
   `~/.config`. Plugin hooks do **not** inherit your shell env.
 - `HERDR_ENV=1` marks a herdr-owned pane.
-- Notifications: exactly one banner per turn. `herdr-plugins/notify` owns it
-  inside herdr (it runs server-side, so it fires while detached);
+- Notifications: exactly one banner per turn. The `gamussa.notify` plugin owns
+  it inside herdr (it runs server-side, so it fires while detached);
   `claude/stop-hook.sh` suppresses itself only when that plugin is enabled.
+  The plugin is **not in this repo** — it lives at `gAmUssA/herdr-notify` and is
+  installed by id (`linkall.sh`). Edit it there, not here; a second copy in
+  dotfiles is what the split was meant to end.
 
 ## `.zshenv` vs `.zshrc`
 
