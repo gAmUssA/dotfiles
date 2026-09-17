@@ -70,13 +70,21 @@ an inner one ever sees it. Each modifier family has exactly one owner:
 |---|---|---|
 | **Alt** | the program in the pane (codex, editors) | multiplexers swallowed it before |
 | **Ctrl+Alt** | tmux + herdr (panes, tabs, workspaces) | terminals and desktops leave it free |
-| **f18 leader** (tap right Shift) | AeroSpace (`aerospace/aerospace.toml`) | OS-level WM — must not touch Ctrl+Alt |
+| **f18 leader** (tap right Command) | AeroSpace (`aerospace/aerospace.toml`) | OS-level WM — must not touch Ctrl+Alt |
 
 AeroSpace uses a **leader**, not a held modifier: Karabiner turns a *tap* of
-right Shift into `f18` (holding it still types Shift), and `f18` enters aero
+right Command into `f18` (holding it is still Command), and `f18` enters aero
 mode where bare keys act and Shift gives the move-variants. A held four-modifier
 Hyper was tried first and dropped — holding was awkward and it ate Shift, which
 forced move-to-workspace into a second mode.
+
+The leader key itself moved once, from right **Shift** to right **Command**:
+Shift worked but is a pinky stretch, and Command is a thumb key with nothing
+competing for it (left Command serves every app shortcut). `to_if_alone` keeps
+the held behaviour intact in both cases, so nothing is given up — pick the key
+that is comfortable, not the one that is free. The tap window is pinned at
+250ms; Karabiner's 1000ms default is long enough that a deliberate hold can
+still register as a tap.
 
 Caps Lock is **not** involved: it maps to `f19` = macOS "Select previous input
 source", the EN/RU switch. Every keyboard's `simple_modifications` does that

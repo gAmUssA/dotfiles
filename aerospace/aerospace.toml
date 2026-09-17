@@ -64,12 +64,16 @@ on-window-detected = [
     { check-further-callbacks = true, run = 'layout floating' },
 ]
 
-# Leader, not a held modifier. Karabiner turns a TAP of right Shift into f18;
-# holding it still types Shift. Nothing to hold while pressing the action key,
-# and because Shift is no longer eaten by the modifier, move-variants are just
-# shifted letters — no second mode for move-to-workspace.
+# Leader, not a held modifier. Karabiner turns a TAP of right Command into f18;
+# holding it is still plain Command. Nothing to hold while pressing the action
+# key, and because Shift is not eaten by the modifier, move-variants are just
+# shifted keys — no second mode for move-to-workspace.
+#
+# Right Shift held this job first. It worked; it is also a pinky stretch, and
+# right Command is a thumb key that nothing competes for. Comfort, not
+# availability, is what picks a leader.
 [mode.main.binding]
-    f18 = ['mode aero', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "AERO" "hjkl focus · ⇧ moves · 1-9 workspace · esc"']
+    f18 = ['mode aero', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "AERO" "arrows focus · ⇧ moves · 1-9 workspace · / help · esc"']
 
 # aero mode — bare keys, one action then straight back to main. Resize stays in
 # the mode, because repeating is the whole point there. esc leaves without acting.

@@ -153,7 +153,7 @@ if [ -d ~/.config/karabiner ] && [ ! -L ~/.config/karabiner ]; then
 fi
 rm -f ~/.config/karabiner
 ln -s ~/projects/dotfiles/karabiner ~/.config/karabiner
-launchctl kickstart -k "gui/$(id -u)/org.pqrs.service.agent.karabiner_console_user_server" 2>/dev/null
+launchctl kickstart -k "gui/$(id -u)/org.pqrs.service.agent.Karabiner-Console-User-Server" 2>/dev/null
 
 # Hammerspoon — entry point + caffeine + ollama menubar modules.
 # File-level symlinks so anything else in ~/.hammerspoon (Spoons/, scratch

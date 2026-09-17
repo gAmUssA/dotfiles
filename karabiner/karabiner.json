@@ -4,15 +4,20 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Right Shift: tap = F18 (AeroSpace leader), hold = Shift",
+                        "description": "Right Command: tap = F18 (AeroSpace leader), hold = Command",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "right_shift",
+                                    "key_code": "right_command",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [{ "key_code": "right_shift" }],
-                                "to_if_alone": [{ "key_code": "f18" }],
+                                "to": [{ "key_code": "right_command" }],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "f18"
+                                    }
+                                ],
+                                "to_if_alone_timeout_milliseconds": 250,
                                 "type": "basic"
                             }
                         ]
