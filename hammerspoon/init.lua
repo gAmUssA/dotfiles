@@ -4,6 +4,13 @@
 
 hs.allowAppleScript(true)  -- enable osascript probes from the shell
 
+-- The `hs` CLI (brew install hammerspoon --cask ships it; ours is at
+-- /opt/homebrew/bin/hs) talks to Hammerspoon over a Mach port that only exists
+-- while hs.ipc is loaded. Without this line the CLI fails with "can't access
+-- Hammerspoon message port" — which reads like a stale binary but is really
+-- just a module that was never required.
+require("hs.ipc")
+
 local LOG_PATH = "/tmp/hammerspoon.log"
 local function logLine(msg)
     local f = io.open(LOG_PATH, "a")

@@ -65,13 +65,15 @@ on-window-detected = [
 ]
 
 # Leader, not a held modifier. Karabiner turns a TAP of right Command into f18;
-# holding it is still plain Command. Nothing to hold while pressing the action
-# key, and because Shift is not eaten by the modifier, move-variants are just
-# shifted keys — no second mode for move-to-workspace.
+# holding it is still Control (this keyboard remaps right Command to Control,
+# and the complex rule now supplies that on hold). Nothing to hold while
+# pressing the action key, and because Shift is not eaten by the modifier,
+# move-variants are just shifted keys — no second mode for move-to-workspace.
 #
-# Right Shift held this job first. It worked; it is also a pinky stretch, and
-# right Command is a thumb key that nothing competes for. Comfort, not
-# availability, is what picks a leader.
+# Right Shift held this job first. It worked; it is also a pinky stretch. Right
+# Command is a thumb key that was already busy being Control — sharing it via
+# tap/hold costs nothing, because a bare Control tap meant nothing. Comfort,
+# not availability, is what picks a leader.
 [mode.main.binding]
     f18 = ['mode aero', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "AERO" "arrows focus · ⇧ moves · 1-9 workspace · / help · esc"']
 

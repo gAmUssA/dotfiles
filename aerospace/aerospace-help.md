@@ -60,8 +60,8 @@ them. Caps Lock is not involved — it still switches EN/RU, instantly.
 
 Ten minutes, in order. Each drill builds on the last. Every step below starts
 with **a tap of right Command**, written `▸` — so "`▸ 2`" means tap right
-Command, then press `2`. It is a tap, not a hold: right Command held is still
-plain Command.
+Command, then press `2`. It is a tap, not a hold: right Command **held** is
+still your Control key, exactly as before — only a clean tap means "leader".
 
 ### 1. Get in and out
 Tap right Command. The HUD shows **AERO**. Press `esc` — nothing happens to your
@@ -143,8 +143,9 @@ press, and everything else is occasional.
 - The leader exists so nothing is held **and** Shift stays free for the move
   variants. A four-modifier Hyper was tried first and dropped for both reasons.
   Right **Shift** was the leader before right Command: it worked, but it is a
-  pinky stretch. Right Command is a thumb key that nothing else wants — left
-  Command already covers every app shortcut.
+  pinky stretch. Right Command is a thumb key, and it was already remapped to
+  Control here — so the leader shares it rather than taking it: tap = leader,
+  hold = Control. A bare Control tap never meant anything, so nothing is lost.
 - **Float is the default on purpose.** Auto-tiling everything felt wrong, so
   tiling is opt-in per window. Raycast keeps snapping duty; if you want an app
   to always tile, add a `run = 'layout tiling'` rule in `aerospace.toml`.

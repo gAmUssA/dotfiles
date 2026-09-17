@@ -79,12 +79,40 @@ Hyper was tried first and dropped — holding was awkward and it ate Shift, whic
 forced move-to-workspace into a second mode.
 
 The leader key itself moved once, from right **Shift** to right **Command**:
-Shift worked but is a pinky stretch, and Command is a thumb key with nothing
-competing for it (left Command serves every app shortcut). `to_if_alone` keeps
-the held behaviour intact in both cases, so nothing is given up — pick the key
-that is comfortable, not the one that is free. The tap window is pinned at
-250ms; Karabiner's 1000ms default is long enough that a deliberate hold can
-still register as a tap.
+Shift worked but is a pinky stretch. Right Command is **not** a free key here —
+it is this keyboard's Control — so the remap moved *out* of
+`simple_modifications` and *into* the same complex rule: tap gives `f18`, hold
+gives `left_control`. Nothing is given up, because a bare Control tap meant
+nothing to begin with. The tap window is pinned at 250ms; Karabiner's 1000ms
+default is long enough that a deliberate hold can still register as a tap.
+
+Two Karabiner traps, both of which cost a debugging session here:
+
+**`to_if_alone_timeout_milliseconds` is not a manipulator property.** It only
+exists as `parameters: { "basic.to_if_alone_timeout_milliseconds": N }`. Written
+bare next to `to_if_alone`, Karabiner logs **nothing** — no error, no warning,
+`core_configuration is updated` as usual — and the manipulator simply never
+fires. A silently-invalid key looks exactly like a wrong key choice, so verify
+the JSON shape against Karabiner's docs before re-picking the key.
+
+**`simple_modifications` run before `complex_modifications`**, and this bit
+twice now. The first attempt bound `right_command` in a complex rule while a
+simple modification was still rewriting it to `left_control` — the complex rule
+never saw the key and the leader silently did nothing. Before binding any key,
+check the profile's `simple_modifications` *and* every per-device block; a key
+that looks unused in the complex rules may already be claimed one layer up.
+Two keys are remapped there today (`caps_lock` → `f19`, `right_control` →
+`right_option`), so the right-hand modifiers are more spoken for than they look.
+
+To debug a dead binding without guessing, check the two halves separately.
+AeroSpace side: `osascript -e 'tell application "System Events" to key code 79'`
+(79 = f18) then `aerospace list-modes --current` — if it says `aero`, the config
+is fine and the problem is upstream in Karabiner. Karabiner side: a temporary
+`hs.eventtap` logging `getKeyCode()` shows what the key actually emits after
+Karabiner processes it. Do **not** poll for a mode change and ask the user to
+press on cue — a no-show then means "nobody was at the keyboard" just as often
+as it means "broken", and it wasted two rounds here. Record passively, correlate
+after. Stop the eventtap and delete its log when done; it captures keystrokes.
 
 Caps Lock is **not** involved: it maps to `f19` = macOS "Select previous input
 source", the EN/RU switch. Every keyboard's `simple_modifications` does that

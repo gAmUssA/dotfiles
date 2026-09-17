@@ -4,20 +4,22 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Right Command: tap = F18 (AeroSpace leader), hold = Command",
+                        "description": "Right Command: tap = F18 (AeroSpace leader), hold = Control",
                         "manipulators": [
                             {
                                 "from": {
                                     "key_code": "right_command",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [{ "key_code": "right_command" }],
+                                "to": [{ "key_code": "left_control" }],
                                 "to_if_alone": [
                                     {
                                         "key_code": "f18"
                                     }
                                 ],
-                                "to_if_alone_timeout_milliseconds": 250,
+                                "parameters": {
+                                    "basic.to_if_alone_timeout_milliseconds": 350
+                                },
                                 "type": "basic"
                             }
                         ]
@@ -1339,10 +1341,6 @@
                 {
                     "from": { "key_code": "delete_forward" },
                     "to": [{ "key_code": "delete_or_backspace" }]
-                },
-                {
-                    "from": { "key_code": "right_command" },
-                    "to": [{ "key_code": "left_control" }]
                 },
                 {
                     "from": { "key_code": "right_control" },
