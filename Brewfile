@@ -1,4 +1,3 @@
-tap "asmvik/formulae", "https://github.com/asmvik/homebrew-formulae.git", trusted: { formulae: ["krp"] }
 tap "buildpacks/tap"
 tap "cameroncooke/axe"
 tap "charmbracelet/tap"
@@ -457,10 +456,6 @@ brew "zsh"
 brew "zsh-autosuggestions"
 # Additional completion definitions for zsh
 brew "zsh-completions"
-# Simple hotkey-daemon for macOS.
-brew "asmvik/formulae/skhd", trusted: true
-# A tiling window manager for macOS based on binary space partitioning.
-brew "asmvik/formulae/yabai", trusted: true
 # A CLI for building apps using Cloud Native Buildpacks
 brew "buildpacks/tap/pack", trusted: true
 # CLI tool for interacting with iOS Simulators via accessibility and HID APIs
