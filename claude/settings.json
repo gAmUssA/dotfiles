@@ -1,4 +1,5 @@
 {
+  "outputStyle": "Concise",
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
@@ -68,16 +69,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash '/Users/vikgamov/.claude/hooks/herdr-agent-state.sh' session",
-            "timeout": 10
-          }
-        ]
-      },
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
             "command": "~/projects/dotfiles/herdr-model-report.sh claude",
             "timeout": 5
           }
@@ -89,6 +80,16 @@
           {
             "type": "command",
             "command": "bash \"$HOME\"'/.tmux/plugins/tmux-assistant-resurrect/hooks/claude-session-track.sh'"
+          }
+        ]
+      },
+      {
+        "matcher": "^(startup|resume|clear|compact|fork)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/vikgamov/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
           }
         ]
       }
