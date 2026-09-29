@@ -47,7 +47,7 @@ several need a human physically at the machine:
 
 **The agent can run unattended:** steps 1–4 (clone, `brew bundle`,
 `linkall.sh`, `macos-defaults.sh`, `prefs-restore.sh`), every verification
-command in this file, the pre-wipe repo sweep, and reporting what it found.
+command in this file, the repo sweep below, and reporting what it found.
 
 **Order matters** — these gate each other, and skipping ahead produces errors
 that read like something else entirely:
@@ -153,9 +153,27 @@ before the Daystrom build, of 746 GiB used:
 | `/Applications` | 97 G | **No** — reinstall; most of it is the video rig, not this machine's job |
 | `/opt/homebrew` | 26 G | **No** — `brew bundle` rebuilds it exactly (step 2) |
 | `/Library` + system caches | 80 G | **No** — regenerates |
-| Genuine user data | ~540 G | **Yes** — and this is the only part that needs a plan |
+| Genuine user data | ~540 G | **Only what the new machine will use** — see below |
 
-### Before you wipe the old machine
+### If the old machine stays, copy less
+
+A second machine alongside a live one needs far less than a replacement does.
+Daystrom runs agents and builds; it does not need the media libraries, the
+Downloads pile, or every repo — the laptop is still there, reachable over
+Tailscale, and remains the fallback for anything not copied. Start with the
+dotfiles repo and the toolchain, add projects when a task actually needs one,
+and let `~/Downloads`, `Music`, `Pictures` and archived talks stay put.
+
+Copy over the tailnet rather than a drive:
+
+```bash
+rsync -aP ~/Library/Fonts/ daystrom:~/Library/Fonts/     # after brew bundle
+rsync -aP ~/projects/<repo> daystrom:~/projects/
+```
+
+### Before decommissioning or erasing a machine
+
+Only when the source machine is going away:
 
 **Sweep every repo for work that exists nowhere else.** This found 60+ repos
 with unpushed commits, and three with no remote at all:
@@ -171,7 +189,8 @@ done
 ```
 
 A repo with `NO-REMOTE` is the dangerous case: nothing is backing it up. Push it
-somewhere or copy the directory before the disk is erased.
+somewhere, or copy the directory off, before the disk is erased. If the
+machine is staying, this is hygiene rather than a deadline.
 
 Also check what is genuinely per-machine and therefore nowhere in git:
 `~/.kube/config`, `~/.docker/config.json`, `~/.appstoreconnect`,
