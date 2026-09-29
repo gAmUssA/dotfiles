@@ -19,6 +19,12 @@ them looks finished while every keybinding is dead.
 Do not reach for Migration Assistant. This repo exists so a machine is rebuilt
 rather than copied.
 
+On a machine that is **already** set up, run `./reconcile-check.sh` first and
+resolve everything it reports before `linkall.sh`. linkall `rm -f`s all 35
+targets before relinking, so a config that drifted from a symlink into a regular
+file is deleted with no backup — which is how local-only edits die. Union the
+two copies; never pick a side.
+
 ## It is a PUBLIC repo
 
 `git remote` is github.com/gAmUssA/dotfiles, public. Before committing anything

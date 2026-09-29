@@ -11,7 +11,10 @@
       "models": {
         "qwen3-coder:30b-ctx64k": {
           "name": "qwen3-coder 30b (64k, agentic default)",
-          "limit": { "context": 65536, "output": 8192 }
+          "limit": {
+            "context": 65536,
+            "output": 8192
+          }
         }
       }
     }
@@ -21,6 +24,14 @@
       "type": "remote",
       "url": "https://mcp.tavily.com/mcp/?tavilyApiKey={env:TAVILY_API_KEY}",
       "enabled": true
+    },
+    "railway": {
+      "command": [
+        "railway",
+        "mcp"
+      ],
+      "enabled": true,
+      "type": "local"
     }
   }
 }

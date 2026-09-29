@@ -68,6 +68,79 @@ still exits 0.
 
 ---
 
+## Reconciling a machine that is already set up
+
+DS9 was configured months ago and the repo has moved since. This is **not** the
+fresh-install path: on a machine in use, `linkall.sh` is destructive.
+
+It `rm -f`s all 35 targets before relinking. Anything that drifted from a
+symlink into a **regular file** is deleted with no backup and no diff — and
+tools do convert them: tmux-assistant-resurrect and Paseo have each done it to
+`claude/settings.json`. The local edits in that file are the ones that exist
+nowhere else.
+
+### Step 1 — audit before touching anything
+
+```bash
+cd ~/projects/dotfiles && git pull --ff-only
+./reconcile-check.sh          # read-only; exits 1 if a human decision is needed
+```
+
+It reports repo state (behind/ahead/dirty), every expected link as
+`OK / REGULAR FILE / WRONG TARGET / missing`, Brewfile gaps, and whether the
+herdr notify plugin is installed. A `REGULAR FILE` line is the dangerous case:
+that file holds changes the repo has never seen.
+
+This is not hypothetical. Run on the laptop the day it was written, it found
+`~/.config/opencode/opencode.json` carrying a `railway` MCP server that existed
+in no commit.
+
+### Step 2 — resolve each drift by union, never by choosing a side
+
+For every `REGULAR FILE`, diff it against the repo copy and merge **both**
+directions before relinking:
+
+```bash
+diff ~/.config/<path> ~/projects/dotfiles/<path>
+# fold anything the live file has and the repo lacks INTO the repo, commit it,
+# then relink just that one file:
+rm -f ~/.config/<path> && ln -s ~/projects/dotfiles/<path> ~/.config/<path>
+```
+
+Overwriting the live file loses local work; overwriting the repo copy loses
+every other machine's. For `claude/settings.json` specifically, union the hooks
+**as a set** — `AGENTS.md` says the same thing, and says it because the rule was
+learned twice.
+
+### Step 3 — only now re-run the scripts
+
+```bash
+brew bundle --file=Brewfile     # adds; never removes
+sh linkall.sh                   # safe once reconcile-check.sh is clean
+sh macos-defaults.sh
+```
+
+Two cautions specific to an existing machine:
+
+- **`brew bundle` never uninstalls.** Packages dropped from the Brewfile (Moom,
+  for one) stay installed until `brew bundle cleanup` is run deliberately.
+  Read its dry run before agreeing to it.
+- **`prefs-restore.sh` overwrites live app settings** with the repo's snapshot,
+  which may be *older* than what this machine has. On a machine in use, run
+  `prefs-backup.sh` first and diff, rather than restoring blind. Quit the app
+  first either way — a running app rewrites its plist on quit.
+
+### The agent's part
+
+Audit, diff, report, and propose the union — all read-only or repo-local, so all
+safe to do unattended. Do **not** run `linkall.sh`, `prefs-restore.sh`, or
+`brew bundle cleanup` on a machine in use until a human has signed off on each
+drift the audit found. Reporting "reconciled" after deleting a config that
+existed only on that machine is the failure this whole section exists to
+prevent.
+
+---
+
 ## Migrating from an existing Mac — do NOT use Migration Assistant
 
 This repo exists so a new machine can be **rebuilt**, not copied. Migration
