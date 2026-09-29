@@ -345,6 +345,41 @@ anything else; see `AGENTS.md`.
 
 ---
 
+### Fonts — the Brewfile covers the coding ones, not the slide ones
+
+42 font casks are in the Brewfile, including `font-iosevka-term-nerd-font`,
+which is what `ghostty/config` actually sets. `brew bundle` restores all of
+them.
+
+It does **not** restore the rest of `~/Library/Fonts` — 1,491 files, 4.3 GB,
+none of it symlinked or Homebrew-managed. The display faces used in talks live
+there: `FinalFrontierOldStyle`, `Lazer84`, `KOMIKAX`, `ADAM.CG PRO`,
+`Font Awesome 5/6`, plus Microsoft's `Aptos` and `calibri` that arrive with
+Office.
+
+These are **licensed assets, so they are not vendored here** — this repo is
+public, and shipping font binaries is redistribution. Same reasoning as the
+Birman layout. Back them up instead, and restore before the first talk:
+
+```bash
+# on the old machine
+/usr/bin/du -sh ~/Library/Fonts
+ditto ~/Library/Fonts /Volumes/<archive>/Fonts-$(date +%F)
+
+# on the new one, after brew bundle has placed the cask fonts
+ditto /Volumes/<archive>/Fonts-<date> ~/Library/Fonts
+```
+
+`ditto` merges rather than replacing, so it will not disturb what `brew bundle`
+already installed. Font Book shows duplicates if both a cask and a hand-copied
+version of the same family land — resolve those in Font Book, not by deleting
+files, or `brew bundle` will simply put them back.
+
+Worth skipping on the way over: `~/Library/Fonts` also holds X11 leftovers
+(`fonts.dir`, `fonts.list`, `fonts.scale`, `encodings.dir`) and a stray `foo`.
+
+---
+
 ### Desktop environment — AeroSpace, Karabiner, Hammerspoon
 
 All three are in the Brewfile, but each needs a TCC permission grant that no

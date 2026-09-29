@@ -556,6 +556,17 @@ cask "font-space-mono-nerd-font"
 cask "font-symbols-only-nerd-font"
 cask "font-victor-mono-nerd-font"
 cask "font-zed-mono-nerd-font"
+
+# Display/presentation faces used in slides. The rest of ~/Library/Fonts is
+# hand-installed and licensed, so it is archived, not vendored — see
+# SETUP-NEW-MACHINE.md.
+cask "font-bangers"
+cask "font-electrolize"
+cask "font-indie-flower"
+cask "font-instrument-serif"
+cask "font-kalam"
+cask "font-lato"
+cask "font-libre-franklin"
 # GIT client
 cask "fork"
 # Set of tools to manage resources and applications hosted on Google Cloud
