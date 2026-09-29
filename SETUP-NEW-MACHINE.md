@@ -1,8 +1,13 @@
-# Setting up a new Mac (DS9 & friends)
+# Setting up a new Mac (DS9, Daystrom & friends)
 
 Step-by-step to bring a fresh macOS machine up to this environment from the
-dotfiles repo. Written for **DS9** (the home-office Mac mini, always-on herdr
-host), but works for any new Mac.
+dotfiles repo. Written for the always-on hosts — **DS9** (home-office Mac mini)
+and **Daystrom** (Mac Studio, agents and builds) — but works for any new Mac.
+
+Machines are named from Star Trek, and the class of name encodes the class of
+hardware: stations and institutions stay put (`DS9`, `Daystrom`), starships
+travel (`Voyager`), small craft attach to a parent (the iPad). Pick the name
+**before** step 6 — Tailscale derives its node name from the hostname.
 
 The repo's model, so the steps make sense:
 
@@ -10,12 +15,77 @@ The repo's model, so the steps make sense:
   (`.zshrc`, `.gitconfig`, `.ssh/config`, ghostty, cmux, **herdr**, sesh,
   Claude Code settings, …).
 - **`Brewfile`** — every package/app, installed by `brew bundle`.
-- **`prefs-restore.sh`** — GUI app preferences (Moom, PopClip, iStat, …).
+- **`prefs-restore.sh`** — GUI app preferences (Bartender, PopClip, iStat, …).
 - **`macos-defaults.sh`** — 55 system settings (Dock, Finder, keyboard, …).
 - **Git submodules** — zsh plugins (kafka-zsh-completions).
 - Deliberately **NOT in git**: kube/docker credentials, Apple signing keys
   (see [SETUP-SIGNING-KEYS.md](SETUP-SIGNING-KEYS.md)), Claude Code's
   `settings.local.json`. Those are per-machine on purpose.
+
+---
+
+## Migrating from an existing Mac — do NOT use Migration Assistant
+
+This repo exists so a new machine can be **rebuilt**, not copied. Migration
+Assistant faithfully reproduces years of accumulated cruft; a clean install plus
+steps 0–7 gives the same environment with none of it. Measured on the laptop
+before the Daystrom build, of 746 GiB used:
+
+| Category | Size | Migrate? |
+|---|---|---|
+| `/Applications` | 97 G | **No** — reinstall; most of it is the video rig, not this machine's job |
+| `/opt/homebrew` | 26 G | **No** — `brew bundle` rebuilds it exactly (step 2) |
+| `/Library` + system caches | 80 G | **No** — regenerates |
+| Genuine user data | ~540 G | **Yes** — and this is the only part that needs a plan |
+
+### Before you wipe the old machine
+
+**Sweep every repo for work that exists nowhere else.** This found 60+ repos
+with unpushed commits, and three with no remote at all:
+
+```bash
+cd ~/projects && for r in $(find . -maxdepth 3 -name .git -type d | sed 's|/.git$||'); do
+  dirty=$(git -C "$r" status --porcelain 2>/dev/null | wc -l | tr -d " ")
+  unpushed=$(git -C "$r" log --branches --not --remotes --oneline 2>/dev/null | wc -l | tr -d " ")
+  remote=$(git -C "$r" remote get-url origin 2>/dev/null || echo NO-REMOTE)
+  [ "$dirty" != "0" ] || [ "$unpushed" != "0" ] || [ "$remote" = "NO-REMOTE" ] &&
+    printf "%-55s dirty=%-5s unpushed=%-5s %s\n" "$r" "$dirty" "$unpushed" "$remote"
+done
+```
+
+A repo with `NO-REMOTE` is the dangerous case: nothing is backing it up. Push it
+somewhere or copy the directory before the disk is erased.
+
+Also check what is genuinely per-machine and therefore nowhere in git:
+`~/.kube/config`, `~/.docker/config.json`, `~/.appstoreconnect`,
+`~/.claude/settings.local.json`, and anything under `~/Downloads` you still want.
+
+### Time Machine local snapshots hide your free space
+
+**Turn Time Machine off before any cleanup or migration:**
+
+```bash
+sudo tmutil disable        # re-enable with `sudo tmutil enable` when finished
+```
+
+APFS local snapshots pin every block you delete. During the Daystrom prep, ~589
+GiB of deletions — a 329 GB runaway clipboard cache, a 97 GB project move, 130
+GiB of caches — returned **zero** free space until two hourly snapshots aged
+out, at which point it all appeared at once. The cleanup looked broken for an
+hour and was not.
+
+The trap inside the trap: `diskutil apfs listSnapshots /` checks the **System**
+volume and reports nothing. Your data lives on the Data volume:
+
+```bash
+tmutil listlocalsnapshots /                      # the honest answer
+diskutil apfs listSnapshots /System/Volumes/Data # ditto, with a Purgeable flag
+sudo tmutil deletelocalsnapshots <YYYY-MM-DD-HHMMSS>
+```
+
+Related: `du` reports cloned and snapshot-pinned blocks at full size, so a
+directory can look enormous while costing almost nothing — and `du` is aliased
+in this shell to a tool that rejects `-s`. Use `/usr/bin/du -shx`.
 
 ---
 
@@ -87,6 +157,21 @@ herdr --version
 herdr integration install claude   # agent state + native session restore
 ```
 
+The notification plugin is **not in this repo** — it lives at
+`gAmUssA/herdr-notify`. `linkall.sh` installs it in step 3
+(`herdr plugin install gAmUssA/herdr-notify --yes`), but that needs the herdr
+binary to already exist, which is why herdr is installed here in step 2 and not
+later. It runs server-side, so it fires while you are detached, and
+`claude/stop-hook.sh` suppresses its own banner only when the plugin is enabled
+— exactly one banner per turn. After step 3, verify:
+
+```bash
+herdr plugin list                   # expect gamussa.notify, enabled
+```
+
+For plugin development, clone the repo and `herdr plugin link <checkout>`
+instead. Edit it there, never a second copy in this repo.
+
 ---
 
 ## 3. Symlink the config files
@@ -109,10 +194,69 @@ Then start a fresh shell (or `exec zsh`) so p10k + plugins load.
 
 ```bash
 sh macos-defaults.sh      # Dock, Finder, keyboard, hot corners — 55 settings
-sh prefs-restore.sh       # Moom, PopClip, iStat Menus, etc.
+sh prefs-restore.sh       # Bartender, PopClip, iStat Menus, etc.
 ```
 
 Some Dock/Finder changes need a logout or `killall Dock Finder` to show.
+
+### Keyboard layout — Ilya Birman Typography (EN + RU)
+
+Both English and Russian typing use the **Ilya Birman Typography** layouts, not
+the stock ones. The bundle is third-party, so it is **not** vendored here —
+download it, then drop it in the system-wide layout directory:
+
+```bash
+# https://ilyabirman.net/projects/typography-layout/ -> download the macOS bundle
+sudo cp -R "Ilya Birman Typography Layout.bundle" "/Library/Keyboard Layouts/"
+sudo chown -R "$USER:staff" "/Library/Keyboard Layouts/Ilya Birman Typography Layout.bundle"
+```
+
+**Log out and back in**, then add both layouts in System Settings → Keyboard →
+Text Input → Edit… → `+`:
+
+- `English - Ilya Birman Typography`
+- `Russian - Ilya Birman Typography`
+
+`prefs-restore.sh` carries the `com.apple.HIToolbox` domain, which records the
+enabled input sources — but it can only enable layouts whose bundle is already
+installed, and the change needs a logout to appear. Install the bundle first.
+
+The EN/RU switch is **Caps Lock**, remapped to `f19` ("Select previous input
+source") in `karabiner/karabiner.json` — in the profile *and* in every
+per-device block. That is why Caps Lock is not available as a modifier for
+anything else; see `AGENTS.md`.
+
+---
+
+### Desktop environment — AeroSpace, Karabiner, Hammerspoon
+
+All three are in the Brewfile, but each needs a TCC permission grant that no
+script can make for you. Skip these and every keybinding is silently dead:
+
+| App | System Settings → Privacy & Security → | Why |
+|---|---|---|
+| AeroSpace | **Accessibility** | moving and focusing windows |
+| Karabiner-Elements | **Input Monitoring** (both `karabiner_grabber` and `karabiner_observer`) | remapping keys at all |
+| Hammerspoon | **Accessibility** | the AeroSpace HUD overlay |
+
+Then launch each once so it registers, and confirm the layer stack works:
+
+```bash
+aerospace list-workspaces --all            # AeroSpace is running and has config
+osascript -e 'tell application "System Events" to key code 79'
+aerospace list-modes --current             # expect "aero" — proves f18 arrives
+```
+
+The modifier layers, and why each belongs to exactly one owner, are in
+`AGENTS.md`. The short version: **Alt** belongs to the program in the pane,
+**Ctrl+Alt** to tmux/herdr, and the **f18 leader** (tap right Command) to
+AeroSpace. AeroSpace grabs keys at the OS level before iTerm sees them, so a
+stray Ctrl+Alt binding there breaks herdr navigation with every config file
+still looking correct.
+
+AeroSpace runs **float-by-default** on purpose — auto-tiling was tried and
+rejected. Do not "fix" that. `aerospace/aerospace-help.md` is the cheat sheet
+(leader then `/`).
 
 ---
 
@@ -155,9 +299,12 @@ claude          # run once, authenticate. Creates per-machine settings.local.jso
 
 ---
 
-## 6. DS9-specific: make it an always-on herdr host
+## 6. Always-on herdr host (DS9, Daystrom)
 
-Only for the Mac mini. See also the network project's herdr notes.
+For any machine that stays powered and serves sessions to the others — the Mac
+mini (`DS9`) and the Mac Studio (`Daystrom`). Skip this on laptops. Substitute
+the machine's own name for `ds9` throughout. See also the network project's
+herdr notes.
 
 ```bash
 # Survive power loss, never sleep (display may sleep):
@@ -166,8 +313,9 @@ pmset -g | grep -E "autorestart|^ sleep"     # verify
 
 # Tailscale: install from Brewfile already done; now sign in to the tailnet:
 sudo tailscale up
-# then rename the machine to ds9 in the Tailscale admin console (Machines → Edit),
-# OR set the hostname BEFORE `tailscale up` and it derives automatically:
+# then rename the machine in the Tailscale admin console (Machines → Edit),
+# OR set the hostname BEFORE `tailscale up` and it derives automatically.
+# Use the machine's own name — DS9/ds9 here, Daystrom/daystrom on the Studio:
 sudo scutil --set ComputerName "DS9"
 sudo scutil --set LocalHostName  "ds9"
 sudo scutil --set HostName       "ds9"
@@ -337,3 +485,18 @@ sh linkall.sh
 sh macos-defaults.sh && sh prefs-restore.sh
 exec zsh
 ```
+
+Then the parts no script can do, in this order:
+
+1. **1Password** — sign in, enable the SSH agent (Settings → Developer).
+2. **TCC grants** — Accessibility for AeroSpace and Hammerspoon, Input
+   Monitoring for both Karabiner binaries. Nothing keyboard-related works until
+   these are set.
+3. **Ilya Birman keyboard layout** — install the bundle, then log out so the
+   EN/RU sources appear.
+4. **Always-on host only** (step 6) — hostname, `tailscale up`, Remote Login,
+   `pmset`, then authorize the login key from the laptop.
+
+And if you are migrating rather than starting clean, read the top of this file
+first — `sudo tmutil disable`, and sweep for unpushed repos before erasing
+anything.

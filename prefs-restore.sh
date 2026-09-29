@@ -48,5 +48,5 @@ if [[ -d "$SRC" ]]; then
 fi
 
 echo
-echo "Done. Restart the affected apps (Moom, Bartender, iStat Menus, PopClip,"
+echo "Done. Restart the affected apps (Bartender, iStat Menus, PopClip,"
 echo "Marked, TaskPaper, Cyberduck, iTerm2) — they read preferences at launch."

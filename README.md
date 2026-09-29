@@ -34,7 +34,7 @@ If you already have config at any of those paths, back it up before running — 
 Claude Code settings live at `claude/settings.json`, symlinked to `~/.claude/settings.json`.
 The per-machine file `~/.claude/settings.local.json` stays local and is gitignored.
 
-### App preferences (Moom, Bartender, iStat Menus, PopClip, Marked, TaskPaper, Cyberduck, iTerm2)
+### App preferences (Bartender, iStat Menus, PopClip, Marked, TaskPaper, Cyberduck, iTerm2)
 
 GUI app plists can't be symlinked — cfprefsd caches and rewrites them, which is
 why the old Mackup setup silently died. Instead, snapshots:

@@ -274,8 +274,6 @@ brew "lolcat"
 brew "lsd"
 # Powerful, lightweight programming language
 brew "lua"
-# Keep your Mac's application settings in sync
-brew "mackup"
 # Utility for directing compilation
 brew "make"
 # Mac App Store command-line interface
@@ -386,8 +384,6 @@ brew "swiftlint"
 brew "tailscale"
 # General purpose fuzzy finder TUI
 brew "television"
-# Send macOS User Notifications from the command-line
-brew "terminal-notifier"
 # Official documentation format of the GNU project
 brew "texinfo"
 # Code-search similar to ack
@@ -496,7 +492,8 @@ cask "1password-cli"
 # GPU-accelerated terminal emulator
 cask "alacritty"
 # Enable Windows-like alt-tab
-# i3-style tiling WM on Hyper (hold Caps Lock). Config: aerospace/aerospace.toml
+# Tiling WM, float-by-default. Leader: tap right Command (Karabiner -> f18).
+# Config: aerospace/aerospace.toml, cheat sheet: aerospace/aerospace-help.md
 cask "nikitabobko/tap/aerospace"
 cask "alt-tab"
 # Agentic-first issue tracker
@@ -677,7 +674,6 @@ mas "LanguageTool", id: 1534275760
 mas "Marked 3", id: 0
 mas "MindNode Classic", id: 1289197285
 mas "MonitorControlLite", id: 1595464182
-mas "Moom Classic", id: 419330170
 mas "Numbers", id: 361304891
 mas "Numbers", id: 409203825
 mas "Okta Verify", id: 490179405

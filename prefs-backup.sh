@@ -29,7 +29,6 @@ mkdir -p "$OUT"
 # (e.g. com.pilotmoon.popclip-setapp) — missing domains are skipped with a
 # note, so the same script works on machines with either flavor.
 domains=(
-  "com.manytricks.Moom"                  # Moom — window layouts + hotkeys
   "com.surteesstudios.Bartender-setapp"  # Bartender Pro (Setapp) — menu bar layout
   "com.bjango.istatmenus-setapp"         # iStat Menus (Setapp) — main settings
   "com.bjango.istatmenus-setapp.menubar.7" # iStat Menus — menubar item config
@@ -48,6 +47,12 @@ domains=(
   "com.googlecode.iterm2"                # iTerm2 — profiles, colours, keymaps, hotkey window
   "com.robinebers.openusage"             # OpenUsage — menu-bar pins, layout, enabled providers.
                                          #   Heavily filtered: see domain_strip_keys below.
+  "com.apple.HIToolbox"                  # Enabled input sources — carries the two Ilya
+                                         #   Birman Typography layouts (EN + RU). The
+                                         #   layout BUNDLE itself is third-party and not
+                                         #   in this repo; SETUP-NEW-MACHINE.md has the
+                                         #   download. Restoring this domain needs a
+                                         #   logout before the sources appear.
 )
 
 # Per-domain top-level keys to drop, beyond the global strip_keys. Echoes one
