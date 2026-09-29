@@ -37,12 +37,6 @@
 	ui = auto
 	status = auto
 	branch = auto
-[difftool "sourcetree"]
-	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --nosplash \"$LOCAL\" \"$REMOTE\"
-	path =
-[mergetool "sourcetree"]
-	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
-	trustExitCode = true
 [alias]
 	dt = difftool
 	news = log -p HEAD@{1}..HEAD@{0}
@@ -62,20 +56,18 @@
 	l2 = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 	l3 = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 	st = status
-	s = status --short --branch
+	s = status -u -s
 	ci = commit
 	co = checkout
-	br = branch
+	br = branch -a
 	switch = !legit switch \"$@\"
 	branches = !legit branches
 	sprout = !legit sprout \"$@\"
 	unpublish = !legit unpublish \"$@\"
 	harvest = !legit harvest \"$@\"
-	sync = !legit sync \"$@\"
+	sync = !git pull && git push
 	publish = !legit publish \"$@\"
 	graft = !legit graft \"$@\"
-	br = branch -a
-	s = status -u -s
 	cl = log --stat -C -2
 	c = commit
 	d = diff --color-words
@@ -90,14 +82,9 @@
 	pl = pull
 	lp = log -p
 	lod = log --oneline --decorate
-	lg = log --graph
 	lpo = log --pretty=oneline --abbrev-commit --graph --decorate --all
-	l1 = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-	l2 = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-	l3 = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 	spull = !git-svn fetch && git-svn rebase
 	spush = !git-svn dcommit
-	sync = !git pull && git push
 	es = !git pull --rebase && git push
 	lf = log --pretty=fuller
 	ignorechanges = update-index --assume-unchanged
@@ -149,7 +136,7 @@
 [commit]
 	gpgsign = false
 [gpg]
-	program = /usr/local/bin/gpg
+	program = /opt/homebrew/bin/gpg
 [credential "https://github.com"]
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential

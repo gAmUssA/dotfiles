@@ -7,7 +7,7 @@
 # into a regular file, after which the live config and the tracked copy drift
 # apart with nothing to announce it. Seen twice already:
 #   2026-09-08  tmux-assistant-resurrect  (added its session hooks)
-#   2026-09-11  paseo                     (added 5 $PASEO_TERMINAL_ID hooks)
+#   2026-09-11  paseo                     (added 5 Paseo lifecycle hooks)
 # Each time the repo kept serving a stale config to other machines while this
 # one quietly diverged. githooks/pre-commit does not catch it — that guards
 # secrets, not link integrity.

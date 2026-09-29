@@ -25,7 +25,6 @@ ln -s ~/projects/dotfiles/.tigrc ~/.tigrc
 ln -s ~/projects/dotfiles/.vimrc ~/.vimrc
 ln -s ~/projects/dotfiles/.ssh/config ~/.ssh/config
 ln -s ~/projects/dotfiles/.dircolors ~/.dircolors
-ln -s ~/projects/dotfiles/.mackup.cfg ~/.mackup.cfg
 ln -s ~/projects/dotfiles/.tmux.conf ~/.tmux.conf
 ln -s ~/projects/dotfiles/.p10k.zsh ~/.p10k.zsh
 
@@ -175,17 +174,16 @@ ls -lah ~/.tigrc
 ls -lah ~/.vimrc
 ls -lah ~/.ssh/config
 ls -lah ~/.dircolors
-ls -lah ~/.mackup.cfg
 ls -lah ~/.tmux.conf
 ls -lah ~/.p10k.zsh
 ls -lah "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
 ls -lah ~/.config/cmux/settings.json
 ls -lah ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh
-ls -lah ~/.hammerspoon/init.lua ~/.hammerspoon/caffeine.lua ~/.hammerspoon/ollama.lua ~/.hammerspoon/claude_sessions.lua
+ls -lah ~/.hammerspoon/init.lua ~/.hammerspoon/caffeine.lua ~/.hammerspoon/ollama.lua ~/.hammerspoon/claude_sessions.lua ~/.hammerspoon/aerospace_hud.lua
 ls -lah ~/.config/opencode/opencode.json ~/.pi/agent/models.json ~/.agents/skills/tavily-search
 ls -lah ~/.config/op/agents.refs
 ls -lah ~/.config/1Password/ssh/agent.toml
-echo "git hooks -> $(git -C ~/projects/dotfiles config core.hooksPath) ($(ls ~/projects/dotfiles/githooks | tr '\n' ' '))"
+echo "git hooks -> $(git -C ~/projects/dotfiles config core.hooksPath) ($(cd ~/projects/dotfiles/githooks && echo *))"
 
 # thefuck — installed via pipx pinned to python@3.11 (the brew formula has a
 # stale openssl@1.1 dep, and thefuck 3.32 imports `distutils` which Python

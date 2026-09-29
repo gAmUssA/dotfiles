@@ -104,6 +104,7 @@ tab_bar_right = [
   { type = "datetime", format = "%H:%M" },
 ]
 agent_panel_sort = "priority"
+status_indicators = "symbols"
 
 show_agent_labels_on_pane_borders = true
 
@@ -155,3 +156,6 @@ delivery = "off"
 
 [experimental]
 kitty_graphics = true
+
+[ui.sound]
+enabled = false
