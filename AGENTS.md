@@ -8,6 +8,17 @@
 
 # Working in this repo
 
+## Setting up a machine
+
+`SETUP-NEW-MACHINE.md` is the runbook, and its first section says which steps an
+agent may run unattended and which must be handed to the human. Read that before
+starting: roughly half the work — `sudo`, 1Password, TCC grants, `gh auth`,
+Tailscale, accepting a host key — cannot be scripted, and a setup that skips
+them looks finished while every keybinding is dead.
+
+Do not reach for Migration Assistant. This repo exists so a machine is rebuilt
+rather than copied.
+
 ## It is a PUBLIC repo
 
 `git remote` is github.com/gAmUssA/dotfiles, public. Before committing anything

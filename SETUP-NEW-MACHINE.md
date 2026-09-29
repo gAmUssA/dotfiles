@@ -24,6 +24,50 @@ The repo's model, so the steps make sense:
 
 ---
 
+## If an agent is driving this setup
+
+An agent can do most of the typing but **cannot finish this alone**, and the
+failure mode is quiet: the machine looks configured, and nothing keyboard-
+related works. Split the work explicitly.
+
+**The agent must stop and hand back for these.** None can be scripted, and
+several need a human physically at the machine:
+
+| Gate | Why it is human-only |
+|---|---|
+| Any `sudo` | No password on the agent's side. Print the command, let the human run it. |
+| Apple ID / iCloud sign-in | Interactive, 2FA |
+| 1Password sign-in + *Settings → Developer → Use the SSH agent* | Nothing else creates `~/.1password/agent.sock`, which the tracked `.ssh/config` points every host at |
+| `gh auth login` | Browser + device code |
+| TCC grants (Accessibility, Input Monitoring, Full Disk Access) | macOS refuses programmatic grants by design |
+| `sudo tailscale up` | Prints an auth URL to open |
+| Ilya Birman layout bundle + the logout after it | Third-party download; sources only appear after a logout |
+| Accepting an SSH host key | The fingerprint must be **compared**, not accepted. See the verification ladder. |
+| Deciding what user data to copy | Judgment, and irreversible |
+
+**The agent can run unattended:** steps 1–4 (clone, `brew bundle`,
+`linkall.sh`, `macos-defaults.sh`, `prefs-restore.sh`), every verification
+command in this file, the pre-wipe repo sweep, and reporting what it found.
+
+**Order matters** — these gate each other, and skipping ahead produces errors
+that read like something else entirely:
+
+1. 1Password SSH agent **before** the clone: `.gitmodules` uses SSH, so
+   `--recurse-submodules` fails without a key.
+2. herdr installed (step 2) **before** `linkall.sh` (step 3): linkall installs
+   the notify plugin and needs the binary.
+3. TCC grants **before** claiming the desktop environment works.
+4. Hostname set **before** `tailscale up`, or the node name is wrong.
+
+**Report honestly.** `brew bundle` partially failing, a cask needing a password,
+a TCC grant not yet made — say so with the output. A setup reported as complete
+when a keybinding layer is dead costs more than the setup did. Verify with the
+commands in each section rather than assuming a command that exited 0 did what
+it claimed; `aerospace reload-config --dry-run`, for one, prints errors and
+still exits 0.
+
+---
+
 ## Migrating from an existing Mac — do NOT use Migration Assistant
 
 This repo exists so a new machine can be **rebuilt**, not copied. Migration
