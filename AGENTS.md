@@ -83,7 +83,7 @@ Shift worked but is a pinky stretch. Right Command is **not** a free key here â€
 it is this keyboard's Control â€” so the remap moved *out* of
 `simple_modifications` and *into* the same complex rule: tap gives `f18`, hold
 gives `left_control`. Nothing is given up, because a bare Control tap meant
-nothing to begin with. The tap window is pinned at 250ms; Karabiner's 1000ms
+nothing to begin with. The tap window is pinned at 350ms; Karabiner's 1000ms
 default is long enough that a deliberate hold can still register as a tap.
 
 Two Karabiner traps, both of which cost a debugging session here:

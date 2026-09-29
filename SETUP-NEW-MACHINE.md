@@ -193,7 +193,7 @@ Then start a fresh shell (or `exec zsh`) so p10k + plugins load.
 ## 4. System settings + GUI app prefs (optional but nice)
 
 ```bash
-sh macos-defaults.sh      # Dock, Finder, keyboard, hot corners — 55 settings
+sh macos-defaults.sh      # Dock, Finder, keyboard, mouse, hot corners — 64 settings
 sh prefs-restore.sh       # Bartender, PopClip, iStat Menus, etc.
 ```
 

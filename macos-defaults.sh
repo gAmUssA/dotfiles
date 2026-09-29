@@ -85,6 +85,18 @@ defaults write NSGlobalDomain com.apple.springing.delay -float 0.5            # 
 defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true          # tap to click (built-in)
 defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool false  # three-finger drag
 
+# ---- Magic Mouse (both domains; macOS keeps wired and bluetooth separate) ----
+# MouseButtonMode OneButton = secondary click OFF, which is the macOS default.
+# Flip both to TwoButton if you want right-click on a Magic Mouse.
+defaults write com.apple.AppleMultitouchMouse MouseButtonMode -string OneButton
+defaults write com.apple.AppleMultitouchMouse MouseHorizontalScroll -bool true            # side-to-side scroll
+defaults write com.apple.AppleMultitouchMouse MouseMomentumScroll -bool true              # inertial scrolling
+defaults write com.apple.AppleMultitouchMouse MouseTwoFingerHorizSwipeGesture -int 2      # two-finger swipe between pages
+defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode -string OneButton
+defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseHorizontalScroll -bool true
+defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseMomentumScroll -bool true
+defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseTwoFingerHorizSwipeGesture -int 2
+
 # ---- com.apple.driver.AppleBluetoothMultitouch.trackpad ----------------
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true  # tap to click (bluetooth)
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -bool false  # three-finger drag (bluetooth)
