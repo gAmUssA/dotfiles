@@ -17,7 +17,6 @@ The repo's model, so the steps make sense:
 - **`Brewfile`** — every package/app, installed by `brew bundle`.
 - **`prefs-restore.sh`** — GUI app preferences (Bartender, PopClip, iStat, …).
 - **`macos-defaults.sh`** — 55 system settings (Dock, Finder, keyboard, …).
-- **Git submodules** — zsh plugins (kafka-zsh-completions).
 - Deliberately **NOT in git**: kube/docker credentials, Apple signing keys
   (see [SETUP-SIGNING-KEYS.md](SETUP-SIGNING-KEYS.md)), Claude Code's
   `settings.local.json`. Those are per-machine on purpose.
@@ -52,8 +51,8 @@ command in this file, the repo sweep below, and reporting what it found.
 **Order matters** — these gate each other, and skipping ahead produces errors
 that read like something else entirely:
 
-1. 1Password SSH agent **before** the clone: `.gitmodules` uses SSH, so
-   `--recurse-submodules` fails without a key.
+1. 1Password SSH agent **before** any push or `ssh <host>`: the clone is public
+   HTTPS and needs nothing, but every host in `.ssh/config` goes through the agent.
 2. herdr installed (step 2) **before** `linkall.sh` (step 3): linkall installs
    the notify plugin and needs the binary.
 3. TCC grants **before** claiming the desktop environment works.
@@ -236,20 +235,12 @@ xcode-select --install
 eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
-Sign in to GitHub. The dotfiles repo itself is **public**, so cloning it needs
-no auth — but `.gitmodules` points at `git@github.com:…` (SSH), so step 1's
-`--recurse-submodules` fails without a key. Choose **SSH** at the `gh auth login`
-prompt and let it upload a key, which resolves the submodule before you reach it:
+Sign in to GitHub. The dotfiles repo is **public**, so cloning it needs no auth;
+signing in is for pushing. Choose **SSH** at the `gh auth login` prompt:
 
 ```bash
 brew install gh
-gh auth login          # protocol: SSH — and say yes to generating/uploading a key
-```
-
-If you already picked HTTPS, either rerun with SSH or rewrite the submodule URL:
-
-```bash
-git config --global url."https://github.com/".insteadOf "git@github.com:"
+gh auth login          # protocol: SSH
 ```
 
 **1Password SSH agent.** The tracked `.ssh/config` points `IdentityAgent` at
@@ -268,10 +259,8 @@ the `ssh-keygen` in step 5 is only for hosts you'd rather key separately.
 
 ```bash
 mkdir -p ~/projects
-git clone --recurse-submodules https://github.com/gAmUssA/dotfiles.git ~/projects/dotfiles
+git clone https://github.com/gAmUssA/dotfiles.git ~/projects/dotfiles
 cd ~/projects/dotfiles
-# if you forgot --recurse-submodules:
-git submodule update --init --recursive
 ```
 
 ---
@@ -661,8 +650,8 @@ reattach with the same command. Code lives on DS9; sync between machines is
 xcode-select --install
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/opt/homebrew/bin/brew shellenv)"
-brew install gh && gh auth login          # pick SSH — the submodule needs a key
-mkdir -p ~/projects && git clone --recurse-submodules https://github.com/gAmUssA/dotfiles.git ~/projects/dotfiles
+brew install gh && gh auth login          # pick SSH
+mkdir -p ~/projects && git clone https://github.com/gAmUssA/dotfiles.git ~/projects/dotfiles
 cd ~/projects/dotfiles
 brew bundle --file=Brewfile
 curl -fsSL https://herdr.dev/install.sh | sh    # herdr is NOT in the Brewfile
