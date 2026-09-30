@@ -551,6 +551,7 @@ ssh ds9
 ```
 
 Current DS9 host key: `SHA256:WKhWmCMkSw8uY8a14LDoMzh1OY7tYjnvqga4cxQjDTg`.
+Current Daystrom host key: `SHA256:DseJ3XJsaLh7wHms0FvU9qQ1uGBag7xpccqWBc3+S1A`.
 It changes only if macOS is reinstalled — a mismatch otherwise is worth stopping
 for, not clearing with `ssh-keygen -R ds9`.
 

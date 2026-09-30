@@ -27,3 +27,10 @@ vault = "Private"
 [[ssh-keys]]
 item = "DS9 Mac Mini id_ed25519"
 vault = "Private"
+
+# Daystrom — the always-on Mac Studio. Authenticates ME to Daystrom; its host
+# key (SHA256:DseJ3…) is separate. Public half is in authorized_keys there,
+# tagged "Daystrom-Mac-Studio".
+[[ssh-keys]]
+item = "Daystrom Mac Studio id_ed25519"
+vault = "Private"
