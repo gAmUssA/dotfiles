@@ -186,6 +186,16 @@ cache. SSH keys come from the 1Password agent, and `op/ssh-agent.toml` is an
 **allowlist** — a key in the vault but missing from that file is invisible to
 ssh, which is the usual reason a new key "does nothing".
 
+**1Password shell plugins were considered and do not replace this.** They alias
+a specific CLI binary so *that command* gets credentials injected, gated behind
+a biometric prompt. Everything in `agents.refs` is consumed by a long-lived
+process Claude Code spawns — MCP servers, SDKs — which never goes through a
+shell alias, so a plugin cannot reach it. They also re-introduce the per-command
+prompt that `opsync`'s keychain cache exists to remove — see
+`zsh_custom/onepassword.zsh` — and `opx` already covers the case where that gate
+is wanted. Plugins would only be additive, for hand-typed CLIs like `gh` or
+`aws` that are not in `agents.refs` at all.
+
 ## Commits
 
 Topical and small; the message explains **why**, not what the diff already
