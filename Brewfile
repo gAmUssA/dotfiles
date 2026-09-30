@@ -17,6 +17,7 @@ tap "olets/tap"
 tap "pg83/tap"
 tap "productdevbook/tap"
 tap "restatedev/tap"
+tap "rjyo/moshi"
 tap "rs/tap"
 tap "vjeantet/tap"
 # Run your GitHub Actions locally
@@ -481,6 +482,8 @@ brew "pg83/tap/shitty", trusted: true
 brew "restatedev/tap/restate", trusted: true
 # Restate Server
 brew "restatedev/tap/restate-server", trusted: true
+# Moshi (iOS) bridge: agent hooks + SSH/mosh pairing. Pair per machine: `moshi-hook host setup`
+brew "rjyo/moshi/moshi-hook", trusted: true
 # The power of curl, the ease of use of httpie.
 brew "rs/tap/curlie", trusted: true
 # macOS notification CLI — send native notifications and capture user interactions
