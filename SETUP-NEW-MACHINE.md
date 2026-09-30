@@ -18,8 +18,8 @@ The repo's model, so the steps make sense:
 - **`prefs-restore.sh`** — GUI app preferences (Bartender, PopClip, iStat, …).
 - **`macos-defaults.sh`** — 55 system settings (Dock, Finder, keyboard, …).
 - Deliberately **NOT in git**: kube/docker credentials, Apple signing keys
-  (see [SETUP-SIGNING-KEYS.md](SETUP-SIGNING-KEYS.md)), Claude Code's
-  `settings.local.json`. Those are per-machine on purpose.
+  (see [SETUP-SIGNING-KEYS.md](SETUP-SIGNING-KEYS.md)). Those are per-machine
+  on purpose. Claude Code has no per-machine global settings file — see AGENTS.md.
 
 ---
 
@@ -193,7 +193,8 @@ machine is staying, this is hygiene rather than a deadline.
 
 Also check what is genuinely per-machine and therefore nowhere in git:
 `~/.kube/config`, `~/.docker/config.json`, `~/.appstoreconnect`,
-`~/.claude/settings.local.json`, and anything under `~/Downloads` you still want.
+`~/.claude/settings.local.json` (if it has hooks, they only ever fired from
+`~` — port them into the tracked settings), and anything under `~/Downloads` you still want.
 
 ### Time Machine local snapshots hide your free space
 
@@ -467,7 +468,7 @@ op item list --tags appstoreconnect      # what's backed up
 #   ~/.docker/config.json — `docker login` as needed
 
 # Claude Code:
-claude          # run once, authenticate. Creates per-machine settings.local.json.
+claude          # run once, authenticate.
 ```
 
 ---

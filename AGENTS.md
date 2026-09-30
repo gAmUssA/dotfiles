@@ -48,9 +48,20 @@ tmux-assistant-resurrect and Paseo have both done it.
 
 - `claude/settings-link-guard.sh` runs at SessionStart and warns. Trust it, but
   check `ls -l ~/.claude/settings.json` if settings look wrong.
-- Splitting rule: **absolute machine paths → `~/.claude/settings.local.json`**
-  (per-machine, untracked); `$HOME`-relative or PATH-resolved commands stay
-  tracked.
+- **There is no per-machine, all-projects settings file.** Claude Code reads
+  `settings.local.json` only from a *project's* `.claude/`, so
+  `~/.claude/settings.local.json` applies only when `claude` runs in `~` — a
+  hook moved there silently stops firing everywhere else. (That was this file's
+  rule until moshi-hook on Daystrom proved it wrong.) So:
+  - Make the command portable and track it: `$HOME`-relative, PATH-resolved,
+    or a standard Homebrew path (`/opt/homebrew/opt/<formula>/bin/...`) for a
+    tool the Brewfile installs everywhere.
+  - Never `/Users/<name>/...`, and never a script that lives outside the repo —
+    track the script and point at it with `~/projects/dotfiles/...`.
+  - If it truly cannot be portable, the only global per-machine scope is
+    managed settings (`/Library/Application Support/ClaudeCode/`, needs sudo).
+- `moshi-hook install` also rewrites this file (and re-sorts every key); its
+  hooks are tracked, so after an upgrade diff, merge, relink.
 - Never "fix" drift by picking a side. Diff both, union the hooks **as a set**,
   then relink.
 

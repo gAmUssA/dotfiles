@@ -20,8 +20,9 @@
 # It never auto-merges. The repo file is public and tracked; deciding which
 # stray hooks belong in it is a judgement call, not something a startup hook
 # should make. See the "keep machine-specific hooks out of the public repo"
-# commit for the rule: absolute machine paths -> settings.local.json,
-# $HOME-relative or PATH-resolved -> tracked.
+# commit, and AGENTS.md: make commands portable ($HOME-relative, PATH-resolved,
+# standard Homebrew path) and track them. ~/.claude/settings.local.json is NOT
+# a global per-machine file — Claude Code only reads it when run from ~.
 #
 # Runs as a SessionStart hook. Exits 0 always: a broken guard must never block
 # a session from starting.
@@ -65,11 +66,11 @@ fi
 
 {
   printf '\033[33m[settings-guard] ~/.claude/settings.json is NO LONGER a symlink and has DIVERGED from the repo.\033[0m\n'
-  printf 'Something rewrote it (Paseo and tmux-assistant-resurrect have both done this).\n'
+  printf 'Something rewrote it (Paseo, tmux-assistant-resurrect and moshi-hook install have all done this).\n'
   printf 'Hooks live here but missing from the tracked copy:\n%s\n' "$drift"
   printf 'Nothing was changed. To repair, merge what you want to keep into\n'
   printf '  %s\n' "$REPO"
-  printf 'putting absolute machine paths in ~/.claude/settings.local.json instead, then:\n'
+  printf 'with portable commands (not ~/.claude/settings.local.json: only read from ~), then:\n'
   printf '  ln -sfn "%s" "%s"\n' "$REPO" "$LIVE"
 } >&2
 
