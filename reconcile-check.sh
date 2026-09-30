@@ -65,10 +65,12 @@ if command -v brew >/dev/null; then
   # Capture first, then match. `... | grep -q` under pipefail reports failure
   # even on a match, because grep exits at the first hit and the producer takes
   # SIGPIPE. That gotcha is in AGENTS.md and it bit this script once already.
-  check_out=$(brew bundle check --file="$REPO/Brewfile" --verbose 2>/dev/null)
-  if printf '%s' "$check_out" | grep -qi 'not installed'; then
-    note "Brewfile has unsatisfied entries:"
-    printf '%s\n' "$check_out" | grep -i 'not installed' | head -10 | sed 's/^/    /'
+  # Trust the exit code, not the wording: brew says "needs to be installed or
+  # updated" / "needs to be tapped", and matching 'not installed' reported a
+  # bare machine as satisfied.
+  if ! check_out=$(brew bundle check --file="$REPO/Brewfile" --verbose 2>&1); then
+    note "Brewfile has unsatisfied entries ($(printf '%s\n' "$check_out" | grep -c '^→') total):"
+    printf '%s\n' "$check_out" | grep '^→' | head -10 | sed 's/^/    /'
     note "run: brew bundle --file=Brewfile"
   else
     note "Brewfile satisfied"
