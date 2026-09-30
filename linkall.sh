@@ -116,6 +116,15 @@ mkdir -p ~/.config/1Password/ssh
 rm -f ~/.config/1Password/ssh/agent.toml
 ln -s ~/projects/dotfiles/op/ssh-agent.toml ~/.config/1Password/ssh/agent.toml
 
+# The stable socket path .ssh/config points at. Enabling the agent does NOT
+# create this on current 1Password (seen on Daystrom): the real socket lives
+# only in the app group container, so link to it ourselves.
+op_sock="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+if [ ! -e ~/.1password/agent.sock ]; then
+  mkdir -p ~/.1password
+  ln -sfn "$op_sock" ~/.1password/agent.sock
+fi
+
 # Local AI coding agents — Ollama provider configs only. Machine state
 # (opencode node_modules/bun.lock, pi auth.json/sessions/settings.json) is
 # deliberately NOT versioned, so symlink the single config file in each.

@@ -37,7 +37,7 @@ several need a human physically at the machine:
 |---|---|
 | Any `sudo` | No password on the agent's side. Print the command, let the human run it. |
 | Apple ID / iCloud sign-in | Interactive, 2FA |
-| 1Password sign-in + *Settings → Developer → Use the SSH agent* | Nothing else creates `~/.1password/agent.sock`, which the tracked `.ssh/config` points every host at |
+| 1Password sign-in + *Settings → Developer → Use the SSH agent* | Nothing else creates the agent socket that `~/.1password/agent.sock` (linked by `linkall.sh`) points at, and the tracked `.ssh/config` points every host there |
 | `gh auth login` | Browser + device code |
 | TCC grants (Accessibility, Input Monitoring, Full Disk Access) | macOS refuses programmatic grants by design |
 | `sudo tailscale up` | Prints an auth URL to open |
@@ -255,7 +255,9 @@ git config --global url."https://github.com/".insteadOf "git@github.com:"
 **1Password SSH agent.** The tracked `.ssh/config` points `IdentityAgent` at
 `~/.1password/agent.sock` for every host, so install 1Password and turn the SSH
 agent on (Settings → Developer → Use the SSH agent) before relying on SSH. Until
-then that socket does not exist. This is the primary key path on every machine —
+then that socket does not exist. The app only creates the real socket inside
+its group container; `~/.1password/agent.sock` is a symlink to it that
+`linkall.sh` makes — 1Password does not. This is the primary key path on every machine —
 the `ssh-keygen` in step 5 is only for hosts you'd rather key separately.
 
 ---
@@ -437,8 +439,10 @@ These are excluded from git on purpose — set them up by hand on DS9:
 
 **SSH keys come from 1Password, not `ssh-keygen`.** Install the app, sign in,
 then enable the agent (Settings → Developer → *Use the SSH agent*) — that
-creates `~/.1password/agent.sock`, which the tracked `.ssh/config` points every
-host at. `linkall.sh` already linked the key list. Verify:
+creates the socket in 1Password's group container, and `linkall.sh` links
+`~/.1password/agent.sock` (what the tracked `.ssh/config` points every host at)
+to it. The first signature pops an approval dialog in 1Password; until someone
+clicks it, ssh reports `signing failed ... communication with agent failed`. `linkall.sh` already linked the key list. Verify:
 
 ```bash
 ls -l ~/.1password/agent.sock                  # socket exists = agent is on
