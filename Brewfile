@@ -19,7 +19,6 @@ tap "productdevbook/tap"
 tap "restatedev/tap"
 tap "rs/tap"
 tap "vjeantet/tap"
-tap "yurikoles/yurikoles"
 # Run your GitHub Actions locally
 brew "act"
 # OpenType text shaping engine
@@ -246,6 +245,7 @@ brew "kotlin"
 brew "kube-linter"
 # Kubernetes command-line interface
 brew "kubernetes-cli"
+brew "krew"
 # Kubernetes prompt info for bash and zsh
 brew "kube-ps1"
 # SDK for building Kubernetes APIs using CRDs
@@ -403,7 +403,7 @@ brew "unbound"
 # URL extractor/launcher
 brew "urlview"
 # Extremely fast Python package installer and resolver, written in Rust
-brew "uv", link: false
+brew "uv"
 # Your CLI home video recorder
 brew "vhs"
 # Executes a program periodically, showing output fullscreen
@@ -486,11 +486,9 @@ brew "rs/tap/curlie", trusted: true
 # macOS notification CLI — send native notifications and capture user interactions
 brew "vjeantet/tap/alerter", trusted: true
 # Linux port of FAR Manager v2
-brew "yurikoles/yurikoles/far2l", args: ["HEAD"], trusted: true
 # Command-line interface for 1Password
 cask "1password-cli"
 # GPU-accelerated terminal emulator
-cask "alacritty"
 # Enable Windows-like alt-tab
 # Tiling WM, float-by-default. Leader: tap right Command (Karabiner -> f18).
 # Config: aerospace/aerospace.toml, cheat sheet: aerospace/aerospace-help.md
@@ -614,7 +612,6 @@ cask "productdevbook/tap/portkiller", trusted: true
 # Quick Look plugin for plaintext files without an extension
 cask "qlstephen"
 # Archive manager for data compression and backups
-cask "rar"
 # Digital audio production application
 cask "reaper"
 # Emoji picker optimised for blind people
@@ -663,58 +660,41 @@ mas "Control Panel for Twitter", id: 1668516167
 mas "Control Panel for YouTube", id: 6478456678
 mas "Developer", id: 640199958
 mas "Display Menu", id: 549083868
-mas "DuckDuckGo Privacy for Safari", id: 1482920575
 mas "Endel", id: 1346247457
 mas "Fantastical", id: 975937182
 mas "Flighty", id: 1358823008
 mas "GarageBand", id: 682658836
-mas "Geekbench 5", id: 1478447657
 mas "Grammarly for Safari", id: 1462114288
 mas "Health Auto Export", id: 1115567069
-mas "Highland 2", id: 1171820258
 mas "Highland Pro", id: 6612007609
 mas "HP", id: 1474276998
 mas "HP Easy Scan", id: 967004861
 mas "iMovie", id: 408981434
-mas "Keepa - Price Tracker", id: 1533805339
 mas "Keynote", id: 361285480
 mas "Kindle", id: 302584613
 mas "Klack", id: 6446206067
 mas "Lang Switcher", id: 1597566195
-mas "LanguageTool", id: 1534275760
-mas "Marked 3", id: 0
 mas "MindNode Classic", id: 1289197285
 mas "MonitorControlLite", id: 1595464182
 mas "Numbers", id: 361304891
-mas "Numbers", id: 409203825
 mas "Okta Verify", id: 490179405
-mas "Pages", id: 409201541
 mas "Pages", id: 361309726
 mas "PayPal Honey", id: 1472777122
-mas "Perplexity", id: 6714467650
-mas "Pixelmator", id: 407963104
 mas "Pixelmator Pro", id: 6746662575
-mas "Pocket", id: 568494494
 mas "Podcast Chapters", id: 1070963477
 mas "Prime Video", id: 545519333
 mas "RecurseChat", id: 6476835702
-mas "Reeder", id: 1449412482
 mas "Reeder", id: 1529448980
 mas "Refined GitHub", id: 1519867270
-mas "RunCat", id: 1429033973
-mas "Save to Pocket", id: 1477385213
 mas "SessionRestore", id: 1463334954
 mas "ShellHistory", id: 1564015476
 mas "Slack", id: 803453959
-mas "Speechify", id: 1624912180
 mas "Speedtest", id: 1153157709
 mas "Swift Playground", id: 1496833156
 mas "Telegram", id: 747648890
 mas "Teleprompter", id: 1533078079
 mas "TestFlight", id: 899247664
 mas "The Clock", id: 488764545
-mas "TripIt", id: 1475712010
-mas "Twitter", id: 1482454543
 mas "Xcode", id: 497799835
 mas "Yubico Authenticator", id: 1497506650
 vscode "1schema.tldr"
@@ -733,7 +713,6 @@ vscode "confluentinc.vscode-confluent"
 vscode "davidanson.vscode-markdownlint"
 vscode "docker.docker"
 vscode "dotjoshjohnson.xml"
-vscode "dracula-theme-pro.theme-dracula-pro"
 vscode "drblury.protobuf-vsc"
 vscode "editorconfig.editorconfig"
 vscode "esbenp.prettier-vscode"
@@ -789,7 +768,6 @@ vscode "wayou.vscode-todo-highlight"
 vscode "wiratama.flink-sql-toolkit"
 vscode "xyz.local-history"
 vscode "zerodind.familiar-java-themes"
-vscode "znck.grammarly"
 go "github.com/bufbuild/buf/cmd/buf"
 go "github.com/go-delve/delve/cmd/dlv"
 go "github.com/pquerna/ffjson"
@@ -818,7 +796,6 @@ cargo "wasm-pack"
 uv "specify-cli", source: "git+https://github.com/github/spec-kit.git"
 uv "tavily-cli"
 krew "ctx"
-krew "krew"
 krew "neat"
 krew "ns"
 npm "@continuedev/cli"
@@ -832,7 +809,6 @@ npm "@tessl/cli"
 npm "@vscode/vsce"
 npm "bat"
 npm "bats"
-npm "bobshell"
 npm "cline"
 npm "csso-cli"
 npm "license-generator"
