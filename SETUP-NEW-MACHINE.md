@@ -453,6 +453,15 @@ ssh -T git@github.com                          # expect "Hi gAmUssA!"
 If a key is in the vault but missing from `ssh-add -l`, it is not in
 `op/ssh-agent.toml` — add it there and re-check. That file is the allowlist.
 
+**`op` (the CLI) needs two more things than the agent does.** Turn on
+*Settings → Developer → Integrate with 1Password CLI*, and give the terminal
+(iTerm) **Full Disk Access**. `op` decides whether the integration is on by
+reading the app's `settings.json` inside its group container, which macOS's
+App Data protection blocks — and `op` reports that as *"No accounts configured"*,
+never as a permission error. `op vault list --debug` shows the real
+`operation not permitted`. The SSH agent keeps working throughout, which makes
+this look like a 1Password problem when it is a TCC one. Found on Daystrom.
+
 Everything else that is genuinely per-machine:
 
 **Apple signing / App Store Connect API keys** live in `~/.appstoreconnect` and

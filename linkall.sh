@@ -101,7 +101,7 @@ git -C ~/projects/dotfiles config core.hooksPath githooks
 # login keychain so new shells cost zero biometric prompts; `opx` resolves them
 # fresh per command. ~/.config/op also holds op's own config, so link the single
 # file rather than the directory.
-mkdir -p ~/.config/op
+mkdir -p ~/.config/op && chmod 700 ~/.config/op   # op refuses to run if this is group/world-readable
 rm -f ~/.config/op/agents.refs
 ln -s ~/projects/dotfiles/op/agents.refs ~/.config/op/agents.refs
 
