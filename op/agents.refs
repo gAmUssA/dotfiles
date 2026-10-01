@@ -49,3 +49,14 @@ XAI_API_KEY=op://Agents/cy55x4rppdpfdcmddw77tlndy4/credential
 # ---- Exa (neural search) ---------------------------------------------------
 # EXA_API_KEY is the var both official SDKs read (exa-py, exa-js).
 EXA_API_KEY=op://Agents/Exa API/credential
+
+# ---- Hosted open-weight models (OpenCode + pi) -----------------------------
+# OpenCode has both providers built in (via models.dev) and turns each on when
+# its var is set. pi has Fireworks built in; Nebius is defined in
+# pi/models.json, which reads $NEBIUS_API_KEY.
+# COMMENTED OUT until the items exist: opsync resolves every ref in one
+# `op inject`, so a single ref to a missing item fails the whole sync and
+# caches nothing. Create the item (Agents vault, API Credential, key in the
+# "credential" field), uncomment, then run `opsync`.
+# NEBIUS_API_KEY=op://Agents/Nebius Token Factory/credential
+# FIREWORKS_API_KEY=op://Agents/Fireworks AI/credential
