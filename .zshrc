@@ -412,9 +412,11 @@ eval "$(zoxide init zsh --no-cmd)"
 function z() { __zoxide_z "$@" }
 function zz() { __zoxide_zi "$@" }
 alias cd='z'
-# NOTE: grok installer appends a block here (PATH + fpath + a duplicate
-# compinit). Its contents live in the completion-paths section above — if the
-# installer re-adds the block, delete it again.
+# NOTE: installers keep appending to the end of this file — delete their blocks.
+# - grok (on every update): PATH + fpath + a duplicate compinit. Its contents
+#   live in the completion-paths section above.
+# - Antigravity CLI: PATH with a hardcoded /Users/<name>/.local/bin. .zshenv
+#   already puts ~/.local/bin on PATH (and must, for non-interactive shells).
 
 
 # Kiro CLI post block. Keep at the bottom of this file.
@@ -428,3 +430,4 @@ source "$HOME/.railway/env"
 # Composio CLI
 export COMPOSIO_INSTALL_DIR="$HOME/.composio"
 export PATH="$COMPOSIO_INSTALL_DIR:$PATH"
+
