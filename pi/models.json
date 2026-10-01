@@ -8,6 +8,14 @@
         {
           "id": "qwen3-coder:30b-ctx64k",
           "contextWindow": 65536
+        },
+        {
+          "id": "qwen3.6:35b-mlx-ctx64k",
+          "contextWindow": 65536
+        },
+        {
+          "id": "muse-glimmer:30b-mlx-ctx64k",
+          "contextWindow": 65536
         }
       ]
     },
