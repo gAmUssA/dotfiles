@@ -37,6 +37,11 @@ if [[ $# -gt 0 ]]; then
     command -v ollama >/dev/null || { echo "ollama not found"; exit 1; }
     curl -sf --max-time 5 http://localhost:11434/api/version >/dev/null \
         || { echo "ollama daemon unreachable — open Ollama.app or run: ollama serve"; exit 1; }
+    # bench-out/ is gitignored, so on a fresh clone it does not exist yet: the
+    # truncate below then fails, `tee -a` cannot open the log, and the FIRST
+    # model's results vanish from the record (later models are fine, because
+    # ollama-code-bench-one.sh creates the dir). Seen on Daystrom's first run.
+    mkdir -p "$(dirname "$LOG")"
     : > "$LOG"
     for m in "$@"; do
         "$HERE/ollama-code-bench-one.sh" "$m" 2>&1 | tee -a "$LOG"
