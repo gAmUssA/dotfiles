@@ -454,6 +454,25 @@ this look like a 1Password problem when it is a TCC one. Found on Daystrom.
 
 Everything else that is genuinely per-machine:
 
+**Local model storage (machines with an external model drive, e.g. Daystrom's
+StudioStack).** Models live on the drive, never the internal disk. Use
+symlinks, not `OLLAMA_MODELS`: the Ollama menu-bar app does not read shell
+env, and a link works for the app, the CLI and MLX tools alike. Do it before
+the first `ollama pull`, or move what is already there first:
+
+```bash
+V=/Volumes/StudioStack
+mkdir -p $V/models/ollama $V/models/huggingface
+touch $V/.metadata_never_index            # no Spotlight indexing of weights
+tmutil addexclusion $V/models             # keep weights out of Time Machine
+ln -sfn $V/models/ollama      ~/.ollama/models
+ln -sfn $V/models/huggingface ~/.cache/huggingface   # mlx-lm, HF downloads
+```
+
+With the drive unplugged the links dangle and Ollama reports no models —
+that is the signal, not a bug. Measured on Daystrom (StudioStack + SN850X):
+~5.7 GB/s sequential write, so a 20 GB model loads in seconds.
+
 **Apple signing / App Store Connect API keys** live in `~/.appstoreconnect` and
 are backed up as 1Password documents — restore steps, and why the local path
 matters, are in [SETUP-SIGNING-KEYS.md](SETUP-SIGNING-KEYS.md):

@@ -605,6 +605,8 @@ cask "obs"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
 # Interact with Ollama models
+# Ollama server + CLI (menu-bar app). ollamac below is only a GUI client for it.
+cask "ollama-app"
 cask "ollamac"
 # Replacement for Docker Desktop
 cask "orbstack"
