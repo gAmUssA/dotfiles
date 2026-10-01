@@ -1,0 +1,7 @@
+This is a small Python checkout package (shop/). Run its tests with
+`python3 -m unittest -v`. Several fail, for different reasons. Fix the bugs in
+shop/ so the behaviour matches the docstrings — those are the spec, not just
+the tests — and add the new "bundle" discount rule described in
+tests/test_shop.py (BundleTest docstring), wired into parse_rule. Do NOT modify
+anything under tests/. Re-run the tests until they all pass, then stop and
+summarize what you changed in three sentences.

@@ -1,0 +1,5 @@
+This is a small Python package. Run its tests with `python3 -m unittest -v`.
+Fix the failing tests by changing code under ledger/ only, and implement
+Ledger.monthly_totals() exactly as its docstring describes. Do NOT modify
+anything under tests/. Re-run the tests until they all pass, then stop and
+summarize what you changed in two sentences.
