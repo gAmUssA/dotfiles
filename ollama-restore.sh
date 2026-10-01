@@ -27,6 +27,9 @@ set -uo pipefail
 #   qwen3-coder:30b    — popup second choice + base for the agentic variant
 #   qwen3.6:27b        — best local code quality (3/3 on the coding bench)
 #   devstral:24b       — 3/3 on coding bench, smallest of the big three
+#   muse-glimmer:30b-mlx — agent default for OpenCode/pi (via its -ctx64k
+#                        variant): only model perfect on both agent-bench
+#                        tasks, 0 malformed tool calls (bench-results/agent-*)
 #   mxbai-embed-large  — embeddings
 #   gemma-4-12B-coder  — base for the gemma4-coder-fixed variant below
 #
@@ -39,6 +42,7 @@ registry_models=(
   "qwen3-coder:30b"
   "qwen3.6:27b"
   "devstral:24b"
+  "muse-glimmer:30b-mlx"
   "mxbai-embed-large:latest"
   # Pulled from Hugging Face rather than the ollama registry. Same `ollama
   # pull` path, just a longer tag.
@@ -77,6 +81,16 @@ else
   tmpfile="$(mktemp /tmp/Modelfile.XXXXXX)"
   printf 'FROM qwen3-coder:30b\nPARAMETER num_ctx 65536\n' > "$tmpfile"
   ollama create qwen3-coder:30b-ctx64k -f "$tmpfile"
+  rm -f "$tmpfile"
+fi
+
+if installed "muse-glimmer:30b-mlx-ctx64k"; then
+  echo "[skip] muse-glimmer:30b-mlx-ctx64k (already installed)"
+else
+  echo "[create] muse-glimmer:30b-mlx-ctx64k"
+  tmpfile="$(mktemp /tmp/Modelfile.XXXXXX)"
+  printf 'FROM muse-glimmer:30b-mlx\nPARAMETER num_ctx 65536\n' > "$tmpfile"
+  ollama create muse-glimmer:30b-mlx-ctx64k -f "$tmpfile"
   rm -f "$tmpfile"
 fi
 
