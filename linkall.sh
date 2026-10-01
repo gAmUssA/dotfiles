@@ -91,10 +91,16 @@ for pair in claude:claude codex:codex copilot:copilot opencode:opencode pi:pi gr
   command -v herdr >/dev/null 2>&1 && herdr integration install "$id" >/dev/null 2>&1 \
     || echo "skip: herdr integration $id"
 done
-if command -v moshi-hook >/dev/null 2>&1 && [ -n "$agent_ids" ]; then
+# Call moshi-hook by the path its brew service runs from, not the PATH symlink:
+# the daemon judges hook files "current" by comparing them with what IT would
+# write, binary path included. Hooks written via /opt/homebrew/bin/moshi-hook
+# made the daemon — and so the Moshi app — report opencode, copilot and pi as
+# "not set up" while `moshi-hook doctor` from a shell said all was fine.
+moshi_bin="$(brew --prefix 2>/dev/null)/opt/moshi-hook/bin/moshi-hook"
+if [ -x "$moshi_bin" ] && [ -n "$agent_ids" ]; then
   # moshi names antigravity "antigravity" (herdr: "antigravity-cli").
   targets=$(echo $agent_ids | sed 's/agy/antigravity/' | tr ' ' ',')
-  moshi-hook install --target "$targets" >/dev/null 2>&1 \
+  "$moshi_bin" install --target "$targets" >/dev/null 2>&1 \
     && echo "moshi-hook -> hooks for $targets" || echo "skip: moshi-hook install"
 fi
 
