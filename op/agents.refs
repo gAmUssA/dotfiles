@@ -50,6 +50,11 @@ XAI_API_KEY=op://Agents/cy55x4rppdpfdcmddw77tlndy4/credential
 # EXA_API_KEY is the var both official SDKs read (exa-py, exa-js).
 EXA_API_KEY=op://Agents/Exa API/credential
 
+# ---- Typesafe (Jev, System One model) --------------------------------------
+# TYPESAFE_API_KEY is the var the Python SDK reads; it calls jev-latest by
+# default. Direct HTTP wants `Authorization: Bearer <key>`.
+TYPESAFE_API_KEY=op://Agents/Typesafe API/credential
+
 # ---- Hosted open-weight models (OpenCode + pi) -----------------------------
 # OpenCode has both providers built in (via models.dev) and turns each on when
 # its var is set. pi has Fireworks built in; Nebius is defined in
