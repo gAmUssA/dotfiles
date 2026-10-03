@@ -59,4 +59,4 @@ EXA_API_KEY=op://Agents/Exa API/credential
 # caches nothing. Create the item (Agents vault, API Credential, key in the
 # "credential" field), uncomment, then run `opsync`.
 NEBIUS_API_KEY=op://Agents/Nebius Token Factory/credential
-# FIREWORKS_API_KEY=op://Agents/Fireworks AI/credential
+FIREWORKS_API_KEY=op://Agents/Fireworks AI/credential
