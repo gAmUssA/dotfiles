@@ -43,3 +43,11 @@ arguments — the number that says whether a model drives tools reliably.
 | pi | ledger | `nebius/deepseek-ai/DeepSeek-V4.1-Flash` | `hosted` | **8/8** | 5/5 | ✅ | 7s | 5 | 7 | 0 | 0 | done |
 | pi | shop | `nebius/zai-org/GLM-5.3-Flash` | `hosted` | **8/8** | 6/6 | ✅ | 63s | 12 | 15 | 0 | 0 | done |
 | pi | shop | `nebius/deepseek-ai/DeepSeek-V4.1-Flash` | `hosted` | **8/8** | 6/6 | ✅ | 49s | 5 | 13 | 0 | 0 | done |
+| pi | ledger | `fireworks/accounts/fireworks/models/glm-5p3-flash` | `hosted` | **8/8** | 5/5 | ✅ | 12s | 6 | 8 | 0 | 0 | done |
+| pi | ledger | `fireworks/accounts/fireworks/models/deepseek-v4p1-flash` | `hosted` | **8/8** | 5/5 | ✅ | 23s | 6 | 10 | 0 | 0 | done |
+| pi | shop | `fireworks/accounts/fireworks/models/glm-5p3-flash` | `hosted` | 8/8 | 4/6 | ✅ | 32s | 6 | 9 | 1 | 0 | done |
+| pi | shop | `fireworks/accounts/fireworks/models/deepseek-v4p1-flash` | `hosted` | **8/8** | 6/6 | ✅ | 57s | 6 | 13 | 1 | 0 | done |
+| opencode | ledger | `fireworks/accounts/fireworks/models/glm-5p3-flash` | `hosted` | **8/8** | 5/5 | ✅ | 22s | 6 | 10 | 0 | 0 | done |
+| opencode | ledger | `fireworks/accounts/fireworks/models/deepseek-v4p1-flash` | `hosted` | **8/8** | 5/5 | ✅ | 33s | 7 | 11 | 0 | 0 | done |
+| opencode | shop | `fireworks/accounts/fireworks/models/glm-5p3-flash` | `hosted` | **8/8** | 6/6 | ✅ | 47s | 9 | 18 | 0 | 0 | done |
+| opencode | shop | `fireworks/accounts/fireworks/models/deepseek-v4p1-flash` | `hosted` | **8/8** | 6/6 | ✅ | 55s | 8 | 15 | 0 | 0 | done |
