@@ -605,8 +605,16 @@ cask "obs"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
 # Interact with Ollama models
-# Ollama server + CLI (menu-bar app). ollamac below is only a GUI client for it.
-cask "ollama-app"
+# Ollama. Headless always-on hosts run the formula as a brew service: the
+# menu-bar app auto-updates and then blocks its own server behind a welcome
+# window nobody sees on a headless box (it froze Daystrom's). The two cannot
+# coexist — both install the `ollama` binary. Elsewhere, the app.
+# ollamac below is only a GUI client, for either.
+if %w[daystrom].include?(`scutil --get LocalHostName 2>/dev/null`.strip.downcase)
+  brew "ollama", start_service: true
+else
+  cask "ollama-app"
+end
 cask "ollamac"
 # Replacement for Docker Desktop
 cask "orbstack"

@@ -482,6 +482,15 @@ no error, only that no request ever arrives (the stuck thread sits in
 Daystrom, where it first looked like qwen3.8 "overthinking" and then like a
 permission problem; it was neither. Check the screen (Comet / ARD) first.
 
+So **always-on hosts run the formula as a brew service instead** — no window,
+no surprise auto-update (upgrade with `brew upgrade ollama`), starts at login.
+The Brewfile picks by hostname (Daystrom today; add DS9 if it serves models).
+Switching an existing host: quit the app, `brew uninstall --cask ollama-app`,
+`brew bundle` (installs and starts it), models stay where `~/.ollama/models`
+points. Two differences to know: it starts at *login*, not boot; and the
+service sets `OLLAMA_KV_CACHE_TYPE=q8_0` + flash attention, which on Daystrom
+cost ~20% decode speed on muse-glimmer MLX (55 vs 67 tok/s) for less memory.
+
 **Apple signing / App Store Connect API keys** live in `~/.appstoreconnect` and
 are backed up as 1Password documents — restore steps, and why the local path
 matters, are in [SETUP-SIGNING-KEYS.md](SETUP-SIGNING-KEYS.md):
