@@ -51,3 +51,17 @@ arguments — the number that says whether a model drives tools reliably.
 | opencode | ledger | `fireworks/accounts/fireworks/models/deepseek-v4p1-flash` | `hosted` | **8/8** | 5/5 | ✅ | 33s | 7 | 11 | 0 | 0 | done |
 | opencode | shop | `fireworks/accounts/fireworks/models/glm-5p3-flash` | `hosted` | **8/8** | 6/6 | ✅ | 47s | 9 | 18 | 0 | 0 | done |
 | opencode | shop | `fireworks/accounts/fireworks/models/deepseek-v4p1-flash` | `hosted` | **8/8** | 6/6 | ✅ | 55s | 8 | 15 | 0 | 0 | done |
+| pi | planner | `nebius/zai-org/GLM-5.3-Flash` | `hosted` | **8/8** | 7/7 | ✅ | 136s | 12 | 14 | 0 | 0 | done |
+| pi | planner | `nebius/deepseek-ai/DeepSeek-V4.1-Flash` | `hosted` | **8/8** | 7/7 | ✅ | 23s | 8 | 12 | 0 | 0 | done |
+| opencode | planner | `nebius/zai-org/GLM-5.3-Flash` | `hosted` | **8/8** | 7/7 | ✅ | 153s | 13 | 16 | 0 | 0 | done |
+| opencode | planner | `nebius/deepseek-ai/DeepSeek-V4.1-Flash` | `hosted` | **8/8** | 7/7 | ✅ | 28s | 9 | 12 | 0 | 0 | done |
+| pi | planner | `fireworks/accounts/fireworks/models/glm-5p3-flash` | `hosted` | **8/8** | 7/7 | ✅ | 32s | 6 | 7 | 0 | 0 | done |
+| pi | planner | `fireworks/accounts/fireworks/models/deepseek-v4p1-flash` | `hosted` | **8/8** | 7/7 | ✅ | 120s | 9 | 14 | 0 | 0 | done |
+| opencode | planner | `fireworks/accounts/fireworks/models/glm-5p3-flash` | `hosted` | **8/8** | 7/7 | ✅ | 130s | 10 | 12 | 0 | 0 | done |
+| opencode | planner | `fireworks/accounts/fireworks/models/deepseek-v4p1-flash` | `hosted` | **8/8** | 7/7 | ✅ | 104s | 9 | 12 | 0 | 0 | done |
+| pi | planner | `ollama/muse-glimmer:30b-mlx-ctx64k` | `cde6f37da6c9` | **8/8** | 7/7 | ✅ | 325s | 19 | 22 | 3 | 0 | done |
+| pi | planner | `ollama/qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | **8/8** | 7/7 | ✅ | 177s | 18 | 21 | 4 | 0 | done |
+| pi | planner | `ollama/qwen3-coder:30b-ctx64k` | `13cd851c8a12` | 3/8 | 3/7 | ✅ | 58s | 11 | 7 | 1 | 0 | done |
+| opencode | planner | `ollama/muse-glimmer:30b-mlx-ctx64k` | `cde6f37da6c9` | **8/8** | 7/7 | ✅ | 788s | 29 | 32 | 0 | 0 | done |
+| opencode | planner | `ollama/qwen3-coder:30b-ctx64k` | `13cd851c8a12` | 7/8 | 5/7 | ✅ | 196s | 29 | 28 | 0 | 0 | done |
+| opencode | planner | `ollama/qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | **8/8** | 7/7 | ✅ | 452s | 27 | 31 | 1 | 0 | done |
