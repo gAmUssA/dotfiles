@@ -16,6 +16,10 @@
         {
           "id": "muse-glimmer:30b-mlx-ctx64k",
           "contextWindow": 65536
+        },
+        {
+          "id": "qwen3.8:27b-mlx-ctx64k",
+          "contextWindow": 65536
         }
       ]
     },

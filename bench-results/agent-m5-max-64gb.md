@@ -14,7 +14,7 @@ arguments — the number that says whether a model drives tools reliably.
 | ollama | 0.35.0 |
 | python | 3.14.7 |
 | timeout | 900s per run |
-| recorded | 2026-10-01 |
+| recorded | 2026-10-03 |
 
 | harness | task | model | digest | visible | hidden | tests untouched | time | turns | tool calls | failed | malformed | end |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -30,3 +30,7 @@ arguments — the number that says whether a model drives tools reliably.
 | opencode | shop | `muse-glimmer:30b-mlx-ctx64k` | `cde6f37da6c9` | **8/8** | 6/6 | ✅ | 465s | 25 | 30 | 1 | 0 | done |
 | opencode | shop | `qwen3-coder:30b-ctx64k` | `13cd851c8a12` | 8/8 | 4/6 | ✅ | 246s | 35 | 38 | 5 | 0 | done |
 | opencode | shop | `qwen3.6:35b-mlx-ctx64k` | `f96ae21d3b2d` | 8/8 | 5/6 | ✅ | 205s | 42 | 47 | 1 | 0 | done |
+| pi | ledger | `qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | **8/8** | 5/5 | ✅ | 30s | 7 | 8 | 1 | 0 | done |
+| pi | shop | `qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | 8/8 | 4/6 | ✅ | 84s | 10 | 13 | 0 | 0 | done |
+| opencode | ledger | `qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | **8/8** | 5/5 | ✅ | 158s | 7 | 12 | 0 | 0 | done |
+| opencode | shop | `qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | 8/8 | 4/6 | ✅ | 197s | 7 | 17 | 0 | 0 | done |

@@ -29,6 +29,13 @@
             "context": 65536,
             "output": 8192
           }
+        },
+        "qwen3.8:27b-mlx-ctx64k": {
+          "name": "qwen3.8 27b MLX (64k)",
+          "limit": {
+            "context": 65536,
+            "output": 8192
+          }
         }
       }
     }
