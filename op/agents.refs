@@ -58,5 +58,5 @@ EXA_API_KEY=op://Agents/Exa API/credential
 # `op inject`, so a single ref to a missing item fails the whole sync and
 # caches nothing. Create the item (Agents vault, API Credential, key in the
 # "credential" field), uncomment, then run `opsync`.
-# NEBIUS_API_KEY=op://Agents/Nebius Token Factory/credential
+NEBIUS_API_KEY=op://Agents/Nebius Token Factory/credential
 # FIREWORKS_API_KEY=op://Agents/Fireworks AI/credential
