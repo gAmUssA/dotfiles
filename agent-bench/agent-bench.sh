@@ -20,7 +20,9 @@
 #   rejected — the tool-format weakness that matters for a local model;
 #   "failed" also counts e.g. a test run exiting non-zero, which is normal)
 #
-# Usage: agent-bench/agent-bench.sh [-h pi,opencode] [-t ledger,shop] <model> [...]
+# Usage: agent-bench/agent-bench.sh [-h pi,opencode] [-t ledger,shop] [-p provider] <model> [...]
+#   -p ollama (default) | nebius | fireworks — hosted runs need NEBIUS_API_KEY /
+#   FIREWORKS_API_KEY in the env (opsync/opload) and cost real money.
 #   models are Ollama tags, registered in BOTH pi/models.json and
 #   opencode/opencode.json — use the -ctx64k variants (Ollama's default context
 #   truncates agent prompts).
@@ -37,15 +39,24 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 REPO="$(dirname "$HERE")"
 OUT="$REPO/bench-out/agent"
 TIMEOUT="${AGENT_BENCH_TIMEOUT:-1200}"   # seconds per run
-harnesses="pi"; tasks="ledger,shop"
+harnesses="pi"; tasks="ledger,shop"; provider="ollama"
 
-while getopts "h:t:" opt; do
-    case $opt in h) harnesses=$OPTARG ;; t) tasks=$OPTARG ;; *) exit 1 ;; esac
+while getopts "h:t:p:" opt; do
+    case $opt in h) harnesses=$OPTARG ;; t) tasks=$OPTARG ;; p) provider=$OPTARG ;; *) exit 1 ;; esac
 done
 shift $((OPTIND - 1))
 [[ $# -gt 0 ]] || { sed -n '2,/^$/p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
-curl -sf --max-time 5 http://localhost:11434/api/version >/dev/null \
-    || { echo "ollama daemon unreachable — open Ollama.app"; exit 1; }
+# Provider ids differ per harness: OpenCode reads models.dev ("fireworks-ai").
+case $provider in
+    ollama)    pi_prov=ollama;    oc_prov=ollama
+               curl -sf --max-time 5 http://localhost:11434/api/version >/dev/null \
+                   || { echo "ollama daemon unreachable"; exit 1; } ;;
+    nebius)    pi_prov=nebius;    oc_prov=nebius
+               [[ -n "${NEBIUS_API_KEY:-}" ]] || { echo "NEBIUS_API_KEY not set (opsync)"; exit 1; } ;;
+    fireworks) pi_prov=fireworks; oc_prov=fireworks-ai
+               [[ -n "${FIREWORKS_API_KEY:-}" ]] || { echo "FIREWORKS_API_KEY not set (opsync)"; exit 1; } ;;
+    *) echo "unknown provider $provider"; exit 1 ;;
+esac
 
 OC_NO_MCP=$(python3 -c 'import json,os
 p=os.path.expanduser("~/.config/opencode/opencode.json")
@@ -104,11 +115,11 @@ run_agent() {  # harness model workdir prompt -> JSON events on stdout
     case $h in
         pi) (cd "$w" && timeout "$TIMEOUT" pi -p --mode json --no-session \
                 --no-extensions --no-skills --no-context-files --offline \
-                --provider ollama --model "$m" "$p" </dev/null) ;;
+                --provider "$pi_prov" --model "$m" "$p" </dev/null) ;;
         # --pure drops plugins but not MCP servers from the global config;
         # disable those too, so OpenCode gets no tools pi does not have.
         opencode) (cd "$w" && OPENCODE_CONFIG_CONTENT="$OC_NO_MCP" timeout "$TIMEOUT" opencode run --pure --auto \
-                --format json -m "ollama/$m" "$p" </dev/null) ;;
+                --format json -m "$oc_prov/$m" "$p" </dev/null) ;;
         *) echo "unknown harness $h" >&2; return 2 ;;
     esac
 }
@@ -119,13 +130,13 @@ for h in ${harnesses//,/ }; do
     tdir="$HERE/tasks/$t"; [[ -d $tdir ]] || { echo "no task $t"; continue; }
     prompt=$(cat "$tdir/prompt.txt")
     for m in "$@"; do
-        slug="$h-$t-$(echo "$m" | tr ':/.' '___')"
+        slug="$h-$t-$provider-$(echo "$m" | tr ':/.' '___')"
         dir="$OUT/$slug"; rm -rf "$dir"; mkdir -p "$dir"
         work=$(mktemp -d "${TMPDIR:-/tmp}/agent-bench.XXXXXX")
         cp -R "$tdir/fixture/." "$work/"
         before=$(cd "$work" && find tests -name '*.py' -exec shasum {} + | sort | shasum)
 
-        echo "########## $h / $t / $m ##########"
+        echo "########## $h / $t / $provider/$m ##########"
         start=$(date +%s)
         run_agent "$h" "$m" "$work" "$prompt" > "$dir/events.jsonl" 2> "$dir/agent.err"
         rc=$?
@@ -141,7 +152,7 @@ for h in ${harnesses//,/ }; do
         cp -R "$work" "$dir/work"; rm -rf "$work"
 
         status=done; [[ $rc -eq 124 ]] && status=TIMEOUT; [[ $rc -ne 0 && $rc -ne 124 ]] && status="exit $rc"
-        printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$h" "$t" "$m" \
+        printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$h" "$t" "$provider/$m" \
             "$vis_ok" "$vis_n" "$hid_ok" "$hid_n" "$tampered" "$secs" "$turns" "$tools" \
             "$failed" "$malformed" "$status" >> "$results"
         echo "visible $vis_ok/$vis_n | hidden $hid_ok/$hid_n | tampered $tampered | ${secs}s | turns $turns | tools $tools ($failed failed, $malformed malformed) | $status"
@@ -176,7 +187,7 @@ dest="$REPO/bench-results/agent-${slugchip}-${ram}gb.md"
     echo "| harness | task | model | digest | visible | hidden | tests untouched | time | turns | tool calls | failed | malformed | end |"
     echo "|---|---|---|---|---|---|---|---|---|---|---|---|---|"
     while IFS=$'\t' read -r h t m vok vn hok hn tam secs turns tools failed bad st; do
-        digest=$(ollama list | awk -v m="$m" '$1==m{print $2}')
+        digest=$( [[ $m == ollama/* ]] && ollama list | awk -v m="${m#ollama/}" '$1==m{print $2}' || echo hosted)
         full=$([[ "$vok" == "$vn" && "$hok" == "$hn" && "$tam" == no ]] && echo "**$vok/$vn**" || echo "$vok/$vn")
         echo "| $h | $t | \`$m\` | \`$digest\` | $full | $hok/$hn | $([[ $tam == no ]] && echo ✅ || echo "❌ edited") | ${secs}s | $turns | $tools | $failed | $bad | $st |"
     done < "$results"

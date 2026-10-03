@@ -11,26 +11,27 @@ arguments — the number that says whether a model drives tools reliably.
 |---|---|
 | pi | 0.99.2 |
 | opencode | 1.18.30 |
-| ollama | 0.35.0 |
-| python | 3.14.7 |
-| timeout | 900s per run |
+| ollama | 0.35.1 |
+| python | 3.14.8 |
+| timeout | 1200s per run |
 | recorded | 2026-10-03 |
 
 | harness | task | model | digest | visible | hidden | tests untouched | time | turns | tool calls | failed | malformed | end |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| pi | ledger | `qwen3.6:35b-mlx-ctx64k` | `f96ae21d3b2d` | 0/1 | 0/1 | ✅ | 1035s | 91 | 93 | 30 | 0 | done |
-| pi | ledger | `muse-glimmer:30b-mlx-ctx64k` | `cde6f37da6c9` | **8/8** | 5/5 | ✅ | 124s | 14 | 16 | 3 | 0 | done |
-| pi | ledger | `qwen3-coder:30b-ctx64k` | `13cd851c8a12` | **8/8** | 5/5 | ✅ | 66s | 22 | 21 | 5 | 3 | done |
-| pi | shop | `qwen3.6:35b-mlx-ctx64k` | `f96ae21d3b2d` | 8/8 | 4/6 | ✅ | 96s | 23 | 27 | 6 | 1 | done |
-| pi | shop | `muse-glimmer:30b-mlx-ctx64k` | `cde6f37da6c9` | **8/8** | 6/6 | ✅ | 187s | 22 | 21 | 2 | 0 | done |
-| pi | shop | `qwen3-coder:30b-ctx64k` | `13cd851c8a12` | 8/8 | 4/6 | ✅ | 131s | 34 | 32 | 8 | 6 | done |
-| opencode | ledger | `qwen3.6:35b-mlx-ctx64k` | `f96ae21d3b2d` | 5/8 | 1/5 | ✅ | 30s | 4 | 7 | 0 | 0 | done |
-| opencode | ledger | `muse-glimmer:30b-mlx-ctx64k` | `cde6f37da6c9` | **8/8** | 5/5 | ✅ | 177s | 17 | 19 | 0 | 0 | done |
-| opencode | ledger | `qwen3-coder:30b-ctx64k` | `13cd851c8a12` | **8/8** | 5/5 | ✅ | 70s | 14 | 13 | 0 | 0 | done |
-| opencode | shop | `muse-glimmer:30b-mlx-ctx64k` | `cde6f37da6c9` | **8/8** | 6/6 | ✅ | 465s | 25 | 30 | 1 | 0 | done |
-| opencode | shop | `qwen3-coder:30b-ctx64k` | `13cd851c8a12` | 8/8 | 4/6 | ✅ | 246s | 35 | 38 | 5 | 0 | done |
-| opencode | shop | `qwen3.6:35b-mlx-ctx64k` | `f96ae21d3b2d` | 8/8 | 5/6 | ✅ | 205s | 42 | 47 | 1 | 0 | done |
-| pi | ledger | `qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | **8/8** | 5/5 | ✅ | 30s | 7 | 8 | 1 | 0 | done |
-| pi | shop | `qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | 8/8 | 4/6 | ✅ | 84s | 10 | 13 | 0 | 0 | done |
-| opencode | ledger | `qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | **8/8** | 5/5 | ✅ | 158s | 7 | 12 | 0 | 0 | done |
-| opencode | shop | `qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | 8/8 | 4/6 | ✅ | 197s | 7 | 17 | 0 | 0 | done |
+| pi | ledger | `ollama/qwen3.6:35b-mlx-ctx64k` | `f96ae21d3b2d` | 0/1 | 0/1 | ✅ | 1035s | 91 | 93 | 30 | 0 | done |
+| pi | ledger | `ollama/muse-glimmer:30b-mlx-ctx64k` | `cde6f37da6c9` | **8/8** | 5/5 | ✅ | 124s | 14 | 16 | 3 | 0 | done |
+| pi | ledger | `ollama/qwen3-coder:30b-ctx64k` | `13cd851c8a12` | **8/8** | 5/5 | ✅ | 66s | 22 | 21 | 5 | 3 | done |
+| pi | shop | `ollama/qwen3.6:35b-mlx-ctx64k` | `f96ae21d3b2d` | 8/8 | 4/6 | ✅ | 96s | 23 | 27 | 6 | 1 | done |
+| pi | shop | `ollama/muse-glimmer:30b-mlx-ctx64k` | `cde6f37da6c9` | **8/8** | 6/6 | ✅ | 187s | 22 | 21 | 2 | 0 | done |
+| pi | shop | `ollama/qwen3-coder:30b-ctx64k` | `13cd851c8a12` | 8/8 | 4/6 | ✅ | 131s | 34 | 32 | 8 | 6 | done |
+| opencode | ledger | `ollama/qwen3.6:35b-mlx-ctx64k` | `f96ae21d3b2d` | 5/8 | 1/5 | ✅ | 30s | 4 | 7 | 0 | 0 | done |
+| opencode | ledger | `ollama/muse-glimmer:30b-mlx-ctx64k` | `cde6f37da6c9` | **8/8** | 5/5 | ✅ | 177s | 17 | 19 | 0 | 0 | done |
+| opencode | ledger | `ollama/qwen3-coder:30b-ctx64k` | `13cd851c8a12` | **8/8** | 5/5 | ✅ | 70s | 14 | 13 | 0 | 0 | done |
+| opencode | shop | `ollama/muse-glimmer:30b-mlx-ctx64k` | `cde6f37da6c9` | **8/8** | 6/6 | ✅ | 465s | 25 | 30 | 1 | 0 | done |
+| opencode | shop | `ollama/qwen3-coder:30b-ctx64k` | `13cd851c8a12` | 8/8 | 4/6 | ✅ | 246s | 35 | 38 | 5 | 0 | done |
+| opencode | shop | `ollama/qwen3.6:35b-mlx-ctx64k` | `f96ae21d3b2d` | 8/8 | 5/6 | ✅ | 205s | 42 | 47 | 1 | 0 | done |
+| pi | ledger | `ollama/qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | **8/8** | 5/5 | ✅ | 30s | 7 | 8 | 1 | 0 | done |
+| pi | shop | `ollama/qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | 8/8 | 4/6 | ✅ | 84s | 10 | 13 | 0 | 0 | done |
+| opencode | ledger | `ollama/qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | **8/8** | 5/5 | ✅ | 158s | 7 | 12 | 0 | 0 | done |
+| opencode | shop | `ollama/qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | 8/8 | 4/6 | ✅ | 197s | 7 | 17 | 0 | 0 | done |
+| pi | ledger | `ollama/qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | **8/8** | 5/5 | ✅ | 62s | 8 | 11 | 0 | 0 | done |
