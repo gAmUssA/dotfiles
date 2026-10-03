@@ -12,6 +12,11 @@
 #   shop    harder: case-insensitive SKU crash surfacing deep in a
 #                   traceback, half-up tax rounding, tax-after-discount
 #                   ordering, and a new rule type wired across 3 files (6/8)
+#   planner hardest: tie-break by priority, a dependency cycle reported
+#                   normalised to its smallest task, a scheduler that starts
+#                   tasks before their deps END, and capacity-limited
+#                   resources across config/graph/scheduler where a blocked
+#                   task must not block lower-priority ones   (5/8; 7 hidden)
 #
 # Per (harness, task, model) run, graded after the agent stops:
 #   visible / hidden  tests passed, always against the PRISTINE tests
@@ -20,7 +25,7 @@
 #   rejected — the tool-format weakness that matters for a local model;
 #   "failed" also counts e.g. a test run exiting non-zero, which is normal)
 #
-# Usage: agent-bench/agent-bench.sh [-h pi,opencode] [-t ledger,shop] [-p provider] <model> [...]
+# Usage: agent-bench/agent-bench.sh [-h pi,opencode] [-t ledger,shop,planner] [-p provider] <model> [...]
 #   -p ollama (default) | nebius | fireworks — hosted runs need NEBIUS_API_KEY /
 #   FIREWORKS_API_KEY in the env (opsync/opload) and cost real money.
 #   models are Ollama tags, registered in BOTH pi/models.json and
@@ -39,7 +44,7 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 REPO="$(dirname "$HERE")"
 OUT="$REPO/bench-out/agent"
 TIMEOUT="${AGENT_BENCH_TIMEOUT:-1200}"   # seconds per run
-harnesses="pi"; tasks="ledger,shop"; provider="ollama"
+harnesses="pi"; tasks="ledger,shop,planner"; provider="ollama"
 
 while getopts "h:t:p:" opt; do
     case $opt in h) harnesses=$OPTARG ;; t) tasks=$OPTARG ;; p) provider=$OPTARG ;; *) exit 1 ;; esac

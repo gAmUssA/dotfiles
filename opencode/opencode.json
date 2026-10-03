@@ -34,7 +34,7 @@
           "name": "qwen3.8 27b MLX (64k)",
           "limit": {
             "context": 65536,
-            "output": 8192
+            "output": 32768
           }
         }
       }

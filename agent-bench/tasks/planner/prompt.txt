@@ -1,0 +1,7 @@
+This is a small Python task-scheduling package (planner/). Run its tests with
+`python3 -m unittest -v`. Several fail. Fix the bugs in planner/ so behaviour
+matches the docstrings — those are the spec, not just the tests — and add the
+resources feature described in the ResourceTest docstring in
+tests/test_planner.py, across the config loader, the graph and the scheduler.
+Do NOT modify anything under tests/. Re-run the tests until they all pass,
+then stop and summarize what you changed in three sentences.
