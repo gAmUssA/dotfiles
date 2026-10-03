@@ -473,6 +473,15 @@ With the drive unplugged the links dangle and Ollama reports no models —
 that is the signal, not a bug. Measured on Daystrom (StudioStack + SN850X):
 ~5.7 GB/s sequential write, so a 20 GB model loads in seconds.
 
+**The Ollama menu-bar app can freeze its own server with a modal window.**
+The cask auto-updates, and after an update it shows a welcome window; until
+someone dismisses it, `ollama serve` answers nothing — not even
+`/api/version` — restarts and `kill -9` do not help, and the server log shows
+no error, only that no request ever arrives (the stuck thread sits in
+`open()`). On a headless always-on host nobody sees that window. Seen on
+Daystrom, where it first looked like qwen3.8 "overthinking" and then like a
+permission problem; it was neither. Check the screen (Comet / ARD) first.
+
 **Apple signing / App Store Connect API keys** live in `~/.appstoreconnect` and
 are backed up as 1Password documents — restore steps, and why the local path
 matters, are in [SETUP-SIGNING-KEYS.md](SETUP-SIGNING-KEYS.md):
