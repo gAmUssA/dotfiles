@@ -93,7 +93,10 @@
             "cacheWrite": 0
           }
         }
-      ]
+      ],
+      "compat": {
+        "supportsDeveloperRole": false
+      }
     }
   }
 }

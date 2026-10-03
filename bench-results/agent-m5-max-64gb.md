@@ -13,7 +13,7 @@ arguments — the number that says whether a model drives tools reliably.
 | opencode | 1.18.30 |
 | ollama | 0.35.1 |
 | python | 3.14.8 |
-| timeout | 1200s per run |
+| timeout | 900s per run |
 | recorded | 2026-10-03 |
 
 | harness | task | model | digest | visible | hidden | tests untouched | time | turns | tool calls | failed | malformed | end |
@@ -35,3 +35,11 @@ arguments — the number that says whether a model drives tools reliably.
 | opencode | ledger | `ollama/qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | **8/8** | 5/5 | ✅ | 158s | 7 | 12 | 0 | 0 | done |
 | opencode | shop | `ollama/qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | 8/8 | 4/6 | ✅ | 197s | 7 | 17 | 0 | 0 | done |
 | pi | ledger | `ollama/qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | **8/8** | 5/5 | ✅ | 62s | 8 | 11 | 0 | 0 | done |
+| opencode | ledger | `nebius/zai-org/GLM-5.3-Flash` | `hosted` | **8/8** | 5/5 | ✅ | 20s | 8 | 12 | 0 | 0 | done |
+| opencode | ledger | `nebius/deepseek-ai/DeepSeek-V4.1-Flash` | `hosted` | **8/8** | 5/5 | ✅ | 10s | 6 | 10 | 0 | 0 | done |
+| opencode | shop | `nebius/zai-org/GLM-5.3-Flash` | `hosted` | **8/8** | 6/6 | ✅ | 38s | 11 | 15 | 0 | 0 | done |
+| opencode | shop | `nebius/deepseek-ai/DeepSeek-V4.1-Flash` | `hosted` | **8/8** | 6/6 | ✅ | 27s | 14 | 13 | 0 | 0 | done |
+| pi | ledger | `nebius/zai-org/GLM-5.3-Flash` | `hosted` | **8/8** | 5/5 | ✅ | 20s | 8 | 9 | 0 | 0 | done |
+| pi | ledger | `nebius/deepseek-ai/DeepSeek-V4.1-Flash` | `hosted` | **8/8** | 5/5 | ✅ | 7s | 5 | 7 | 0 | 0 | done |
+| pi | shop | `nebius/zai-org/GLM-5.3-Flash` | `hosted` | **8/8** | 6/6 | ✅ | 63s | 12 | 15 | 0 | 0 | done |
+| pi | shop | `nebius/deepseek-ai/DeepSeek-V4.1-Flash` | `hosted` | **8/8** | 6/6 | ✅ | 49s | 5 | 13 | 0 | 0 | done |
