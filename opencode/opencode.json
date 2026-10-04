@@ -16,13 +16,6 @@
             "output": 8192
           }
         },
-        "qwen3.6:35b-mlx-ctx64k": {
-          "name": "qwen3.6 35b-a3b MLX (64k)",
-          "limit": {
-            "context": 65536,
-            "output": 8192
-          }
-        },
         "muse-glimmer:30b-mlx-ctx64k": {
           "name": "muse-glimmer 30b MLX (64k)",
           "limit": {
@@ -48,6 +41,13 @@
       "models": {
         "Qwen3.8-27B-oQ4e-mtp": {
           "name": "Qwen3.8 27B oQ4e MTP (oMLX)",
+          "limit": {
+            "context": 65536,
+            "output": 32768
+          }
+        },
+        "Muse-Glimmer-30B-4bit": {
+          "name": "Muse Glimmer 30B 4bit (oMLX)",
           "limit": {
             "context": 65536,
             "output": 32768

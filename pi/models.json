@@ -10,10 +10,6 @@
           "contextWindow": 65536
         },
         {
-          "id": "qwen3.6:35b-mlx-ctx64k",
-          "contextWindow": 65536
-        },
-        {
           "id": "muse-glimmer:30b-mlx-ctx64k",
           "contextWindow": 65536
         },
@@ -105,6 +101,12 @@
       "models": [
         {
           "id": "Qwen3.8-27B-oQ4e-mtp",
+          "reasoning": true,
+          "contextWindow": 65536,
+          "maxTokens": 32768
+        },
+        {
+          "id": "Muse-Glimmer-30B-4bit",
           "reasoning": true,
           "contextWindow": 65536,
           "maxTokens": 32768

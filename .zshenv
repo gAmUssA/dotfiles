@@ -14,3 +14,9 @@ export PATH="$HOME/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 # client-supplied value.
 : "${LANG:=en_US.UTF-8}"
 export LANG
+
+# Per-machine OpenCode overrides (e.g. a default model only this machine
+# serves, like oMLX on Daystrom). opencode.json is tracked and shared, so a
+# machine-specific default would break every other machine; OpenCode merges
+# OPENCODE_CONFIG on top of it instead. The file is untracked and optional.
+[[ -r ~/.config/opencode/opencode.local.json ]] && export OPENCODE_CONFIG=~/.config/opencode/opencode.local.json
