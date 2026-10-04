@@ -14,7 +14,7 @@ arguments — the number that says whether a model drives tools reliably.
 | ollama | 0.35.1 |
 | python | 3.14.8 |
 | timeout | 900s per run |
-| recorded | 2026-10-03 |
+| recorded | 2026-10-04 |
 
 | harness | task | model | digest | visible | hidden | tests untouched | time | turns | tool calls | failed | malformed | end |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -65,3 +65,9 @@ arguments — the number that says whether a model drives tools reliably.
 | opencode | planner | `ollama/muse-glimmer:30b-mlx-ctx64k` | `cde6f37da6c9` | **8/8** | 7/7 | ✅ | 788s | 29 | 32 | 0 | 0 | done |
 | opencode | planner | `ollama/qwen3-coder:30b-ctx64k` | `13cd851c8a12` | 7/8 | 5/7 | ✅ | 196s | 29 | 28 | 0 | 0 | done |
 | opencode | planner | `ollama/qwen3.8:27b-mlx-ctx64k` | `c69cc4be857d` | **8/8** | 7/7 | ✅ | 452s | 27 | 31 | 1 | 0 | done |
+| pi | ledger | `omlx/Qwen3.8-27B-oQ4e-mtp` | `hosted` | **8/8** | 5/5 | ✅ | 24s | 7 | 9 | 0 | 0 | done |
+| pi | shop | `omlx/Qwen3.8-27B-oQ4e-mtp` | `hosted` | 8/8 | 4/6 | ✅ | 47s | 8 | 10 | 0 | 0 | done |
+| pi | planner | `omlx/Qwen3.8-27B-oQ4e-mtp` | `hosted` | **8/8** | 7/7 | ✅ | 75s | 6 | 11 | 0 | 0 | done |
+| opencode | ledger | `omlx/Qwen3.8-27B-oQ4e-mtp` | `hosted` | **8/8** | 5/5 | ✅ | 50s | 7 | 11 | 0 | 0 | done |
+| opencode | shop | `omlx/Qwen3.8-27B-oQ4e-mtp` | `hosted` | **8/8** | 6/6 | ✅ | 165s | 10 | 22 | 6 | 0 | done |
+| opencode | planner | `omlx/Qwen3.8-27B-oQ4e-mtp` | `hosted` | **8/8** | 7/7 | ✅ | 226s | 11 | 18 | 5 | 0 | done |
