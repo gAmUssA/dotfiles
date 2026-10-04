@@ -26,7 +26,7 @@
 #   "failed" also counts e.g. a test run exiting non-zero, which is normal)
 #
 # Usage: agent-bench/agent-bench.sh [-h pi,opencode] [-t ledger,shop,planner] [-p provider] <model> [...]
-#   -p ollama (default) | nebius | fireworks — hosted runs need NEBIUS_API_KEY /
+#   -p ollama (default) | omlx | nebius | fireworks — hosted runs need NEBIUS_API_KEY /
 #   FIREWORKS_API_KEY in the env (opsync/opload) and cost real money.
 #   models are Ollama tags, registered in BOTH pi/models.json and
 #   opencode/opencode.json — use the -ctx64k variants (Ollama's default context
@@ -56,6 +56,9 @@ case $provider in
     ollama)    pi_prov=ollama;    oc_prov=ollama
                curl -sf --max-time 5 http://localhost:11434/api/version >/dev/null \
                    || { echo "ollama daemon unreachable"; exit 1; } ;;
+    omlx)      pi_prov=omlx;      oc_prov=omlx
+               curl -sf --max-time 5 http://localhost:8000/v1/models >/dev/null \
+                   || { echo "oMLX unreachable on :8000"; exit 1; } ;;
     nebius)    pi_prov=nebius;    oc_prov=nebius
                [[ -n "${NEBIUS_API_KEY:-}" ]] || { echo "NEBIUS_API_KEY not set (opsync)"; exit 1; } ;;
     fireworks) pi_prov=fireworks; oc_prov=fireworks-ai

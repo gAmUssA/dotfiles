@@ -97,6 +97,19 @@
       "compat": {
         "supportsDeveloperRole": false
       }
+    },
+    "omlx": {
+      "baseUrl": "http://localhost:8000/v1",
+      "api": "openai-completions",
+      "apiKey": "omlx",
+      "models": [
+        {
+          "id": "Qwen3.8-27B-oQ4e-mtp",
+          "reasoning": true,
+          "contextWindow": 65536,
+          "maxTokens": 32768
+        }
+      ]
     }
   }
 }

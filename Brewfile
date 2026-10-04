@@ -612,6 +612,13 @@ cask "obsidian"
 # ollamac below is only a GUI client, for either.
 if %w[daystrom].include?(`scutil --get LocalHostName 2>/dev/null`.strip.downcase)
   brew "ollama", start_service: true
+  # oMLX: MLX server with a prefix KV cache that survives across requests and
+  # multi-token prediction — 1.3-3.2x faster than Ollama on the same model in
+  # agent loops (bench-results/agent-*). HEAD + custom kernels: the stable
+  # bottle lacks qwen35_prefill and Qwen3.x silently falls back to a slow
+  # prefill path. Building them needs full Xcode (Metal toolchain).
+  tap "jundot/omlx", "https://github.com/jundot/omlx"
+  brew "jundot/omlx/omlx", args: ["HEAD", "with-custom-kernel"], trusted: true, start_service: true
 else
   cask "ollama-app"
 end

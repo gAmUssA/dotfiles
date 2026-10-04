@@ -38,6 +38,22 @@
           }
         }
       }
+    },
+    "omlx": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "oMLX (local, prefix cache + MTP)",
+      "options": {
+        "baseURL": "http://localhost:8000/v1"
+      },
+      "models": {
+        "Qwen3.8-27B-oQ4e-mtp": {
+          "name": "Qwen3.8 27B oQ4e MTP (oMLX)",
+          "limit": {
+            "context": 65536,
+            "output": 32768
+          }
+        }
+      }
     }
   },
   "mcp": {

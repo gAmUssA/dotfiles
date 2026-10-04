@@ -491,6 +491,23 @@ points. Two differences to know: it starts at *login*, not boot; and the
 service sets `OLLAMA_KV_CACHE_TYPE=q8_0` + flash attention, which on Daystrom
 cost ~20% decode speed on muse-glimmer MLX (55 vs 67 tok/s) for less memory.
 
+**oMLX alongside Ollama (Daystrom).** Port 8000, models under
+`~/.omlx/models` → `/Volumes/StudioStack/models/omlx` (same link pattern;
+download with `hf download <repo> --local-dir`). Three things that are off or
+missing by default and each cost real speed:
+
+- **Native kernels:** the stable bottle ships without them; check with
+  `$(brew --prefix)/opt/omlx/libexec/bin/python -c "from omlx.custom_kernels
+  import native_kernel_status as s; print(s())"` — `qwen35_prefill` must be
+  True for Qwen3.x. The Brewfile builds HEAD `--with-custom-kernel` (needs Xcode).
+- **Multi-token prediction:** `mtp_enabled` defaults to false. Set it per model
+  in `~/.omlx/model_settings.json` (`{"version":1,"models":{"<id>":
+  {"mtp_enabled":true}}}`) with the service stopped, then restart: 25 → 47
+  tok/s on Qwen3.8-27B. The first request after a load does not use it.
+- **Drive permission:** like Ollama, oMLX's Python needs macOS's Removable
+  Volumes grant. Until someone clicks Allow it hangs in `opendir()` on the
+  models link, with an empty log.
+
 **Apple signing / App Store Connect API keys** live in `~/.appstoreconnect` and
 are backed up as 1Password documents — restore steps, and why the local path
 matters, are in [SETUP-SIGNING-KEYS.md](SETUP-SIGNING-KEYS.md):
