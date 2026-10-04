@@ -104,12 +104,6 @@
           "reasoning": true,
           "contextWindow": 65536,
           "maxTokens": 32768
-        },
-        {
-          "id": "Muse-Glimmer-30B-4bit",
-          "reasoning": true,
-          "contextWindow": 65536,
-          "maxTokens": 32768
         }
       ]
     }

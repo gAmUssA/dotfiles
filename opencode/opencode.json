@@ -45,13 +45,6 @@
             "context": 65536,
             "output": 32768
           }
-        },
-        "Muse-Glimmer-30B-4bit": {
-          "name": "Muse Glimmer 30B 4bit (oMLX)",
-          "limit": {
-            "context": 65536,
-            "output": 32768
-          }
         }
       }
     }
