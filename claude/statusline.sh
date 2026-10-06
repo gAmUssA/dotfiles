@@ -55,3 +55,38 @@ BADGES=""
 [ -n "$WORKTREE" ] && BADGES="${BADGES} ${BLU}[wt:${WORKTREE}]${R}"
 
 echo -e "${B}${MODEL}${R} ${D}│${R} ${DIR_SHORT}${GIT}${BADGES} ${D}│${R} ${PC}${PCT}%${R}${D}/${R}${CTX_LABEL} ${D}│${R} ${GRN}+${ADDED}${R}${D}/${R}${RED}-${REMOVED}${R} ${D}│${R} ${D}${TIME}${R}"
+
+# Prompt-cache line: how long until the main conversation's cache expires,
+# and once cold, how many tokens the next message re-processes. Every message
+# re-sends the whole conversation; a warm cache skips re-reading it (faster,
+# cheaper against usage limits). Subscription main thread: 1h TTL; API key or
+# usage credits: 5m. Fields need Claude Code >= 2.1.251 (miss causes 2.1.260);
+# absent fields are skipped, and nothing prints until prompt_cache appears.
+# settings.json sets statusLine.refreshInterval (seconds) so the countdown
+# moves while idle; Claude Code also re-runs this at expires_at by itself.
+echo "$input" | jq -r --argjson now "$(date +%s)" '
+  .prompt_cache // empty
+  | . as $c
+  | ($c.ttl // "") as $ttl
+  | (if $ttl == "1h" then 3600 elif $ttl == "5m" then 300 else null end) as $span
+  | def k(n): if n == null then null elif n >= 1000 then "\((n / 1000) | round)k" else "\(n)" end;
+    if $c.warm == true and $c.expires_at != null then
+      (($c.expires_at - $now) | if . < 0 then 0 else . end) as $left
+      | (if $span then ($left / $span) else 1 end) as $frac
+      | ([((($frac * 6) | ceil)), 6] | min) as $full
+      | (if $frac < 0.2 then "\u001b[33m" else "\u001b[32m" end) as $col
+      | "\($col)cache ● \($ttl) "
+        + ("█" * $full) + ("░" * (6 - $full))
+        + " " + (if $left >= 60 then "\(($left / 60) | floor)m" else "\($left)s" end) + " left"
+        + (if $c.hit_ratio != null then " · hit \(($c.hit_ratio * 100) | round)%" else "" end)
+        + (if $c.misses != null then " · misses \($c.misses)" else "" end)
+        + "\u001b[0m"
+    elif $c.warm == false then
+      "\u001b[31mcache ○ cold"
+        + (if $c.recache_tokens_if_cold != null
+           then " · next message re-caches \(k($c.recache_tokens_if_cold)) tokens" else "" end)
+        + (if ($c.last_miss_cause.causes // []) | length > 0
+           then " · last miss: \($c.last_miss_cause.causes | join(", "))" else "" end)
+        + "\u001b[0m"
+    else empty end
+' 2>/dev/null

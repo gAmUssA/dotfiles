@@ -256,6 +256,7 @@
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh",
+    "refreshInterval": 30,
     "padding": 1
   },
   "enabledPlugins": {
