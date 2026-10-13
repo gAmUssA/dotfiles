@@ -18,6 +18,7 @@ These are the configs I run on my Mac every day: zsh, tmux, iTerm2, Ghostty, and
   Not currently bound (Claude Code handles clipboard paste natively), but kept in case that changes.
 - `Brewfile` — everything above, plus my usual CLI kit.
 - `install-completions.sh` — background job that keeps `~/.zfunc` fresh for kubectl, terraform, gh, and friends.
+- `clean_projects.sh` — preview or interactively remove project artifacts with Kondo; also linked at `~/projects/clean_projects.sh`.
 
 ## Install
 
@@ -79,6 +80,47 @@ Idempotent. Tap-to-click and key-repeat rates need a logout to take effect.
 
 `./ollama-restore.sh` pulls the registry models and recreates the local
 `-ctx64k` variants used by the OpenCode/Pi agent setup.
+
+### Project cleanup
+
+Install [Kondo](https://github.com/tbillington/kondo) 0.9 or newer with
+`brew install kondo` (also declared in the Brewfile). Homebrew upgrades renew
+the dependency alongside the other CLI tools.
+
+```bash
+~/projects/clean_projects.sh                     # preview ~/projects
+~/projects/clean_projects.sh --older 3M          # preview older projects
+~/projects/clean_projects.sh --apply             # choose projects interactively
+~/projects/clean_projects.sh --exclude ~/projects/keep-this-project
+~/projects/clean_projects.sh ~/projects/demo ~/projects/demo/app
+```
+
+The tracked script is `clean_projects.sh` in this repo; the old location is a
+symlink. `linkall.sh` creates that link when absent and leaves existing files
+or different links for reconciliation. The default root is always
+`~/projects`, even when called from another directory. Relative paths resolve
+from the calling directory. `--apply` requires terminal input and retains
+Kondo's project-by-project prompts. There is no unattended delete-all mode.
+
+Kondo identifies projects by their manifests and deletes their known artifact
+directories: for example, Node's `node_modules`, Maven's `target`, and Gradle's
+`build` and `.gradle`. It does not check whether artifacts are tracked in Git.
+Preview first and use `--exclude` for projects that retain those files;
+exclusions protect entire projects, not individual artifacts. The wrapper does
+not enable symlink traversal and restricts scanning to the root filesystem.
+
+Kondo 0.9 stops descending after recognizing a project. Pass nested Gradle
+modules as additional paths, as in the last example, to include their build
+outputs. Its deletion diagnostics are forwarded and cause this wrapper to
+fail, even when Kondo itself returns success. Sizes in Kondo's summary are
+estimates of file content, not a measurement of reclaimed disk blocks.
+
+Shared caches (`~/.gradle`, `~/.npm`, `~/.cache/uv`) are not scanned by default.
+Maintain those separately with Gradle's retention settings, `npm cache verify`,
+`npm cache npx ls` / `npm cache npx rm <key>`, and `uv cache prune`.
+
+Run the cleanup checks with `bash scripts/run-tests.sh`. The real Kondo
+integration checks use temporary fixtures and require Kondo on PATH.
 
 ## The Claude Code bits
 

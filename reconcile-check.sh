@@ -38,7 +38,7 @@ head2 "Config links (expected vs actual)"
 ghostty_dir="$HOME/Library/Application Support/com.mitchellh.ghostty"
 
 while IFS= read -r line; do
-  target=${line#ln -s *dotfiles/}       # strip through the source path
+  target=${line#*ln -s *dotfiles/}      # strip indentation and the source path
   target=${target#* }                    # leave only the destination
   target=${target//\"/}
   target=${target/\$GHOSTTY_MACOS_DIR/$ghostty_dir}
@@ -57,7 +57,7 @@ while IFS= read -r line; do
   else
     note "missing       ${target/#$HOME/\~}  (linkall.sh will create it)"
   fi
-done < <(grep -E '^ln -s' linkall.sh)
+done < <(grep -E '^[[:space:]]*ln -s ' linkall.sh)
 
 # ------------------------------------------------------------------ Homebrew
 head2 "Homebrew"
