@@ -19,6 +19,7 @@ These are the configs I run on my Mac every day: zsh, tmux, iTerm2, Ghostty, and
 - `Brewfile` — everything above, plus my usual CLI kit.
 - `install-completions.sh` — background job that keeps `~/.zfunc` fresh for kubectl, terraform, gh, and friends.
 - `clean_projects.sh` — preview or interactively remove project artifacts with Kondo; also linked at `~/projects/clean_projects.sh`.
+- `keyboard-layouts/` + `keyboard-layouts.sh` — the customized Birman EN/RU layouts, with explicit backup, comparison and restore commands.
 
 ## Install
 
@@ -51,6 +52,22 @@ for license/serial/credential key names and refuses to write ones that match
 PII in a `<data>` blob also get a per-domain drop list — see
 `domain_strip_keys` in `prefs-backup.sh`, which is what keeps OpenUsage's
 account email and its ~40 KB of churning usage snapshots out of the repo.
+
+The modified Birman English/Russian keyboard bundle lives in
+[`keyboard-layouts/`](keyboard-layouts/README.md). `prefs-backup.sh` snapshots
+it with the portable input-source preferences; `prefs-restore.sh` installs the
+matching bundle before importing those preferences. For just the keyboard:
+
+```bash
+./keyboard-layouts.sh backup           # capture installed custom mappings
+./keyboard-layouts.sh check            # compare installed and tracked bundles
+./keyboard-layouts.sh restore --dry-run
+./keyboard-layouts.sh restore          # another Mac, after pulling the repo
+```
+
+Log out and back in after installation, then verify both input sources and
+typing. Fresh installs use the user Library; updating an existing system-wide
+installation may require the human-run sudo command documented in the runbook.
 
 iTerm2 is snapshotted the same way rather than through its own "load
 preferences from a custom folder" option — that writes on every quit with no

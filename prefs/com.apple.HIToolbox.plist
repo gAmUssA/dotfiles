@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AppleCurrentKeyboardLayoutInputSourceID</key>
+	<string>org.sil.ukelele.keyboardlayout.t.english- ilya birman typography</string>
+	<key>AppleEnabledInputSources</key>
+	<array>
+		<dict>
+			<key>Bundle ID</key>
+			<string>com.apple.CharacterPaletteIM</string>
+			<key>InputSourceKind</key>
+			<string>Non Keyboard Input Method</string>
+		</dict>
+		<dict>
+			<key>InputSourceKind</key>
+			<string>Keyboard Layout</string>
+			<key>KeyboardLayout ID</key>
+			<integer>-1088</integer>
+			<key>KeyboardLayout Name</key>
+			<string>English - Ilya Birman Typography</string>
+		</dict>
+		<dict>
+			<key>InputSourceKind</key>
+			<string>Keyboard Layout</string>
+			<key>KeyboardLayout ID</key>
+			<integer>-20914</integer>
+			<key>KeyboardLayout Name</key>
+			<string>Russian - Ilya Birman Typography</string>
+		</dict>
+		<dict>
+			<key>Bundle ID</key>
+			<string>com.apple.PressAndHold</string>
+			<key>InputSourceKind</key>
+			<string>Non Keyboard Input Method</string>
+		</dict>
+		<dict>
+			<key>Bundle ID</key>
+			<string>com.apple.inputmethod.ironwood</string>
+			<key>InputSourceKind</key>
+			<string>Non Keyboard Input Method</string>
+		</dict>
+	</array>
+	<key>AppleSelectedInputSources</key>
+	<array>
+		<dict>
+			<key>Bundle ID</key>
+			<string>com.apple.PressAndHold</string>
+			<key>InputSourceKind</key>
+			<string>Non Keyboard Input Method</string>
+		</dict>
+		<dict>
+			<key>InputSourceKind</key>
+			<string>Keyboard Layout</string>
+			<key>KeyboardLayout ID</key>
+			<integer>-1088</integer>
+			<key>KeyboardLayout Name</key>
+			<string>English - Ilya Birman Typography</string>
+		</dict>
+	</array>
+</dict>
+</plist>

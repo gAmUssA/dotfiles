@@ -218,3 +218,7 @@ karabiner/automatic_backups/
 # automation). Untracked junk, and this repo is public — never let a `git add -A`
 # sweep a captured page in here.
 .playwright-mcp/
+
+# Previous keyboard bundles kept locally when a snapshot replaces a copy.
+keyboard-layouts/.birman-backup.*/
+keyboard-layouts/.snapshot.*/
