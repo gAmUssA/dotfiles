@@ -183,6 +183,10 @@ keyboard_layouts_main() (
       fi
     fi
 
+    if ! command -v uv >/dev/null 2>&1; then
+      printf 'error: backup requires uv from the Brewfile to validate input-source IDs\n' >&2
+      return 1
+    fi
     mkdir -p "$here/keyboard-layouts" "$here/prefs"
     stage=$(mktemp -d "$here/keyboard-layouts/.snapshot.XXXXXX")
     keyboard_layouts_copy "$source" "$stage/$name"
@@ -198,6 +202,8 @@ keyboard_layouts_main() (
       fragment=$(plutil -extract "$key" xml1 -o - "$preferences")
       plutil -insert "$key" -xml "$fragment" "$stage/input-sources.plist"
     done
+    uv run --no-project --no-python-downloads --no-cache \
+      "$here/scripts/validate_keyboard_sources.py" "$stage/$name" "$stage/input-sources.plist"
     keyboard_layouts_replace "$stage/$name" "$snapshot"
     mv -- "$stage/input-sources.plist" "$here/prefs/com.apple.HIToolbox.plist"
     printf 'Copied portable input sources: prefs/com.apple.HIToolbox.plist\n'

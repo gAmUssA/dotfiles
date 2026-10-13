@@ -27,6 +27,22 @@ with `--source BUNDLE`. Ukelele may edit a working copy rather than an installed
 bundle; install that copy first, or explicitly supply its path. Review layout
 outputs before committing: custom macros can contain private text.
 
+Backup validates each layout's header ID/name and the bundle's TIS source IDs
+against the enabled, selected and current HIToolbox sources before replacing
+either snapshot. Both EN/RU layouts must be enabled and one must be selected.
+If those identifiers changed, install and enable the edited layouts, select one,
+then export again; a stale preferences file is rejected without changing the
+saved pair. Other enabled input sources and non-keyboard methods are preserved.
+
+The standard-library validator `scripts/validate_keyboard_sources.py` requires
+Python 3.9+ and runs through `uv` (already in the Brewfile), without downloading
+Python or third-party packages:
+
+```bash
+uv run --no-project --no-python-downloads --no-cache scripts/validate_keyboard_sources.py \
+  "keyboard-layouts/Ilya Birman Typography Layout.bundle" prefs/com.apple.HIToolbox.plist
+```
+
 `prefs-backup.sh` runs the same backup helper, keeping the bundle and the
 allowlisted `com.apple.HIToolbox` input-source preferences together.
 

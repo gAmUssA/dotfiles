@@ -3,13 +3,15 @@
 set -euo pipefail
 
 main() (
-  local repo sandbox bundle helper preferences status digest
+  local repo sandbox bundle helper preferences status digest mismatch
   repo=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)
   sandbox=$(mktemp -d "${TMPDIR:-/tmp}/keyboard-layouts-test.XXXXXX")
   sandbox=$(cd -- "$sandbox" && pwd -P)
   trap 'rm -rf -- "$sandbox"' EXIT
   mkdir -p "$sandbox/repo" "$sandbox/installed/Custom.bundle/Contents/Resources"
   cp "$repo/keyboard-layouts.sh" "$sandbox/repo/keyboard-layouts.sh"
+  mkdir -p "$sandbox/repo/scripts"
+  cp "$repo/scripts/validate_keyboard_sources.py" "$sandbox/repo/scripts/"
   helper="$sandbox/repo/keyboard-layouts.sh"
   bundle="$sandbox/installed/Custom.bundle"
   preferences="$sandbox/input-sources.plist"
@@ -17,22 +19,38 @@ main() (
 <?xml version="1.0" encoding="UTF-8"?>
 <plist version="1.0"><dict>
 <key>CFBundleIdentifier</key><string>example.keyboard.custom</string>
+<key>KLInfo_English - Ilya Birman Typography</key><dict>
+<key>TISInputSourceID</key><string>example.keyboard.custom.english</string>
+</dict>
+<key>KLInfo_Russian - Ilya Birman Typography</key><dict>
+<key>TISInputSourceID</key><string>example.keyboard.custom.russian</string>
+</dict>
 </dict></plist>
 EOF
   # Legacy controls must survive byte-for-byte, without XML normalization.
-  printf '<?xml version="1.1"?><keyboard id="-1088"><key code="0" output="&#x001B;"/></keyboard>\n' >"$bundle/Contents/Resources/English - Ilya Birman Typography.keylayout"
-  printf '<?xml version="1.0"?><keyboard id="-20914"><key code="0" output="ф"/></keyboard>\n' >"$bundle/Contents/Resources/Russian - Ilya Birman Typography.keylayout"
+  printf '<?xml version="1.1"?><keyboard id="-1088" name="English - Ilya Birman Typography"><key code="0" output="&#x001B;"/></keyboard>\n' >"$bundle/Contents/Resources/English - Ilya Birman Typography.keylayout"
+  printf '<?xml version="1.0"?><keyboard id="-20914" name="Russian - Ilya Birman Typography"><key code="0" output="ф"/></keyboard>\n' >"$bundle/Contents/Resources/Russian - Ilya Birman Typography.keylayout"
   printf 'Finder state\n' >"$bundle/.DS_Store"
   printf 'resource fork\n' >"$bundle/._metadata"
   cat >"$preferences" <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <plist version="1.0"><dict>
 <key>AppleEnabledInputSources</key><array><dict>
+<key>InputSourceKind</key><string>Keyboard Layout</string>
 <key>KeyboardLayout ID</key><integer>-1088</integer>
 <key>KeyboardLayout Name</key><string>English - Ilya Birman Typography</string>
+</dict><dict>
+<key>InputSourceKind</key><string>Keyboard Layout</string>
+<key>KeyboardLayout ID</key><integer>-20914</integer>
+<key>KeyboardLayout Name</key><string>Russian - Ilya Birman Typography</string>
+</dict><dict>
+<key>InputSourceKind</key><string>Non Keyboard Input Method</string>
+<key>Bundle ID</key><string>com.apple.CharacterPaletteIM</string>
 </dict></array>
 <key>AppleSelectedInputSources</key><array><dict>
+<key>InputSourceKind</key><string>Keyboard Layout</string>
 <key>KeyboardLayout ID</key><integer>-1088</integer>
+<key>KeyboardLayout Name</key><string>English - Ilya Birman Typography</string>
 </dict></array>
 <key>AppleCurrentKeyboardLayoutInputSourceID</key><string>example.keyboard.custom.english</string>
 <key>AppleInputSourceHistory</key><array><string>volatile history</string></array>
@@ -71,6 +89,51 @@ EOF
   [[ "$(cat "$sandbox/repo/prefs/com.apple.HIToolbox.plist")" != *FutureMachineState* ]]
   [[ "$(cat "$sandbox/repo/prefs/com.apple.HIToolbox.plist")" != *AppleInputSourceHistory* ]]
   printf 'PASS: input-source snapshot keeps only portable allowlisted fields\n'
+
+  # An edited bundle with stale preferences must not replace either snapshot.
+  cp -R "$bundle" "$sandbox/edited.bundle"
+  sed 's/id="-1088"/id="2548"/' \
+    "$bundle/Contents/Resources/English - Ilya Birman Typography.keylayout" \
+    >"$sandbox/edited.bundle/Contents/Resources/English - Ilya Birman Typography.keylayout"
+  expect_status 1 bash "$helper" backup --source "$sandbox/edited.bundle" --preferences "$preferences"
+  bash "$helper" check --source "$bundle"
+  [[ "$digest" == "$(shasum -a 256 "$sandbox/repo/prefs/com.apple.HIToolbox.plist")" ]]
+  printf 'PASS: mismatched bundle IDs cannot replace either saved snapshot\n'
+
+  for mismatch in enabled-id enabled-name missing-russian current-id selected-id bundle-tis-id; do
+    cp "$preferences" "$sandbox/stale-preferences.plist"
+    cp -R "$bundle" "$sandbox/changed.bundle"
+    # Make the candidate bundle differ, so replacing it is observable too.
+    printf 'edited resource\n' >"$sandbox/changed.bundle/Contents/edit"
+    case "$mismatch" in
+      enabled-id) plutil -replace 'AppleEnabledInputSources.0.KeyboardLayout ID' -integer 2548 "$sandbox/stale-preferences.plist" ;;
+      enabled-name) plutil -replace 'AppleEnabledInputSources.1.KeyboardLayout Name' -string 'Stock Russian' "$sandbox/stale-preferences.plist" ;;
+      missing-russian) plutil -remove AppleEnabledInputSources.1 "$sandbox/stale-preferences.plist" ;;
+      current-id) plutil -replace AppleCurrentKeyboardLayoutInputSourceID -string example.keyboard.stale "$sandbox/stale-preferences.plist" ;;
+      selected-id) plutil -replace 'AppleSelectedInputSources.0.KeyboardLayout ID' -integer -20914 "$sandbox/stale-preferences.plist" ;;
+      bundle-tis-id) plutil -replace 'KLInfo_English - Ilya Birman Typography.TISInputSourceID' -string example.keyboard.custom.renamed "$sandbox/changed.bundle/Contents/Info.plist" ;;
+    esac
+    expect_status 1 bash "$helper" backup --source "$sandbox/changed.bundle" --preferences "$sandbox/stale-preferences.plist"
+    [[ "$(cat "$sandbox/stderr")" == *'bundle/input-source mismatch'* ]]
+    bash "$helper" check --source "$bundle" >/dev/null
+    [[ "$digest" == "$(shasum -a 256 "$sandbox/repo/prefs/com.apple.HIToolbox.plist")" ]]
+    rm -rf "$sandbox/changed.bundle"
+  done
+  [[ -z "$(find "$sandbox/repo/keyboard-layouts" -name '.snapshot.*' -o -name '.birman-backup.*')" ]]
+  printf 'PASS: stale enabled, selected, current and bundle TIS identities leave both snapshots untouched\n'
+
+  cp "$preferences" "$sandbox/russian-preferences.plist"
+  plutil -replace AppleCurrentKeyboardLayoutInputSourceID -string example.keyboard.custom.russian "$sandbox/russian-preferences.plist"
+  plutil -replace 'AppleSelectedInputSources.0.KeyboardLayout ID' -integer -20914 "$sandbox/russian-preferences.plist"
+  plutil -replace 'AppleSelectedInputSources.0.KeyboardLayout Name' -string 'Russian - Ilya Birman Typography' "$sandbox/russian-preferences.plist"
+  plutil -insert AppleEnabledInputSources.3 -xml \
+    '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>0</integer><key>KeyboardLayout Name</key><string>U.S.</string></dict>' \
+    "$sandbox/russian-preferences.plist"
+  bash "$helper" backup --source "$bundle" --preferences "$sandbox/russian-preferences.plist" >/dev/null
+  [[ "$(plutil -extract AppleCurrentKeyboardLayoutInputSourceID raw -o - "$sandbox/repo/prefs/com.apple.HIToolbox.plist")" == example.keyboard.custom.russian ]]
+  [[ "$(plutil -extract 'AppleEnabledInputSources.3.KeyboardLayout Name' raw -o - "$sandbox/repo/prefs/com.apple.HIToolbox.plist")" == U.S. ]]
+  bash "$helper" backup --source "$bundle" --preferences "$preferences" >/dev/null
+  printf 'PASS: either bundled language may be selected; unrelated enabled sources are preserved\n'
 
   bash "$helper" restore --destination "$sandbox/restored layouts" --dry-run
   [[ ! -e "$sandbox/restored layouts" ]]

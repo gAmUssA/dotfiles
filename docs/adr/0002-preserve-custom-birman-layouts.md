@@ -21,6 +21,9 @@ Keep the actual installed bundle as personal configuration in
 snapshot of customized keyboard configuration, not a vendored application or
 library dependency. Back it up together with only the portable HIToolbox
 selection fields. Restore the matching bundle before importing those fields.
+Validate the layout header IDs/names, bundle TIS IDs, and enabled/current/selected
+input sources before backup replaces either saved snapshot. Reject stale
+preferences, including when an explicitly selected working bundle changes IDs.
 
 ## Consequences
 
