@@ -1,6 +1,7 @@
 {
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_PLUGIN_DIRS": "~/.claude/moshi-plugin"
   },
   "includeCoAuthoredBy": false,
   "permissions": {
@@ -46,24 +47,24 @@
         ]
       },
       {
+        "matcher": "AskUserQuestion",
         "hooks": [
           {
-            "async": true,
+            "type": "command",
             "command": "'/opt/homebrew/opt/moshi-hook/bin/moshi-hook' claude-hook",
-            "type": "command"
+            "async": true
           }
-        ],
-        "matcher": "AskUserQuestion"
+        ]
       },
       {
+        "matcher": "ExitPlanMode",
         "hooks": [
           {
-            "async": true,
+            "type": "command",
             "command": "'/opt/homebrew/opt/moshi-hook/bin/moshi-hook' claude-hook",
-            "type": "command"
+            "async": true
           }
-        ],
-        "matcher": "ExitPlanMode"
+        ]
       }
     ],
     "SessionStart": [
@@ -116,9 +117,17 @@
       {
         "hooks": [
           {
-            "async": true,
+            "type": "command",
+            "command": "if command -v tessl >/dev/null 2>&1 && [ -d \"$HOME/.tessl/plugins/gamussa/coding-policy\" ]; then cd \"${CLAUDE_PROJECT_DIR}\" && tessl hook run --plugin-path=\"$HOME/.tessl/plugins/gamussa/coding-policy\" --event=\"SessionStart\" --agent=claude-code --schema-version=1; fi"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
             "command": "'/opt/homebrew/opt/moshi-hook/bin/moshi-hook' claude-hook",
-            "type": "command"
+            "async": true
           }
         ]
       }
@@ -135,9 +144,9 @@
       {
         "hooks": [
           {
-            "async": true,
+            "type": "command",
             "command": "'/opt/homebrew/opt/moshi-hook/bin/moshi-hook' claude-hook",
-            "type": "command"
+            "async": true
           }
         ]
       }
@@ -152,14 +161,14 @@
         ]
       },
       {
+        "matcher": "permission_prompt",
         "hooks": [
           {
-            "async": true,
+            "type": "command",
             "command": "'/opt/homebrew/opt/moshi-hook/bin/moshi-hook' claude-hook",
-            "type": "command"
+            "async": true
           }
-        ],
-        "matcher": "permission_prompt"
+        ]
       }
     ],
     "Stop": [
@@ -192,9 +201,21 @@
       {
         "hooks": [
           {
-            "async": true,
+            "type": "command",
+            "command": "f=\"$HOME/.tessl/plugins/gamussa/coding-policy/hooks/stop-handoff-hygiene.sh\"; if [ -f \"$f\" ]; then bash \"$f\"; fi"
+          },
+          {
+            "type": "command",
+            "command": "f=\"$HOME/.tessl/plugins/gamussa/coding-policy/hooks/herdr-supervision-stop.sh\"; if [ -f \"$f\" ]; then bash \"$f\"; fi"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
             "command": "'/opt/homebrew/opt/moshi-hook/bin/moshi-hook' claude-hook",
-            "type": "command"
+            "async": true
           }
         ]
       }
@@ -212,9 +233,9 @@
       {
         "hooks": [
           {
-            "async": true,
+            "type": "command",
             "command": "'/opt/homebrew/opt/moshi-hook/bin/moshi-hook' claude-hook",
-            "type": "command"
+            "async": true
           }
         ]
       }
@@ -223,33 +244,33 @@
       {
         "hooks": [
           {
-            "async": false,
+            "type": "command",
             "command": "'/opt/homebrew/opt/moshi-hook/bin/moshi-hook' claude-hook",
-            "type": "command"
+            "async": false
           }
         ]
       }
     ],
     "PostToolUse": [
       {
+        "matcher": "AskUserQuestion",
         "hooks": [
           {
-            "async": true,
+            "type": "command",
             "command": "'/opt/homebrew/opt/moshi-hook/bin/moshi-hook' claude-hook",
-            "type": "command"
+            "async": true
           }
-        ],
-        "matcher": "AskUserQuestion"
+        ]
       },
       {
+        "matcher": "ExitPlanMode",
         "hooks": [
           {
-            "async": true,
+            "type": "command",
             "command": "'/opt/homebrew/opt/moshi-hook/bin/moshi-hook' claude-hook",
-            "type": "command"
+            "async": true
           }
-        ],
-        "matcher": "ExitPlanMode"
+        ]
       }
     ]
   },
@@ -388,6 +409,42 @@
         "GOOGLE_AI_API_KEY": "${GOOGLE_AI_API_KEY}",
         "NANOBANANA_MODEL": "gemini-3.1-flash-image-preview"
       }
+    }
+  },
+  "tessl": {
+    "hooks": {
+      "gamussa/coding-policy": [
+        {
+          "hookEntry": {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "if command -v tessl >/dev/null 2>&1 && [ -d \"$HOME/.tessl/plugins/gamussa/coding-policy\" ]; then cd \"${CLAUDE_PROJECT_DIR}\" && tessl hook run --plugin-path=\"$HOME/.tessl/plugins/gamussa/coding-policy\" --event=\"SessionStart\" --agent=claude-code --schema-version=1; fi"
+              }
+            ]
+          },
+          "nativeEvent": "SessionStart"
+        }
+      ]
+    },
+    "native": {
+      "gamussa/coding-policy": [
+        {
+          "hookEntry": {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "f=\"$HOME/.tessl/plugins/gamussa/coding-policy/hooks/stop-handoff-hygiene.sh\"; if [ -f \"$f\" ]; then bash \"$f\"; fi"
+              },
+              {
+                "type": "command",
+                "command": "f=\"$HOME/.tessl/plugins/gamussa/coding-policy/hooks/herdr-supervision-stop.sh\"; if [ -f \"$f\" ]; then bash \"$f\"; fi"
+              }
+            ]
+          },
+          "nativeEvent": "Stop"
+        }
+      ]
     }
   }
 }

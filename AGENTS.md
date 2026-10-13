@@ -61,7 +61,17 @@ tmux-assistant-resurrect and Paseo have both done it.
   - If it truly cannot be portable, the only global per-machine scope is
     managed settings (`/Library/Application Support/ClaudeCode/`, needs sudo).
 - `moshi-hook install` also rewrites this file (and re-sorts every key); its
-  hooks are tracked, so after an upgrade diff, merge, relink.
+  hooks are tracked, so after an upgrade diff, merge, relink. Keep its hook
+  **last** in every event — the daemon calls anything else "out of date".
+  Since 0.4.28 it also writes `env.CLAUDE_CODE_PLUGIN_DIRS` with an absolute
+  path; the tracked copy says `~/.claude/moshi-plugin` (Claude Code expands
+  `~` there, not `$HOME`). `moshi-hook doctor` then always reports claude as
+  "hooks out of date" — cosmetic: `claude plugin list` shows the plugin
+  loaded, and that string is the only difference from what moshi writes.
+- `tessl install` (global plugins such as `gamussa/coding-policy`) did the same
+  on Oct 6, adding hooks with `/Users/<name>/.tessl/...` paths and breaking the
+  symlink for a week. The tracked versions use `$HOME` and are guarded with
+  `if [ -f … ]` so a machine without tessl gets a no-op, not a hook error.
 - Never "fix" drift by picking a side. Diff both, union the hooks **as a set**,
   then relink.
 
