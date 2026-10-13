@@ -40,7 +40,7 @@ several need a human physically at the machine:
 | `gh auth login` | Browser + device code |
 | TCC grants (Accessibility, Input Monitoring, Full Disk Access) | macOS refuses programmatic grants by design |
 | `sudo tailscale up` | Prints an auth URL to open |
-| Ilya Birman layout download + the logout after it | Third-party download; sources only appear after a logout |
+| Keyboard layout activation after restore | Log out and back in, then verify EN/RU sources and real typing; the customized bundle itself is restored by script |
 | Accepting an SSH host key | The fingerprint must be **compared**, not accepted. See the verification ladder. |
 | Deciding what user data to copy | Judgment, and irreversible |
 
@@ -329,29 +329,43 @@ Some Dock/Finder changes need a logout or `killall Dock Finder` to show.
 
 ### Keyboard layout — Ilya Birman Typography (EN + RU)
 
-Both English and Russian typing use the **Ilya Birman Typography** layouts, not
-the stock ones. They are third-party, so they are **not** vendored here.
-Since 2.0.x the download is loose `.keylayout` + `.icns` files, not a bundle,
-and the per-user directory works — no sudo:
+Both English and Russian typing use locally modified **Ilya Birman
+Typography** layouts. The installed bundle is snapshotted in
+`keyboard-layouts/`; a stock download would lose the modifications. Preserve
+the bundle and layout IDs so the saved input-source selection still matches.
+Stock 2.0.x downloads contain loose `.keylayout` and `.icns` files; those are
+different from this customized bundle and its saved IDs.
 
 ```bash
-# https://ilyabirman.net/projects/typography-layout/ -> download the mac zip
-mkdir -p ~/Library/Keyboard\ Layouts
-ditto -x -k ~/Downloads/ilya-birman-typolayout-*-mac.zip ~/Library/Keyboard\ Layouts/
+./keyboard-layouts.sh restore --dry-run
+./keyboard-layouts.sh restore
+./prefs-restore.sh
 ```
 
-Enabling them needs a **logout**: macOS only indexes new layouts at login, and
-until then the TIS API (`TISRegisterInputSource` + `TISEnableInputSource`)
-returns success yet persists nothing — tried on Daystrom. Either add them after
-the logout in System Settings → Keyboard → Text Input → Edit… → `+`:
+Fresh installs use `~/Library/Keyboard Layouts` without sudo. An existing
+installation is updated at its current user/system location and a differing
+copy is backed up first. If a system-wide installation needs updating, the
+human runs `sudo ./keyboard-layouts.sh restore --system`. Do not install another
+copy under the other Library with the same IDs.
+
+**Log out and back in**: macOS indexes new layouts at login. Until then the TIS
+API (`TISRegisterInputSource` + `TISEnableInputSource`) can return success without
+persisting the sources — observed on Daystrom. After login, verify both layouts
+in System Settings → Keyboard → Text Input → Edit…; use `+` to add either one if
+needed:
 
 - `English - Ilya Birman Typography`
 - `Russian - Ilya Birman Typography`
 
-or write `com.apple.HIToolbox AppleEnabledInputSources` before it (layout IDs
-2548 and 19779, as in each `.keylayout`'s `<keyboard id=…>`).
-`prefs-restore.sh` carries that domain too, but only once a machine with the
-layouts has run `prefs-backup.sh` — none had, so Daystrom came up stock.
+`prefs-restore.sh` installs the matching bundle before importing the allowlisted
+`com.apple.HIToolbox` snapshot. After changing and installing a layout on the
+source machine, run `./keyboard-layouts.sh backup`, then review and commit the
+bundle and input-source diff. `./keyboard-layouts.sh check` compares the
+installed bundle byte-for-byte with the repo. `prefs-backup.sh` also captures
+this pair; see [keyboard-layouts/README.md](keyboard-layouts/README.md).
+The earlier setup had no committed HIToolbox snapshot, which is why Daystrom
+came up with stock input sources; the bundle and selection are now tracked
+together. Do not copy the stock download's layout IDs into this snapshot.
 
 The EN/RU switch is **Caps Lock**, remapped to `f19` ("Select previous input
 source") in `karabiner/karabiner.json` — in the profile *and* in every
@@ -373,8 +387,8 @@ there: `FinalFrontierOldStyle`, `Lazer84`, `KOMIKAX`, `ADAM.CG PRO`,
 Office.
 
 These are **licensed assets, so they are not vendored here** — this repo is
-public, and shipping font binaries is redistribution. Same reasoning as the
-Birman layout. Back them up instead, and restore before the first talk:
+public, and shipping font binaries is redistribution. Back them up instead,
+and restore before the first talk:
 
 ```bash
 # on the old machine
@@ -725,8 +739,8 @@ Then the parts no script can do, in this order:
 2. **TCC grants** — Accessibility for AeroSpace and Hammerspoon, Input
    Monitoring for both Karabiner binaries. Nothing keyboard-related works until
    these are set.
-3. **Ilya Birman keyboard layout** — install the layouts, then log out so the
-   EN/RU sources appear.
+3. **Ilya Birman keyboard layout** — the custom bundle is restored by
+   `prefs-restore.sh`; log out and back in, then verify both EN/RU sources.
 4. **Always-on host only** (step 6) — hostname, `tailscale up`, Remote Login,
    `pmset`, then authorize the login key from the laptop.
 

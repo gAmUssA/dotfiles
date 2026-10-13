@@ -14,17 +14,26 @@ set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 IN="$HERE/prefs"
 
+# Install the matching customized bundle before HIToolbox tries to enable its
+# layout IDs. The helper is a no-op when the installed copy already matches.
+if ! "$HERE/keyboard-layouts.sh" restore; then
+  printf '[FAIL] Birman restore — resolve the error above before importing input sources\n' >&2
+  exit 1
+fi
+
 if ! ls "$IN"/*.plist >/dev/null 2>&1; then
   echo "no snapshots in $IN — run ./prefs-backup.sh on the source machine first"
   exit 1
 fi
 
 echo "=== prefs-restore: importing snapshots from $IN"
+failed=0
 for f in "$IN"/*.plist; do
   d="$(basename "$f" .plist)"
   if defaults import "$d" "$f"; then
     printf '[ok]   %s\n' "$d"
   else
+    failed=1
     printf '[FAIL] %s\n' "$d"
   fi
 done
@@ -43,6 +52,7 @@ if [[ -d "$SRC" ]]; then
     printf '[ok]   popclip extensions (%s bundles -> %s)\n' \
       "$(ls -1 "$SRC" | wc -l | tr -d ' ')" "$DST"
   else
+    failed=1
     printf '[FAIL] popclip extensions\n'
   fi
 fi
@@ -50,3 +60,5 @@ fi
 echo
 echo "Done. Restart the affected apps (Bartender, iStat Menus, PopClip,"
 echo "Marked, TaskPaper, Cyberduck, iTerm2) — they read preferences at launch."
+echo "Log out and back in for restored keyboard layouts and input sources."
+exit "$failed"

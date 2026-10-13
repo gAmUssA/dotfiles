@@ -47,12 +47,6 @@ domains=(
   "com.googlecode.iterm2"                # iTerm2 — profiles, colours, keymaps, hotkey window
   "com.robinebers.openusage"             # OpenUsage — menu-bar pins, layout, enabled providers.
                                          #   Heavily filtered: see domain_strip_keys below.
-  "com.apple.HIToolbox"                  # Enabled input sources — carries the two Ilya
-                                         #   Birman Typography layouts (EN + RU). The
-                                         #   layout files are third-party and not
-                                         #   in this repo; SETUP-NEW-MACHINE.md has the
-                                         #   download. Restoring this domain needs a
-                                         #   logout before the sources appear.
 )
 
 # Per-domain top-level keys to drop, beyond the global strip_keys. Echoes one
@@ -130,6 +124,7 @@ for d in "${domains[@]}"; do
   fi
   f="$OUT/$d.plist"
   if ! defaults export "$d" "$f" 2>/dev/null; then
+    warned=1
     printf '[FAIL] %s (defaults export error)\n' "$d"; continue
   fi
   plutil -convert xml1 "$f"   # guarantee git-diffable XML
@@ -190,8 +185,19 @@ if [[ -d "$POPCLIP_EXT" ]]; then
   fi
 fi
 
+# The customized keyboard bundle and its input-source selection travel as a
+# pair. The helper allowlists portable HIToolbox fields instead of exporting
+# history/timestamps or future machine-specific keys with the other domains.
+if "$HERE/keyboard-layouts.sh" backup; then
+  printf '[ok]   customized Birman keyboard layouts and input sources\n'
+else
+  warned=1
+  printf '[FAIL] Birman backup — run ./keyboard-layouts.sh backup and resolve its error\n' >&2
+fi
+
 echo
 echo "Changed snapshots (review before committing):"
-git -C "$HERE" status --short prefs/ popclip/ || true
-[[ $warned -eq 1 ]] && echo "NOTE: one or more domains were rejected by the secret guard — see above."
+git -C "$HERE" status --short prefs/ popclip/ keyboard-layouts/ || true
+[[ $warned -eq 1 ]] && echo "NOTE: one or more backups failed or were rejected by the secret guard — see above."
+if [[ "$warned" -eq 1 ]]; then exit 1; fi
 exit 0

@@ -240,6 +240,9 @@ brew "kcat"
 brew "kind"
 # Command-line interface for managing Knative Serving and Eventing resources
 brew "kn"
+# Project dependency and build-artifact cleanup (clean_projects.sh; Kondo >= 0.9)
+# Renew through the same brew update / brew upgrade cycle as the CLI kit.
+brew "kondo"
 # Statically typed programming language for the JVM
 brew "kotlin"
 # Static analysis tool for Kubernetes YAML files and Helm charts

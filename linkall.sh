@@ -28,6 +28,14 @@ ln -s ~/projects/dotfiles/.dircolors ~/.dircolors
 ln -s ~/projects/dotfiles/.tmux.conf ~/.tmux.conf
 ln -s ~/projects/dotfiles/.p10k.zsh ~/.p10k.zsh
 
+# Project cleanup helper. Keep the old command path without overwriting a
+# regular file or a different link: those need reconciliation first.
+if [ ! -e ~/projects/clean_projects.sh ] && [ ! -L ~/projects/clean_projects.sh ]; then
+  ln -s ~/projects/dotfiles/clean_projects.sh ~/projects/clean_projects.sh
+elif [ ! -L ~/projects/clean_projects.sh ] || [ "$(readlink ~/projects/clean_projects.sh)" != "$HOME/projects/dotfiles/clean_projects.sh" ]; then
+  echo "skip: reconcile ~/projects/clean_projects.sh with dotfiles/clean_projects.sh before relinking" >&2
+fi
+
 # Ghostty terminal config
 # On macOS, Ghostty loads ~/Library/Application Support/com.mitchellh.ghostty/config
 # AFTER the XDG path, so the macOS-native one wins on conflicts. Put the symlink there
