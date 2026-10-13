@@ -1,13 +1,21 @@
 #!/bin/bash
-# Claude Code custom status line.
-# Activated via ~/.claude/settings.json → statusLine.
-# Receives session JSON on stdin; prints a single-line status string.
+# Status line shared by every agent CLI: Claude Code, grok, agy and copilot
+# call it directly (they all pipe Claude-shaped JSON on stdin); pi and opencode
+# go through adapters that build that JSON (pi/extensions/statusline.ts,
+# opencode/statusline/tui.tsx). Other CLIs omit fields Claude sends, so every
+# segment is dropped when its field is absent rather than shown as a zero.
 
 input=$(cat)
+# Debug a CLI's payload: launch it with STATUSLINE_CAPTURE_DIR=<dir> and each
+# run's stdin lands in <dir>/<parent process name>.json.
+if [ -n "${STATUSLINE_CAPTURE_DIR:-}" ]; then
+  printf '%s\n' "$input" > "$STATUSLINE_CAPTURE_DIR/$(ps -o comm= -p "$PPID" | sed 's|.*/||').json"
+fi
 eval "$(echo "$input" | jq -r '
-  @sh "MODEL=\(.model.display_name // "?")",
-  @sh "DIR=\(.workspace.current_dir // "?")",
-  @sh "DURATION_MS=\(.cost.total_duration_ms // 0)",
+  @sh "MODEL=\((.model | if type == "object" then (.display_name // .id) else . end) // "?")",
+  @sh "DIR=\(.workspace.current_dir // .cwd // "?")",
+  @sh "DURATION_MS=\(.cost.total_duration_ms // -1 | floor)",
+  @sh "HAS_LINES=\(if .cost.total_lines_added != null then 1 else 0 end)",
   @sh "ADDED=\(.cost.total_lines_added // 0)",
   @sh "REMOVED=\(.cost.total_lines_removed // 0)",
   @sh "PCT=\(.context_window.used_percentage // 0 | floor)",
@@ -17,25 +25,11 @@ eval "$(echo "$input" | jq -r '
 ')"
 
 DIR_SHORT="${DIR##*/}"
-DURATION_S=$((DURATION_MS / 1000))
-MINUTES=$((DURATION_S / 60))
-SEC=$((DURATION_S % 60))
-
-if [ "$CTX_SIZE" -ge 1000000 ]; then
-  CTX_LABEL="$((CTX_SIZE / 1000000))M"
-else
-  CTX_LABEL="$((CTX_SIZE / 1000))k"
-fi
-
-if [ "$MINUTES" -gt 0 ]; then
-  TIME="${MINUTES}m${SEC}s"
-else
-  TIME="${SEC}s"
-fi
 
 R='\033[0m'; D='\033[2m'; B='\033[1m'
 GRN='\033[32m'; YEL='\033[33m'; RED='\033[31m'
 MAG='\033[35m'; CYN='\033[36m'; BLU='\033[34m'
+SEP=" ${D}│${R} "
 
 if [ "$PCT" -lt 50 ]; then PC="$GRN"
 elif [ "$PCT" -lt 75 ]; then PC="$YEL"
@@ -54,7 +48,27 @@ BADGES=""
 [ -n "$AGENT" ] && BADGES="${BADGES} ${CYN}[${AGENT}]${R}"
 [ -n "$WORKTREE" ] && BADGES="${BADGES} ${BLU}[wt:${WORKTREE}]${R}"
 
-echo -e "${B}${MODEL}${R} ${D}│${R} ${DIR_SHORT}${GIT}${BADGES} ${D}│${R} ${PC}${PCT}%${R}${D}/${R}${CTX_LABEL} ${D}│${R} ${GRN}+${ADDED}${R}${D}/${R}${RED}-${REMOVED}${R} ${D}│${R} ${D}${TIME}${R}"
+LINE="${B}${MODEL}${R}${SEP}${DIR_SHORT}${GIT}${BADGES}"
+
+if [ "$CTX_SIZE" -ge 1000000 ]; then
+  LINE="${LINE}${SEP}${PC}${PCT}%${R}${D}/${R}$((CTX_SIZE / 1000000))M"
+elif [ "$CTX_SIZE" -gt 0 ]; then
+  LINE="${LINE}${SEP}${PC}${PCT}%${R}${D}/${R}$((CTX_SIZE / 1000))k"
+fi
+
+[ "$HAS_LINES" = 1 ] && LINE="${LINE}${SEP}${GRN}+${ADDED}${R}${D}/${R}${RED}-${REMOVED}${R}"
+
+# shellcheck disable=SC2153 # DURATION_MS comes from the jq eval above
+if [ "$DURATION_MS" -ge 0 ]; then
+  DURATION_S=$((DURATION_MS / 1000))
+  if [ "$DURATION_S" -ge 60 ]; then
+    LINE="${LINE}${SEP}${D}$((DURATION_S / 60))m$((DURATION_S % 60))s${R}"
+  else
+    LINE="${LINE}${SEP}${D}${DURATION_S}s${R}"
+  fi
+fi
+
+echo -e "$LINE"
 
 # Prompt-cache line: how long until the main conversation's cache expires,
 # and once cold, how many tokens the next message re-processes. Every message

@@ -182,6 +182,18 @@ problem.
   installed by id (`linkall.sh`). Edit it there, not here; a second copy in
   dotfiles is what the split was meant to end.
 
+## Agent status lines
+
+One script, `claude/statusline.sh`, renders the status line for Claude Code,
+grok, agy, copilot, pi and opencode. The first four pipe Claude-shaped JSON to
+a command; pi (`pi/extensions/statusline.ts`, a footer) and opencode
+(`opencode/statusline/tui.tsx`, a v2 TUI slot) build that JSON themselves.
+`agents/statusline-install.sh` (run by linkall) wires each CLI. Other CLIs omit
+fields Claude sends, so a segment is dropped when its field is absent — keep
+it that way when adding one. Debug a CLI's payload with
+`STATUSLINE_CAPTURE_DIR=<dir> <cli>`. grok paints its row only after the first
+turn; opencode v1 TUI plugins do not load on v2 (`tui.jsonc` is ignored).
+
 ## `.zshenv` vs `.zshrc`
 
 `.zshenv` is read by **non-interactive** shells — `ssh host <cmd>`, and

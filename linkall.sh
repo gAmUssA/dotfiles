@@ -112,6 +112,11 @@ if [ -x "$moshi_bin" ] && [ -n "$agent_ids" ]; then
     && echo "moshi-hook -> hooks for $targets" || echo "skip: moshi-hook install"
 fi
 
+# Status lines: grok, agy, copilot, pi and opencode all render the shared
+# claude/statusline.sh (linked below as ~/.claude/statusline.sh). Their configs
+# are per-machine, so the installer sets one key in each rather than linking.
+~/projects/dotfiles/agents/statusline-install.sh || echo "warn: agent status lines — see the errors above"
+
 # sesh — tmux session manager config
 mkdir -p ~/.config/sesh
 rm -f ~/.config/sesh/sesh.toml
