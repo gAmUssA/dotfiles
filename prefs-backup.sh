@@ -49,7 +49,7 @@ domains=(
                                          #   Heavily filtered: see domain_strip_keys below.
   "com.apple.HIToolbox"                  # Enabled input sources — carries the two Ilya
                                          #   Birman Typography layouts (EN + RU). The
-                                         #   layout BUNDLE itself is third-party and not
+                                         #   layout files are third-party and not
                                          #   in this repo; SETUP-NEW-MACHINE.md has the
                                          #   download. Restoring this domain needs a
                                          #   logout before the sources appear.
