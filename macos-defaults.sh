@@ -160,6 +160,20 @@ defaults write com.apple.ActivityMonitor ShowCategory -int 100                # 
 # So this machine: top-left = Quick Note (⌥), bottom-left = Screen Saver,
 # bottom-right = Quick Note (⌥). Top-right is unset.
 #
+# ---- com.apple.symbolichotkeys -----------------------------------------
+# Hotkey 60 = "Select previous input source" (the EN/RU switch) on F19.
+# Karabiner maps Caps Lock -> f19 on every keyboard (karabiner/karabiner.json),
+# so this is the other half of "Caps Lock switches language". The macOS default
+# is Ctrl+Space — which is also the tmux and herdr prefix, so leaving it stock
+# lets macOS steal the prefix. Parameters: (ascii 65535 = none, keycode 80 =
+# F19, modifier 8388608 = the function-key flag F-keys carry). Missed on
+# Daystrom's first setup because nothing here set it; a dry run reports the
+# whole dict as a CHANGE because the wrapper compares by key, not entry.
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 60 \
+    '{enabled = 1; value = { parameters = (65535, 80, 8388608); type = standard; }; }'
+# Hotkeys are cached by the window server; this makes them apply without logout.
+(( DRY )) || /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u >/dev/null 2>&1
+
 # ---- other opaque values used above ------------------------------------
 # FXPreferredViewStyle: icnv icon · Nlsv list · clmv column · Flwv gallery
 # NewWindowTarget:      PfHm home · PfDe desktop · PfDo documents · PfLo other
