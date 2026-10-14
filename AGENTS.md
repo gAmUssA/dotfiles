@@ -190,7 +190,9 @@ a command; pi (`pi/extensions/statusline.ts`, a footer) and opencode
 (`opencode/statusline/tui.tsx`, a v2 TUI slot) build that JSON themselves.
 `agents/statusline-install.sh` (run by linkall) wires each CLI. Other CLIs omit
 fields Claude sends, so a segment is dropped when its field is absent — keep
-it that way when adding one. Debug a CLI's payload with
+it that way when adding one. Plan limits come from Claude's `rate_limits` or
+agy's `quota`; cost shows only without them, since a subscription reports an
+API-price estimate, not money spent. Tests pin the clock with `STATUSLINE_NOW`. Debug a CLI's payload with
 `STATUSLINE_CAPTURE_DIR=<dir> <cli>`. grok paints its row only after the first
 turn; opencode v1 TUI plugins do not load on v2 (`tui.jsonc` is ignored).
 

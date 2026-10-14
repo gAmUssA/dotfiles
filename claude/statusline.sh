@@ -21,8 +21,13 @@ eval "$(echo "$input" | jq -r '
   @sh "PCT=\(.context_window.used_percentage // 0 | floor)",
   @sh "CTX_SIZE=\(.context_window.context_window_size // 0)",
   @sh "AGENT=\(.agent.name // "")",
-  @sh "WORKTREE=\(.worktree.name // "")"
+  @sh "WORKTREE=\(.worktree.name // "")",
+  @sh "COMPACT_AT=\(.context_window.auto_compact_threshold_percent // 80 | floor)",
+  @sh "PREMIUM=\(.cost.total_premium_requests // 0 | if . > 0 then tostring else "" end)",
+  @sh "COST=\(.cost.total_cost_usd // 0 | if . > 0 and (. * 100 | round) > 0 then (. * 100 | round | tostring) else "" end)"
 ')"
+# Tests pin the clock; everything time-relative below reads NOW.
+NOW="${STATUSLINE_NOW:-$(date +%s)}"
 
 DIR_SHORT="${DIR##*/}"
 
@@ -31,9 +36,10 @@ GRN='\033[32m'; YEL='\033[33m'; RED='\033[31m'
 MAG='\033[35m'; CYN='\033[36m'; BLU='\033[34m'
 SEP=" ${D}│${R} "
 
-if [ "$PCT" -lt 50 ]; then PC="$GRN"
-elif [ "$PCT" -lt 75 ]; then PC="$YEL"
-else PC="$RED"
+# Red once auto-compaction is near: grok sends its threshold, others get 80%.
+if [ "$PCT" -ge $((COMPACT_AT - 5)) ]; then PC="$RED"
+elif [ "$PCT" -ge 50 ]; then PC="$YEL"
+else PC="$GRN"
 fi
 
 BRANCH=$(git -C "$DIR" symbolic-ref --short HEAD 2>/dev/null)
@@ -67,6 +73,39 @@ if [ "$DURATION_MS" -ge 0 ]; then
     LINE="${LINE}${SEP}${D}${DURATION_S}s${R}"
   fi
 fi
+
+# Plan limits: Claude's 5h/7d rate_limits, else agy's tightest quota bucket.
+# 🔥 marks a window on pace to run out before it resets (judged once a tenth
+# of it has elapsed, so the first minutes of a window do not cry wolf).
+USAGE=$(echo "$input" | jq -r --argjson now "$NOW" '
+  def dur: floor | if . >= 86400 then "\(. / 86400 | floor)d\(. % 86400 / 3600 | floor)h"
+    elif . >= 3600 then "\(. / 3600 | floor)h\(. % 3600 / 60 | floor)m" else "\(. / 60 | ceil)m" end;
+  def seg($label; $used; $left; $span):
+    (if $used >= 80 then "\u001b[31m" elif $used >= 50 then "\u001b[33m" else "\u001b[32m" end)
+    + "\($label) \($used | floor)%\u001b[0m"
+    + (if $left != null and $left > 0 then "\u001b[2m ↻\($left | dur)\u001b[0m" else "" end)
+    + (if $span != null and $left != null and ($span - $left) >= $span / 10 and $used > 0
+          and $used / (($span - $left) / $span) > 100 then " 🔥" else "" end);
+  if (.rate_limits | type) == "object" then
+    [ (["5h", .rate_limits.five_hour, 18000], ["7d", .rate_limits.seven_day, 604800])
+      | select(.[1].used_percentage != null)
+      | seg(.[0]; .[1].used_percentage; (if .[1].resets_at then .[1].resets_at - $now else null end); .[2]) ]
+  elif (.quota | type) == "object" then
+    [ .quota | to_entries | map(select(.value.remaining_fraction != null))
+      | min_by(.value.remaining_fraction) // empty
+      | (if (.key | test("week")) then ["7d", 604800] elif (.key | test("da(y|ily)")) then ["1d", 86400]
+         else [.key, null] end) as [$label, $span]
+      | seg($label; (1 - .value.remaining_fraction) * 100; .value.reset_in_seconds; $span) ]
+  else [] end
+  | join("\u001b[2m · \u001b[0m")
+' 2>/dev/null)
+[ -n "$USAGE" ] && LINE="${LINE}${SEP}${USAGE}"
+# Cost only where it is real money: a plan with limits reports an API-price
+# estimate (hundreds of "dollars" on a subscription), so skip it there.
+if [ -n "$COST" ] && [ -z "$USAGE" ]; then
+  LINE="${LINE}${SEP}${D}\$$((COST / 100)).$(printf '%02d' $((COST % 100)))${R}"
+fi
+[ -n "$PREMIUM" ] && LINE="${LINE}${SEP}${D}${PREMIUM} premium${R}"
 
 echo -e "$LINE"
 

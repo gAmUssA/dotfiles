@@ -34,6 +34,41 @@ main() (
   [[ "$out" == "? │ ?" ]] || fail "empty payload: $out"
   printf 'PASS: absent fields drop their segment instead of rendering zeros\n'
 
+  # Plan limits, against a pinned clock. 5h: 4h gone, 60% used, on pace.
+  # 7d: half gone, 90% used, on pace to run out (🔥). Subscription cost hidden.
+  local now=1000000 base='"model":{"display_name":"M"},"workspace":{"current_dir":"/tmp/demo"}'
+  render() { STATUSLINE_NOW=$now "$script"; }
+  out=$(printf '{%s,"cost":{"total_cost_usd":150},"rate_limits":{
+    "five_hour":{"used_percentage":60,"resets_at":%d},"seven_day":{"used_percentage":90,"resets_at":%d}}}' \
+    "$base" $((now + 3600)) $((now + 302400)) | render | plain)
+  [[ "$out" == "M │ demo │ 5h 60% ↻1h0m · 7d 90% ↻3d12h 🔥" ]] || fail "rate limits: $out"
+  # Over pace, but only 1000s into a 5h window: too early to warn.
+  out=$(printf '{%s,"rate_limits":{"five_hour":{"used_percentage":20,"resets_at":%d}}}' \
+    "$base" $((now + 17000)) | render | plain)
+  [[ "$out" == "M │ demo │ 5h 20% ↻4h43m" ]] || fail "early window warned: $out"
+  # agy: the tightest quota bucket wins.
+  out=$(printf '{%s,"quota":{"a-weekly":{"remaining_fraction":0.9,"reset_in_seconds":9},
+    "b-weekly":{"remaining_fraction":0.4,"reset_in_seconds":172800}}}' "$base" | render | plain)
+  [[ "$out" == "M │ demo │ 7d 60% ↻2d0h" ]] || fail "agy quota: $out"
+  printf 'PASS: plan limits show usage, reset countdown and a burn-rate warning\n'
+
+  # Pay-per-use cost and copilot premium requests; zero cost stays hidden.
+  out=$(printf '{%s,"cost":{"total_cost_usd":0.018955}}' "$base" | render | plain)
+  [[ "$out" == "M │ demo │ \$0.02" ]] || fail "cost: $out"
+  out=$(printf '{%s,"cost":{"total_cost_usd":0,"total_premium_requests":1.5}}' "$base" | render | plain)
+  [[ "$out" == "M │ demo │ 1.5 premium" ]] || fail "premium: $out"
+  printf 'PASS: real-money cost and premium requests render; zeros do not\n'
+
+  # Context turns red 5 points before auto-compaction: 80% by default,
+  # or the threshold grok sends.
+  local red=$'\e[31m76%' yellow=$'\e[33m76%'
+  out=$(printf '{%s,"context_window":{"used_percentage":76,"context_window_size":200000}}' "$base" | render)
+  [[ "$out" == *"$red"* ]] || fail "76% under the default threshold is not red: $out"
+  out=$(printf '{%s,"context_window":{"used_percentage":76,"context_window_size":200000,
+    "auto_compact_threshold_percent":95}}' "$base" | render)
+  [[ "$out" == *"$yellow"* ]] || fail "76% under a 95% threshold is not yellow: $out"
+  printf 'PASS: context colour tracks the auto-compact threshold\n'
+
   # --- installer --------------------------------------------------------------
   local home="$sandbox/home" bin="$sandbox/bin" fake="$sandbox/dotfiles"
   mkdir -p "$home/.grok" "$home/.copilot" "$bin" "$fake/pi/extensions" "$fake/opencode/statusline"
