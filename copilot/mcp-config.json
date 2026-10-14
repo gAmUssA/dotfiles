@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "railway": {
+      "args": [
+        "mcp"
+      ],
+      "command": "railway",
+      "tools": [
+        "*"
+      ],
+      "type": "local"
+    }
+  }
+}
