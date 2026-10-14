@@ -66,12 +66,15 @@ fi
 
 # shellcheck disable=SC2153 # DURATION_MS comes from the jq eval above
 if [ "$DURATION_MS" -ge 0 ]; then
-  DURATION_S=$((DURATION_MS / 1000))
-  if [ "$DURATION_S" -ge 60 ]; then
-    LINE="${LINE}${SEP}${D}$((DURATION_S / 60))m$((DURATION_S % 60))s${R}"
-  else
-    LINE="${LINE}${SEP}${D}${DURATION_S}s${R}"
+  # Two units at most: a resumed session runs for days, and 20753m59s
+  # crowded the cache line off narrow panes.
+  S=$((DURATION_MS / 1000))
+  if [ "$S" -ge 86400 ]; then T="$((S / 86400))d$((S % 86400 / 3600))h"
+  elif [ "$S" -ge 3600 ]; then T="$((S / 3600))h$((S % 3600 / 60))m"
+  elif [ "$S" -ge 60 ]; then T="$((S / 60))m$((S % 60))s"
+  else T="${S}s"
   fi
+  LINE="${LINE}${SEP}${D}${T}${R}"
 fi
 
 # Plan limits: Claude's 5h/7d rate_limits, else agy's tightest quota bucket.

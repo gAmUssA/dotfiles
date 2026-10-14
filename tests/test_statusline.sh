@@ -57,6 +57,11 @@ main() (
   [[ "$out" == "M │ demo │ \$0.02" ]] || fail "cost: $out"
   out=$(printf '{%s,"cost":{"total_cost_usd":0,"total_premium_requests":1.5}}' "$base" | render | plain)
   [[ "$out" == "M │ demo │ 1.5 premium" ]] || fail "premium: $out"
+  # Session time keeps two units: hours past an hour, days past a day.
+  for pair in 3599000:59m59s 7380000:2h3m 1245239246:14d9h; do
+    out=$(printf '{%s,"cost":{"total_duration_ms":%s}}' "$base" "${pair%%:*}" | render | plain)
+    [[ "$out" == "M │ demo │ ${pair#*:}" ]] || fail "duration ${pair%%:*}ms: $out"
+  done
   printf 'PASS: real-money cost and premium requests render; zeros do not\n'
 
   # Context turns red 5 points before auto-compaction: 80% by default,
