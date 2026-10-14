@@ -187,7 +187,10 @@ export FZF_DEFAULT_OPTS="
   --color info:108,prompt:109,spinner:108,pointer:168,marker:168
 "
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# Ctrl-R history, Ctrl-T files, Alt-C cd. `fzf --zsh` (fzf >= 0.48) prints the
+# bindings itself; ~/.fzf.zsh only exists after fzf's separate install script,
+# which a rebuilt machine never runs — so Ctrl-R silently stayed zsh's own.
+command -v fzf >/dev/null && source <(fzf --zsh)
 
 # ===== LAZY LOADED HEAVY SERVICES =====
 # Lazy load GCP SDK. NOTE: per-shell laziness via unfunction — the old version
