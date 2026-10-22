@@ -1,23 +1,24 @@
 #!/usr/bin/env bash
-# SketchyBar: replaces the macOS menu bar (set to auto-hide) and Bartender.
+# SketchyBar: replaces the macOS menu bar and Bartender.
 # Linked to ~/.config/sketchybar by linkall.sh; `sketchybar --reload` applies.
 #
-# The native menu bar is still there: push the pointer to the top edge and it
-# slides over this bar, every app's extras included. That is the "hidden
-# section" Bartender used to provide; only what is worth a glance lives here.
+# It is drawn ON TOP of the native menu bar, which stays visible underneath
+# (not auto-hidden). Auto-hide was tried first: a real pointer entering the
+# strip slid the native bar in over this one and swallowed every click.
+# App menus and the other apps' extras are one AERO `n` away, which hides
+# this bar; Raycast's Search Menu Items reaches menus without the mouse.
+# Mirroring other apps' icons (alias items) was tried and dropped: on macOS 27
+# they came back hundreds of points wide, one spanning the whole bar.
 
 PLUGINS="$CONFIG_DIR/plugins"
 source "$CONFIG_DIR/colors.sh"
 FONT="JetBrainsMono Nerd Font"
 APP_FONT="sketchybar-app-font:Regular:15.0"
 
-# 32 pt is the strip a notched MacBook reserves even with the menu bar hidden
-# (screen:frame() starts at y=32), so no window can cover the bar there; on an
-# external display AeroSpace's gaps.outer.top keeps tiled windows clear.
-# topmost=window: above app windows, but below the native menu bar when that
-# slides in.
-sketchybar --bar position=top height=32 color=$BAR_COLOR blur_radius=30 \
-  padding_left=8 padding_right=8 topmost=window sticky=on display=all
+# 34 pt covers the native menu bar on the notched built-in display exactly.
+# topmost=on: above the menu bar, so clicks land here, not on it.
+sketchybar --bar position=top height=34 color=$BAR_COLOR blur_radius=30 \
+  padding_left=8 padding_right=8 topmost=on sticky=on display=all
 
 sketchybar --default \
   icon.font="$FONT:Bold:14.0" label.font="$FONT:Medium:13.0" \

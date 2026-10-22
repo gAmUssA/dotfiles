@@ -52,9 +52,10 @@ gaps.inner.horizontal = 0
 gaps.inner.vertical   = 0
 gaps.outer.left       = 0
 gaps.outer.bottom     = 0
-# SketchyBar sits where the auto-hidden menu bar was. The notched built-in
-# display already reserves that strip; other displays need the gap.
-gaps.outer.top        = [{ monitor."built-in" = 0 }, 32]
+# SketchyBar (34 pt) covers the native menu bar, which already keeps windows
+# clear on the built-in display. An external display's menu bar is ~24 pt,
+# so tiled windows there need the remaining 10.
+gaps.outer.top        = [{ monitor."built-in" = 0 }, 10]
 gaps.outer.right      = 0
 
 # FLOAT BY DEFAULT. Auto-tiling — every window resizing itself when you open an
@@ -131,6 +132,7 @@ on-window-detected = [
     equal = ['resize smart +50', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Bigger" "="']
     b = ['balance-sizes', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Even sizes" "b"']
     w = ['exec-and-forget open -g hammerspoon://aerospace-windows', 'mode main']
+    n = ['exec-and-forget /opt/homebrew/bin/sketchybar --bar hidden=toggle', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Native menu bar ↔ SketchyBar" "n"', 'mode main']
     slash = ['exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-help.sh', 'mode main']
 
 # JOIN — a one-shot sub-mode reached with `j` from aero mode.
