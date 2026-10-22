@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Redraw every workspace item at once: focused one highlighted, empty ones
-# hidden, each labelled with the icons of the apps on it.
+# hidden, each labelled with the icons of the apps on it (at most six).
 PATH=/opt/homebrew/bin:$PATH
 source "$CONFIG_DIR/icon_map.sh"
 
@@ -16,6 +16,12 @@ for sid in 1 2 3 4 5 6 7 8 9; do
     case " $icons " in *" $icon_result "*) ;; *) icons="$icons $icon_result" ;; esac
   done <<< "$windows"
   icons="${icons# }"
+  # Cap at six icons so a busy workspace cannot push its neighbours off the
+  # pill; the rest become "+N".
+  set -- $icons
+  if [ $# -gt 6 ]; then
+    extra=$(($# - 6)); icons="$1 $2 $3 $4 $5 $6 +$extra"
+  fi
 
   draw=off; bg=off
   [ -n "$icons" ] && draw=on

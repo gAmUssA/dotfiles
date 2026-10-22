@@ -50,7 +50,6 @@ them. Caps Lock is not involved — it still switches EN/RU, instantly.
 | `x` | spread out | Sends each window here to its own **empty** workspace, keeping the first in place. Occupied workspaces are never touched. |
 | `g` | **g**ather | Pulls every window from all other workspaces onto this one. The inverse of `x`. |
 | `m` | **m**ove workspace to other display | The whole workspace — every window on it — jumps to the other monitor. |
-| `n` | **n**ative menu bar | SketchyBar hides and the regular macOS menu bar shows: app menus (File, Edit…) and every app's icons. Press again to bring SketchyBar back. |
 | `c` | focus other display | Moves focus to the other monitor without moving anything. |
 | `r` | reset layout | A mangled workspace flattens back to a plain, even split. |
 | `/` | this cheat sheet | Opens in Marked. It live-reloads, so edits show up immediately. |

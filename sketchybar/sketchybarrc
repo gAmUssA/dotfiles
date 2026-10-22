@@ -1,74 +1,44 @@
 #!/usr/bin/env bash
-# SketchyBar: replaces the macOS menu bar and Bartender.
+# SketchyBar: AeroSpace workspaces only, as a small pill at the bottom edge.
 # Linked to ~/.config/sketchybar by linkall.sh; `sketchybar --reload` applies.
 #
-# It is drawn ON TOP of the native menu bar, which stays visible underneath
-# (not auto-hidden). Auto-hide was tried first: a real pointer entering the
-# strip slid the native bar in over this one and swallowed every click.
-# App menus and the other apps' extras are one AERO `n` away, which hides
-# this bar; Raycast's Search Menu Items reaches menus without the mouse.
-# Mirroring other apps' icons (alias items) was tried and dropped: on macOS 27
-# they came back hundreds of points wide, one spanning the whole bar.
+# The macOS menu bar stays as it is, with Bartender managing its icons. Taking
+# over the menu bar was tried and dropped: with auto-hide, the native bar slid
+# in over SketchyBar and took the clicks; drawn over it, app menus needed a
+# toggle; and on macOS 27 mirrored icons (alias items) came back hundreds of
+# points wide, because the menu bar is now one window instead of one per icon.
+# The bottom edge is free here: the Dock sits on the right and auto-hides.
 
 PLUGINS="$CONFIG_DIR/plugins"
 source "$CONFIG_DIR/colors.sh"
 FONT="JetBrainsMono Nerd Font"
 APP_FONT="sketchybar-app-font:Regular:15.0"
 
-# 34 pt covers the native menu bar on the notched built-in display exactly.
-# topmost=on: above the menu bar, so clicks land here, not on it.
-sketchybar --bar position=top height=34 color=$BAR_COLOR blur_radius=30 \
-  padding_left=8 padding_right=8 topmost=on sticky=on display=all
+# margin narrows the bar window itself to a centered pill (1728 - 2*480 = 768
+# pt on the built-in display), so it covers only that strip, not the full edge.
+# topmost=window keeps it above windows that reach the bottom edge.
+sketchybar --bar position=bottom height=30 margin=480 y_offset=6 corner_radius=10 \
+  color=$BAR_COLOR blur_radius=30 padding_left=6 padding_right=6 topmost=window sticky=on display=all
 
 sketchybar --default \
-  icon.font="$FONT:Bold:14.0" label.font="$FONT:Medium:13.0" \
-  icon.color=$WHITE label.color=$WHITE \
-  padding_left=3 padding_right=3 \
-  icon.padding_left=6 icon.padding_right=3 label.padding_left=3 label.padding_right=6 \
-  background.height=26 background.corner_radius=8
+  icon.font="$FONT:Bold:14.0" label.font="$APP_FONT" \
+  icon.color=$ACCENT label.color=$WHITE \
+  padding_left=2 padding_right=2 \
+  icon.padding_left=8 icon.padding_right=4 label.padding_left=2 label.padding_right=8 \
+  background.height=24 background.corner_radius=7
 
-# ── Left: AeroSpace workspaces, then the front app ──────────────────────────
-# One controller redraws all nine in a single call; the items themselves have
-# no script. aerospace.toml triggers aerospace_workspace_change on workspace
-# AND focus changes (a window sent elsewhere changes focus, not workspace).
+# Workspace items have no script: one controller redraws all nine in a single
+# call. aerospace.toml triggers aerospace_workspace_change on workspace AND
+# focus changes (a window sent elsewhere changes focus, not workspace).
 sketchybar --add event aerospace_workspace_change
 for sid in 1 2 3 4 5 6 7 8 9; do
-  sketchybar --add item "space.$sid" left \
-    --set "space.$sid" icon="$sid" icon.color=$ACCENT \
-      label.font="$APP_FONT" label.y_offset=-1 \
+  sketchybar --add item "space.$sid" center \
+    --set "space.$sid" icon="$sid" label.y_offset=-1 \
       background.color=$ITEM_BG background.drawing=off drawing=off \
       click_script="/opt/homebrew/bin/aerospace workspace $sid"
 done
-sketchybar --add item spaces left \
+sketchybar --add item spaces center \
   --set spaces drawing=off updates=on script="$PLUGINS/spaces.sh" \
   --subscribe spaces aerospace_workspace_change front_app_switched system_woke
-
-sketchybar --add item front_app left \
-  --set front_app icon.font="$APP_FONT" label.font="$FONT:Bold:13.0" \
-    script="$PLUGINS/front_app.sh" \
-  --subscribe front_app front_app_switched
-
-# ── Right (first added = rightmost) ─────────────────────────────────────────
-sketchybar --add item clock right \
-  --set clock icon.drawing=off update_freq=30 script="$PLUGINS/clock.sh" \
-    click_script="open -a Calendar"
-
-sketchybar --add item battery right \
-  --set battery update_freq=120 script="$PLUGINS/battery.sh" \
-  --subscribe battery system_woke power_source_change
-
-sketchybar --add item volume right \
-  --set volume script="$PLUGINS/volume.sh" \
-  --subscribe volume volume_change
-
-sketchybar --add item wifi right \
-  --set wifi update_freq=60 script="$PLUGINS/wifi.sh" \
-    click_script="open 'x-apple.systempreferences:com.apple.wifi-settings-extension'" \
-  --subscribe wifi wifi_change system_woke
-
-# herdr agents waiting on you / finished unseen, from LCARS Ops. Hidden when
-# there is nothing to act on or Ops is not running.
-sketchybar --add item herdr right \
-  --set herdr update_freq=5 drawing=off script="$PLUGINS/herdr.sh"
 
 sketchybar --update
