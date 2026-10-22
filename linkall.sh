@@ -223,6 +223,12 @@ ln -s ~/projects/dotfiles/karabiner ~/.config/karabiner
 launchctl kickstart -k "gui/$(id -u)/org.pqrs.service.agent.Karabiner-Console-User-Server" 2>/dev/null
 
 # Hammerspoon — entry point + caffeine + ollama menubar modules.
+# SketchyBar reads ~/.config/sketchybar/sketchybarrc and its plugins/ beside it.
+# A directory link: SketchyBar writes nothing of its own there.
+mkdir -p ~/.config
+rm -rf ~/.config/sketchybar
+ln -s ~/projects/dotfiles/sketchybar ~/.config/sketchybar
+
 # File-level symlinks so anything else in ~/.hammerspoon (Spoons/, scratch
 # files, Hammerspoon's own state) is left alone.
 mkdir -p ~/.hammerspoon

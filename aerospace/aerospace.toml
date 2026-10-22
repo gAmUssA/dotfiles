@@ -33,7 +33,11 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 # Workspace changes announce themselves once here rather than annotating all
 # nine bindings — this also covers Hyper+Tab and moves that change workspace.
-exec-on-workspace-change = ['/bin/bash', '-c', '/Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace $AEROSPACE_FOCUSED_WORKSPACE" ""']
+# SketchyBar's workspace items redraw on the same event (sketchybar/plugins/spaces.sh).
+exec-on-workspace-change = ['/bin/bash', '-c', '/Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace $AEROSPACE_FOCUSED_WORKSPACE" ""; /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE']
+# Sending a window to another workspace changes focus but not the workspace, so
+# the bar's per-workspace app icons need this too.
+on-focus-changed = ['exec-and-forget /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_change']
 automatically-unhide-macos-hidden-apps = false
 
 # Nine workspaces, bound to Hyper+1..9. The default config declares 31; nothing
@@ -48,7 +52,9 @@ gaps.inner.horizontal = 0
 gaps.inner.vertical   = 0
 gaps.outer.left       = 0
 gaps.outer.bottom     = 0
-gaps.outer.top        = 0
+# SketchyBar sits where the auto-hidden menu bar was. The notched built-in
+# display already reserves that strip; other displays need the gap.
+gaps.outer.top        = [{ monitor."built-in" = 0 }, 32]
 gaps.outer.right      = 0
 
 # FLOAT BY DEFAULT. Auto-tiling — every window resizing itself when you open an

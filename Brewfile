@@ -501,6 +501,9 @@ cask "1password-cli"
 cask "nikitabobko/tap/aerospace"
 # Outline on the focused window; AeroSpace starts it (after-startup-command)
 brew "FelixKratz/formulae/borders"
+# Menu bar replacement (Bartender's job); config in sketchybar/, linked by linkall
+brew "FelixKratz/formulae/sketchybar"
+cask "font-sketchybar-app-font"   # must match the version of sketchybar/icon_map.sh
 cask "alt-tab"
 # Agentic-first issue tracker
 cask "hmans/beans/beans", trusted: true
