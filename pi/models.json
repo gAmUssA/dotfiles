@@ -16,6 +16,14 @@
         {
           "id": "qwen3.8:27b-mlx-ctx64k",
           "contextWindow": 65536
+        },
+        {
+          "id": "flint:40b-a2b-mlx-nvfp4-ctx64k",
+          "contextWindow": 65536
+        },
+        {
+          "id": "flint:40b-a2b-ctx64k",
+          "contextWindow": 65536
         }
       ]
     },

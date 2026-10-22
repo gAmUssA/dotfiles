@@ -124,9 +124,11 @@ run_agent() {  # harness model workdir prompt -> JSON events on stdout
         pi) (cd "$w" && timeout "$TIMEOUT" pi -p --mode json --no-session \
                 --no-extensions --no-skills --no-context-files --offline \
                 --provider "$pi_prov" --model "$m" "$p" </dev/null) ;;
-        # --pure drops plugins but not MCP servers from the global config;
-        # disable those too, so OpenCode gets no tools pi does not have.
-        opencode) (cd "$w" && OPENCODE_CONFIG_CONTENT="$OC_NO_MCP" timeout "$TIMEOUT" opencode run --pure --auto \
+        # MCP servers from the global config are disabled, so OpenCode gets no
+        # tools pi does not have. v2 removed --pure (and rejects it, so every
+        # run died at 0s); --standalone keeps runs off the shared background
+        # server, whose config and sessions belong to interactive use.
+        opencode) (cd "$w" && OPENCODE_CONFIG_CONTENT="$OC_NO_MCP" timeout "$TIMEOUT" opencode run --standalone --auto \
                 --format json -m "$oc_prov/$m" "$p" </dev/null) ;;
         *) echo "unknown harness $h" >&2; return 2 ;;
     esac
@@ -159,7 +161,7 @@ for h in ${harnesses//,/ }; do
         read -r turns tools failed malformed <<<"$(count_events "$h" "$dir/events.jsonl")"
         cp -R "$work" "$dir/work"; rm -rf "$work"
 
-        status=done; [[ $rc -eq 124 ]] && status=TIMEOUT; [[ $rc -ne 0 && $rc -ne 124 ]] && status="exit $rc"
+        status="done"; [[ $rc -eq 124 ]] && status=TIMEOUT; [[ $rc -ne 0 && $rc -ne 124 ]] && status="exit $rc"
         printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$h" "$t" "$provider/$m" \
             "$vis_ok" "$vis_n" "$hid_ok" "$hid_n" "$tampered" "$secs" "$turns" "$tools" \
             "$failed" "$malformed" "$status" >> "$results"

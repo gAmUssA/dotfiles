@@ -29,6 +29,20 @@
             "context": 65536,
             "output": 32768
           }
+        },
+        "flint:40b-a2b-mlx-nvfp4-ctx64k": {
+          "name": "Flint 40b-a2b MLX nvfp4 (64k)",
+          "limit": {
+            "context": 65536,
+            "output": 32768
+          }
+        },
+        "flint:40b-a2b-ctx64k": {
+          "name": "Flint 40b-a2b GGUF (64k)",
+          "limit": {
+            "context": 65536,
+            "output": 32768
+          }
         }
       }
     },
