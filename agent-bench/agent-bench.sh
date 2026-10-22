@@ -175,6 +175,13 @@ chip=$(sysctl -n machdep.cpu.brand_string 2>/dev/null || echo unknown)
 ram=$(( $(sysctl -n hw.memsize) / 1024 / 1024 / 1024 ))
 slugchip=$(echo "$chip" | sed 's/Apple //' | tr 'A-Z ' 'a-z-')
 dest="$REPO/bench-results/agent-${slugchip}-${ram}gb.md"
+# Digests come from the live daemon; a row whose model it can't list (daemon
+# stopped, model removed) keeps the digest the previous report recorded.
+if ! ollama_list=$(ollama list 2>/dev/null); then
+    echo "warning: ollama unreachable; keeping previously recorded digests" >&2
+    ollama_list=""
+fi
+prev=""; [[ -f "$dest" ]] && prev=$(<"$dest")
 {
     echo "# Agent bench — $chip, $ram GB"
     echo
@@ -189,7 +196,8 @@ dest="$REPO/bench-results/agent-${slugchip}-${ram}gb.md"
     echo "|---|---|"
     echo "| pi | $(pi --version 2>/dev/null) |"
     echo "| opencode | $(opencode --version 2>/dev/null) |"
-    echo "| ollama | $(ollama --version 2>/dev/null | awk '{print $NF}') |"
+    # With the daemon down, ollama prints a warning line before the client version.
+    echo "| ollama | $(ollama --version 2>&1 | tail -1 | awk '{print $NF}') |"
     echo "| python | $(python3 --version 2>&1 | awk '{print $2}') |"
     echo "| timeout | ${TIMEOUT}s per run |"
     echo "| recorded | $(date +%Y-%m-%d) |"
@@ -197,7 +205,13 @@ dest="$REPO/bench-results/agent-${slugchip}-${ram}gb.md"
     echo "| harness | task | model | digest | visible | hidden | tests untouched | time | turns | tool calls | failed | malformed | end |"
     echo "|---|---|---|---|---|---|---|---|---|---|---|---|---|"
     while IFS=$'\t' read -r h t m vok vn hok hn tam secs turns tools failed bad st; do
-        digest=$( [[ $m == ollama/* ]] && ollama list | awk -v m="${m#ollama/}" '$1==m{print $2}' || echo hosted)
+        case $m in
+            ollama/*) digest=$(awk -v m="${m#ollama/}" '$1==m{print $2; exit}' <<<"$ollama_list")
+                      [[ -n "$digest" ]] || digest=$(awk -F'|' -v h=" $h " -v t=" $t " -v m=" \`$m\` " \
+                          '$2==h && $3==t && $4==m {d=$5; gsub(/[ `]/, "", d); print d; exit}' <<<"$prev") ;;
+            omlx/*) digest=local ;;
+            *) digest=hosted ;;
+        esac
         full=$([[ "$vok" == "$vn" && "$hok" == "$hn" && "$tam" == no ]] && echo "**$vok/$vn**" || echo "$vok/$vn")
         echo "| $h | $t | \`$m\` | \`$digest\` | $full | $hok/$hn | $([[ $tam == no ]] && echo ✅ || echo "❌ edited") | ${secs}s | $turns | $tools | $failed | $bad | $st |"
     done < "$results"
