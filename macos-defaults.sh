@@ -9,7 +9,7 @@
 #
 # GENERATED FROM THIS MACHINE, not from a generic opinionated list. Every line
 # below was read off a real setting that was actually customised here; OS
-# defaults were skipped. 55 settings across 10 domains.
+# defaults were skipped. 56 settings across 10 domains.
 #
 # To refresh after changing System Settings, re-read the values you care about:
 #     defaults read com.apple.dock tilesize
@@ -80,6 +80,7 @@ defaults write NSGlobalDomain com.apple.trackpad.scaling -float 2.5           # 
 defaults write NSGlobalDomain com.apple.mouse.scaling -float 1.5              # mouse tracking speed
 defaults write NSGlobalDomain com.apple.springing.enabled -bool true          # spring-loaded folders
 defaults write NSGlobalDomain com.apple.springing.delay -float 0.5            # spring-loading delay
+defaults write NSGlobalDomain NSWindowShouldDragOnGesture -bool true        # ctrl+cmd+drag moves a window from anywhere in it
 
 # ---- com.apple.AppleMultitouchTrackpad ---------------------------------
 defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true          # tap to click (built-in)

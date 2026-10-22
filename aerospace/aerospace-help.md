@@ -18,6 +18,7 @@ them. Caps Lock is not involved — it still switches EN/RU, instantly.
 |---|---|---|
 | `←` `↓` `↑` `→` | focus left / down / up / right | The highlight jumps to the next window in that direction. Nothing moves or resizes. |
 | `⇧←` `⇧↓` `⇧↑` `⇧→` | move the window | The focused window moves that way. Floating windows shift; tiled ones swap with a neighbour. |
+| `w` | find a **w**indow | A search box lists every window on every workspace by title, app and workspace. Type part of a title (a browser tab, a terminal's command), press Enter, and AeroSpace jumps to that window's workspace and focuses it. |
 | `d` | send to the other **d**isplay | The window disappears from this screen and appears on the BenQ / built-in. Focus follows it. |
 
 ## Workspaces

@@ -7,12 +7,8 @@
 #   Ctrl+Alt     tmux + herdr pane/tab/workspace navigation. Never bind here:
 #                AeroSpace grabs keys at the OS level, BEFORE iTerm sees them,
 #                so a ctrl-alt binding here silently breaks tmux/herdr nav.
-#   Hyper        AeroSpace. Hyper = cmd+alt+ctrl+shift, produced by HOLDING
-#                Caps Lock (Karabiner rule; TAPPING Caps still switches EN/RU).
-#
-# Hyper uses all four modifiers, so there is no "shift variant" left for
-# move-to-workspace. That lives in the `move` binding mode (Hyper+M) instead —
-# the i3 way, and it keeps every chord one modifier deep.
+#   f18 leader   AeroSpace. A TAP of right Command (Karabiner) enters AERO mode,
+#                where bare keys act; see [mode.main.binding] below.
 #
 # AeroSpace binds by key code, so bindings work with the Russian layout active.
 
@@ -20,7 +16,11 @@ config-version = 2
 
 start-at-login = true
 auto-reload-config = true           # edits to this file apply on save
-after-startup-command = []
+# JankyBorders outlines the focused window. With float-by-default, windows
+# overlap, and macOS's own focus cue (a slightly brighter title bar) is easy to
+# miss. Idea from the DevOps Toolbox AeroSpace video. Silent no-op if borders
+# is not installed (Brewfile: FelixKratz/formulae/borders).
+after-startup-command = ['exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0x00000000 width=5.0']
 
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
@@ -75,7 +75,7 @@ on-window-detected = [
 # tap/hold costs nothing, because a bare Control tap meant nothing. Comfort,
 # not availability, is what picks a leader.
 [mode.main.binding]
-    f18 = ['mode aero', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "AERO" "arrows focus · ⇧ moves · 1-9 workspace · / help · esc"']
+    f18 = ['mode aero', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "AERO" "arrows focus · ⇧ moves · 1-9 workspace · w find · / help · esc"']
 
 # aero mode — bare keys, one action then straight back to main. Resize stays in
 # the mode, because repeating is the whole point there. esc leaves without acting.
@@ -124,6 +124,7 @@ on-window-detected = [
     minus = ['resize smart -50', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Smaller" "-"']
     equal = ['resize smart +50', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Bigger" "="']
     b = ['balance-sizes', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Even sizes" "b"']
+    w = ['exec-and-forget open -g hammerspoon://aerospace-windows', 'mode main']
     slash = ['exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-help.sh', 'mode main']
 
 # JOIN — a one-shot sub-mode reached with `j` from aero mode.

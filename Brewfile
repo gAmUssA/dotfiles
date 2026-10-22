@@ -499,6 +499,8 @@ cask "1password-cli"
 # Tiling WM, float-by-default. Leader: tap right Command (Karabiner -> f18).
 # Config: aerospace/aerospace.toml, cheat sheet: aerospace/aerospace-help.md
 cask "nikitabobko/tap/aerospace"
+# Outline on the focused window; AeroSpace starts it (after-startup-command)
+brew "FelixKratz/formulae/borders"
 cask "alt-tab"
 # Agentic-first issue tracker
 cask "hmans/beans/beans", trusted: true

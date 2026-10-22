@@ -74,6 +74,7 @@ safeRequire("caffeine")
 safeRequire("ollama")
 safeRequire("claude_sessions")
 safeRequire("aerospace_hud")
+safeRequire("aerospace_windows")
 
 logLine("=== init.lua done ===")
 hs.alert.show("Hammerspoon config loaded", 0.6)

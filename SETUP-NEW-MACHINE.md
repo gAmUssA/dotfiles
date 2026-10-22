@@ -16,7 +16,7 @@ The repo's model, so the steps make sense:
   Claude Code settings, …).
 - **`Brewfile`** — every package/app, installed by `brew bundle`.
 - **`prefs-restore.sh`** — GUI app preferences (Bartender, PopClip, iStat, …).
-- **`macos-defaults.sh`** — 55 system settings (Dock, Finder, keyboard, …).
+- **`macos-defaults.sh`** — 56 system settings (Dock, Finder, keyboard, …).
 - Deliberately **NOT in git**: kube/docker credentials, Apple signing keys
   (see [SETUP-SIGNING-KEYS.md](SETUP-SIGNING-KEYS.md)). Those are per-machine
   on purpose. Claude Code has no per-machine global settings file — see AGENTS.md.
