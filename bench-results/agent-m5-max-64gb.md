@@ -10,11 +10,12 @@ arguments — the number that says whether a model drives tools reliably.
 | field | value |
 |---|---|
 | pi | 0.99.2 |
-| opencode | 1.18.30 |
-| ollama | 0.35.1 |
-| python | 3.14.8 |
-| timeout | 900s per run |
-| recorded | 2026-10-04 |
+| opencode | opencode v2.0.25 |
+| ollama | 0.40.9-rc1
+0.40.3 |
+| python | 3.15.0 |
+| timeout | 1200s per run |
+| recorded | 2026-10-22 |
 
 | harness | task | model | digest | visible | hidden | tests untouched | time | turns | tool calls | failed | malformed | end |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -74,3 +75,9 @@ arguments — the number that says whether a model drives tools reliably.
 | pi | ledger | `omlx/Muse-Glimmer-30B-4bit` | `hosted` | **8/8** | 5/5 | ✅ | 250s | 12 | 15 | 2 | 0 | done |
 | pi | shop | `omlx/Muse-Glimmer-30B-4bit` | `hosted` | **8/8** | 6/6 | ✅ | 358s | 16 | 20 | 2 | 0 | done |
 | pi | planner | `omlx/Muse-Glimmer-30B-4bit` | `hosted` | **8/8** | 7/7 | ✅ | 690s | 30 | 33 | 5 | 1 | done |
+| pi | ledger | `ollama/flint:40b-a2b-ctx64k` | `62234c77ad1d` | **8/8** | 5/5 | ✅ | 40s | 6 | 10 | 1 | 0 | done |
+| pi | shop | `ollama/flint:40b-a2b-ctx64k` | `62234c77ad1d` | **8/8** | 6/6 | ✅ | 103s | 13 | 21 | 1 | 0 | done |
+| pi | planner | `ollama/flint:40b-a2b-ctx64k` | `62234c77ad1d` | **8/8** | 7/7 | ✅ | 111s | 12 | 17 | 0 | 0 | done |
+| opencode | ledger | `ollama/flint:40b-a2b-ctx64k` | `62234c77ad1d` | **8/8** | 5/5 | ✅ | 37s | 8 | 14 | 4 | 4 | done |
+| opencode | shop | `ollama/flint:40b-a2b-ctx64k` | `62234c77ad1d` | 8/8 | 5/6 | ✅ | 102s | 19 | 31 | 6 | 6 | done |
+| opencode | planner | `ollama/flint:40b-a2b-ctx64k` | `62234c77ad1d` | **8/8** | 7/7 | ✅ | 119s | 13 | 20 | 1 | 0 | done |
