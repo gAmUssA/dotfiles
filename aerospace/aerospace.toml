@@ -32,7 +32,7 @@ default-root-container-orientation = 'auto'
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 # Workspace changes announce themselves once here rather than annotating all
-# nine bindings — this also covers Hyper+Tab and moves that change workspace.
+# workspace bindings — this also covers AERO tab and moves that change workspace.
 # SketchyBar's workspace items redraw on the same event (sketchybar/plugins/spaces.sh).
 exec-on-workspace-change = ['/bin/bash', '-c', '/Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace $AEROSPACE_FOCUSED_WORKSPACE" ""; /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE']
 # Sending a window to another workspace changes focus but not the workspace, so
@@ -40,9 +40,10 @@ exec-on-workspace-change = ['/bin/bash', '-c', '/Users/vikgamov/projects/dotfile
 on-focus-changed = ['exec-and-forget /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_change']
 automatically-unhide-macos-hidden-apps = false
 
-# Nine workspaces, bound to Hyper+1..9. The default config declares 31; nothing
+# Four workspaces, AERO 1..4. More went unused: everything piled on 1. The
+# default config declares 31; nothing
 # here uses letters, so the rest would just be clutter in `list-workspaces`.
-persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+persistent-workspaces = ["1", "2", "3", "4"]
 
 focus-follows-mouse.enabled = false
 key-mapping.preset = 'qwerty'
@@ -80,7 +81,7 @@ on-window-detected = [
 # tap/hold costs nothing, because a bare Control tap meant nothing. Comfort,
 # not availability, is what picks a leader.
 [mode.main.binding]
-    f18 = ['mode aero', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "AERO" "arrows focus · ⇧ moves · 1-9 workspace · w find · / help · esc"']
+    f18 = ['mode aero', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "AERO" "arrows focus · ⇧ moves · 1-4 workspace · w find · / help · esc"']
 
 # aero mode — bare keys, one action then straight back to main. Resize stays in
 # the mode, because repeating is the whole point there. esc leaves without acting.
@@ -98,20 +99,10 @@ on-window-detected = [
     2 = ['workspace 2', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 2" "2"', 'mode main']
     3 = ['workspace 3', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 3" "3"', 'mode main']
     4 = ['workspace 4', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 4" "4"', 'mode main']
-    5 = ['workspace 5', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 5" "5"', 'mode main']
-    6 = ['workspace 6', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 6" "6"', 'mode main']
-    7 = ['workspace 7', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 7" "7"', 'mode main']
-    8 = ['workspace 8', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 8" "8"', 'mode main']
-    9 = ['workspace 9', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Workspace 9" "9"', 'mode main']
     shift-1 = ['move-node-to-workspace 1', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 1" "⇧1"', 'mode main']
     shift-2 = ['move-node-to-workspace 2', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 2" "⇧2"', 'mode main']
     shift-3 = ['move-node-to-workspace 3', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 3" "⇧3"', 'mode main']
     shift-4 = ['move-node-to-workspace 4', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 4" "⇧4"', 'mode main']
-    shift-5 = ['move-node-to-workspace 5', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 5" "⇧5"', 'mode main']
-    shift-6 = ['move-node-to-workspace 6', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 6" "⇧6"', 'mode main']
-    shift-7 = ['move-node-to-workspace 7', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 7" "⇧7"', 'mode main']
-    shift-8 = ['move-node-to-workspace 8', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 8" "⇧8"', 'mode main']
-    shift-9 = ['move-node-to-workspace 9', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Send → workspace 9" "⇧9"', 'mode main']
     tab = ['workspace-back-and-forth', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Previous workspace" "tab"', 'mode main']
     d = ['move-node-to-monitor --wrap-around next', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Other display" "d"', 'mode main']
     f = ['fullscreen', 'exec-and-forget /Users/vikgamov/projects/dotfiles/aerospace/aerospace-hud.sh "Fullscreen" "f"', 'mode main']

@@ -9,7 +9,7 @@ focused="${FOCUSED_WORKSPACE:-$(aerospace list-workspaces --focused)}"
 windows=$(aerospace list-windows --all --format '%{workspace}|%{app-name}') || exit 0
 
 args=()
-for sid in 1 2 3 4 5 6 7 8 9; do
+for sid in 1 2 3 4; do
   icons=""
   while IFS='|' read -r ws app; do
     [ "$ws" = "$sid" ] || continue
@@ -24,7 +24,7 @@ for sid in 1 2 3 4 5 6 7 8 9; do
     extra=$(($# - 6)); icons="$1 $2 $3 $4 $5 $6 +$extra"
   fi
 
-  # All nine always show, so every number is something to click: empty ones
+  # All four always show, so every number is something to click: empty ones
   # dimmed, the focused one highlighted.
   bg=off; [ "$sid" = "$focused" ] && bg=on
   color=$ACCENT; [ -z "$icons" ] && [ "$sid" != "$focused" ] && color=$DIM

@@ -25,8 +25,8 @@ them. Caps Lock is not involved — it still switches EN/RU, instantly.
 
 | Key | Action | What should happen |
 |---|---|---|
-| `1`–`9` | switch workspace | The screen contents change completely. An empty workspace shows the desktop — that is normal, not a crash. |
-| `⇧1`–`⇧9` | send window to workspace | The focused window vanishes from this screen. You stay put; it is waiting on that workspace. |
+| `1`–`4` | switch workspace | The screen contents change completely. An empty workspace shows the desktop — that is normal, not a crash. |
+| `⇧1`–`⇧4` | send window to workspace | The focused window vanishes from this screen. You stay put; it is waiting on that workspace. |
 | `tab` | previous workspace | Flips between the last two workspaces, like alt-tab for workspaces. |
 
 ## Layout & size

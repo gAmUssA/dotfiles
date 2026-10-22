@@ -46,7 +46,7 @@ case "${1:-}" in
       # use, destroying an arrangement instead of extending it.
       here="$(focused_ws)"
       empties=()
-      for w in 1 2 3 4 5 6 7 8 9; do
+      for w in 1 2 3 4; do
           [ "$w" = "$here" ] && continue
           [ -z "$("$AS" list-windows --workspace "$w" --format '%{window-id}' 2>/dev/null)" ] && empties+=("$w")
       done
@@ -67,7 +67,7 @@ case "${1:-}" in
 
   gather)
       here="$(focused_ws)"; n=0
-      for w in 1 2 3 4 5 6 7 8 9; do
+      for w in 1 2 3 4; do
           [ "$w" = "$here" ] && continue
           while read -r id; do
               [ -n "$id" ] || continue

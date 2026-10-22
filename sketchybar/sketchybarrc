@@ -27,11 +27,11 @@ sketchybar --default \
   icon.padding_left=8 icon.padding_right=4 label.padding_left=2 label.padding_right=8 \
   background.height=24 background.corner_radius=7
 
-# Workspace items have no script: one controller redraws all nine in a single
+# Workspace items have no script: one controller redraws all four in a single
 # call. aerospace.toml triggers aerospace_workspace_change on workspace AND
 # focus changes (a window sent elsewhere changes focus, not workspace).
 sketchybar --add event aerospace_workspace_change
-for sid in 1 2 3 4 5 6 7 8 9; do
+for sid in 1 2 3 4; do
   sketchybar --add item "space.$sid" center \
     --set "space.$sid" icon="$sid" label.y_offset=-1 \
       background.color=$ITEM_BG background.drawing=off drawing=off \
