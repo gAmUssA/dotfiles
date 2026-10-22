@@ -59,6 +59,12 @@ case $provider in
     omlx)      pi_prov=omlx;      oc_prov=omlx
                curl -sf --max-time 5 http://localhost:8000/v1/models >/dev/null \
                    || { echo "oMLX unreachable on :8000"; exit 1; } ;;
+    # rec (Recursive's MLX engine) mints a local key; both harnesses read it from env.
+    rec)       pi_prov=rec;       oc_prov=rec
+               REC_API_KEY=$(rec auth token) || { echo "rec auth token failed; run rec doctor"; exit 1; }
+               export REC_API_KEY
+               curl -sf --max-time 5 -H "Authorization: Bearer $REC_API_KEY" http://127.0.0.1:11500/v1/models >/dev/null \
+                   || { echo "rec unreachable on :11500; run rec serve"; exit 1; } ;;
     nebius)    pi_prov=nebius;    oc_prov=nebius
                [[ -n "${NEBIUS_API_KEY:-}" ]] || { echo "NEBIUS_API_KEY not set (opsync)"; exit 1; } ;;
     fireworks) pi_prov=fireworks; oc_prov=fireworks-ai
@@ -198,6 +204,7 @@ prev=""; [[ -f "$dest" ]] && prev=$(<"$dest")
     echo "| opencode | $(opencode --version 2>/dev/null) |"
     # With the daemon down, ollama prints a warning line before the client version.
     echo "| ollama | $(ollama --version 2>&1 | tail -1 | awk '{print $NF}') |"
+    command -v rec >/dev/null && echo "| rec | $(rec --version | awk '{print $NF}') |"
     echo "| python | $(python3 --version 2>&1 | awk '{print $2}') |"
     echo "| timeout | ${TIMEOUT}s per run |"
     echo "| recorded | $(date +%Y-%m-%d) |"
@@ -209,7 +216,7 @@ prev=""; [[ -f "$dest" ]] && prev=$(<"$dest")
             ollama/*) digest=$(awk -v m="${m#ollama/}" '$1==m{print $2; exit}' <<<"$ollama_list")
                       [[ -n "$digest" ]] || digest=$(awk -F'|' -v h=" $h " -v t=" $t " -v m=" \`$m\` " \
                           '$2==h && $3==t && $4==m {d=$5; gsub(/[ `]/, "", d); print d; exit}' <<<"$prev") ;;
-            omlx/*) digest=local ;;
+            omlx/*|rec/*) digest=local ;;
             *) digest=hosted ;;
         esac
         full=$([[ "$vok" == "$vn" && "$hok" == "$hn" && "$tam" == no ]] && echo "**$vok/$vn**" || echo "$vok/$vn")

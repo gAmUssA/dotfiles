@@ -114,6 +114,19 @@
           "maxTokens": 32768
         }
       ]
+    },
+    "rec": {
+      "baseUrl": "http://127.0.0.1:11500/v1",
+      "api": "openai-completions",
+      "apiKey": "$REC_API_KEY",
+      "models": [
+        {
+          "id": "flint",
+          "name": "Flint (rec)",
+          "contextWindow": 65536,
+          "maxTokens": 32768
+        }
+      ]
     }
   }
 }
