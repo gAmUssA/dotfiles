@@ -65,9 +65,19 @@ sketchybar --add item wifi right \
     click_script="open 'x-apple.systempreferences:com.apple.wifi-settings-extension'" \
   --subscribe wifi wifi_change system_woke
 
+# Mirrors of other apps' menu bar icons (needs Screen Recording for
+# sketchybar). Names come from `sketchybar --query default_menu_items`; an app
+# that adds or reorders its icons can change the "(n)" part.
+sketchybar --add alias "Lang Switcher,(3)" right \
+  --set "Lang Switcher,(3)" padding_left=0 padding_right=0
+
 # herdr agents waiting on you / finished unseen, from LCARS Ops. Hidden when
 # there is nothing to act on or Ops is not running.
 sketchybar --add item herdr right \
   --set herdr update_freq=5 drawing=off script="$PLUGINS/herdr.sh"
+
+for alias in "The Clock,(5)" "Vorssaint,(7)" "Vorssaint,(2)"; do
+  sketchybar --add alias "$alias" right --set "$alias" padding_left=0 padding_right=0
+done
 
 sketchybar --update
