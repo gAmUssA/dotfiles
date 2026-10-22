@@ -38,7 +38,7 @@
 
 set -u
 
-ALERTER=/opt/homebrew/bin/alerter
+ALERTER="${CLAUDE_STOP_HOOK_ALERTER:-/opt/homebrew/bin/alerter}"
 ICONS="$HOME/projects/dotfiles/iterm2-icons"
 CONTENT_IMAGE="$ICONS/claude.png"
 
@@ -129,7 +129,10 @@ if [[ -n "${CLAUDE_STOP_HOOK_DEBUG:-}" ]]; then
   } >> /tmp/claude-stop-hook.log
 fi
 
-# Fire the notification. Background the subshell so the hook returns fast.
+# Fire the notification. Background the subshell so the hook returns fast,
+# and detach its stdio: grok (which also runs this from ~/.claude/settings.json)
+# waits for stdout to close, not just for the script to exit, so an inherited
+# fd held it for alerter's whole 30 s and tripped the 10 s timeout.
 # If the user clicks the banner, alerter writes @CONTENTCLICKED to stdout;
 # we then focus the specific iTerm session. Other outputs (@TIMEOUT, @CLOSED)
 # do nothing.
@@ -184,6 +187,6 @@ APPLESCRIPT
       open -a "$FOCUS_APP"
     fi
   fi
-) &
+) </dev/null >/dev/null 2>&1 &
 
 exit 0
