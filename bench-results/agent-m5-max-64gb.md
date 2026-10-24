@@ -11,11 +11,11 @@ arguments — the number that says whether a model drives tools reliably.
 |---|---|
 | pi | 0.99.2 |
 | opencode | opencode v2.0.25 |
-| ollama | 0.40.3 |
+| ollama | 0.40.10 |
 | rec | 0.1.0 |
 | python | 3.15.0 |
 | timeout | 1200s per run |
-| recorded | 2026-10-22 |
+| recorded | 2026-10-24 |
 
 | harness | task | model | digest | visible | hidden | tests untouched | time | turns | tool calls | failed | malformed | end |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -87,3 +87,6 @@ arguments — the number that says whether a model drives tools reliably.
 | opencode | ledger | `rec/flint` | `local` | **8/8** | 5/5 | ✅ | 31s | 11 | 16 | 3 | 3 | done |
 | opencode | shop | `rec/flint` | `local` | 8/8 | 4/6 | ✅ | 88s | 23 | 32 | 8 | 8 | done |
 | opencode | planner | `rec/flint` | `local` | **8/8** | 7/7 | ✅ | 72s | 12 | 16 | 0 | 0 | done |
+| pi | ledger | `ollama/flint:40b-a2b-ctx64k` | `62234c77ad1d` | **8/8** | 5/5 | ✅ | 40s | 8 | 13 | 2 | 0 | done |
+| pi | shop | `ollama/flint:40b-a2b-ctx64k` | `62234c77ad1d` | **8/8** | 6/6 | ✅ | 118s | 8 | 14 | 0 | 0 | done |
+| pi | planner | `ollama/flint:40b-a2b-ctx64k` | `62234c77ad1d` | **8/8** | 7/7 | ✅ | 94s | 6 | 12 | 1 | 0 | done |
