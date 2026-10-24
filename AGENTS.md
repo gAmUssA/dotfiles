@@ -64,15 +64,16 @@ tmux-assistant-resurrect and Paseo have both done it.
   hooks are tracked, so after an upgrade diff, merge, relink. Keep its hook
   **last** in every event — the daemon calls anything else "out of date".
   Since 0.4.28 it also writes `env.CLAUDE_CODE_PLUGIN_DIRS` with an absolute
-  path; the tracked copy says `~/.claude/moshi-plugin` (Claude Code expands
-  `~` there, not `$HOME`). `moshi-hook doctor` then always reports claude as
-  "hooks out of date" — cosmetic: `claude plugin list` shows the plugin
-  loaded, and that string is the only difference from what moshi writes.
-  Still true in 0.4.37: only the literal absolute path passes (`$HOME`,
-  `${HOME}` and dropping the key all fail too), and install appends the
-  absolute path after the `~` entry instead of recognizing it. Report goes to
-  support@getmoshi.app (no public tracker; drafted 2026-10-24); drop this note
-  once doctor accepts `~`.
+  path, and as of 0.4.37 only that literal string passes its check: `~`,
+  `$HOME`, `${HOME}` and dropping the key all leave the Moshi app showing
+  Claude as "not set up" (inbox and Chat View), even though `claude plugin
+  list` shows the plugin loaded. So the tracked value is
+  `/Users/vikgamov/.claude/moshi-plugin` — the **one deliberate exception**
+  to the no-`/Users/<name>` rule, accepted because every machine here uses
+  the same username. A machine with another username needs its own value.
+  Revert to `~/.claude/moshi-plugin` (Claude Code expands `~` there, not
+  `$HOME`) once doctor accepts it; the report to support@getmoshi.app (no
+  public tracker) was drafted 2026-10-24.
 - `tessl install` (global plugins such as `gamussa/coding-policy`) did the same
   on Oct 6, adding hooks with `/Users/<name>/.tessl/...` paths and breaking the
   symlink for a week. The tracked versions use `$HOME` and are guarded with
