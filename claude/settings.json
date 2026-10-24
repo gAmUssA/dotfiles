@@ -298,7 +298,8 @@
     "i-have-adhd@i-have-adhd": true,
     "cc-plugin-you-should-know@builtin": true,
     "filetree@claude-code-filetree": true,
-    "supabase@claude-plugins-official": true
+    "supabase@claude-plugins-official": true,
+    "watch@watch-skill": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
@@ -359,6 +360,12 @@
       "source": {
         "source": "github",
         "repo": "data-goblin/claude-code-filetree"
+      }
+    },
+    "watch-skill": {
+      "source": {
+        "source": "github",
+        "repo": "gAmUssA/watch-skill"
       }
     }
   },
