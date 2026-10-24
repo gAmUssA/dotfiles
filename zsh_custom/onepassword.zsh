@@ -68,10 +68,18 @@ opsync() {
   local blob
   blob=$(printf '# synced %s\n%s\n' "$(date +%s)" "$resolved" | base64)
 
-  if ! security add-generic-password -U \
-         -a "$USER" -s "$OP_KEYCHAIN_SERVICE" \
-         -w "$blob" -T /usr/bin/security 2>/dev/null; then
-    print -u2 "opsync: failed writing to the login keychain"
+  # Exit 36 (errSecInteractionNotAllowed) means the keychain is locked and this
+  # session cannot raise the unlock dialog — typical over ssh/mosh and in herdr
+  # panes started from one. The GUI login unlocks it; a remote session does not.
+  local err rc
+  err=$(security add-generic-password -U \
+          -a "$USER" -s "$OP_KEYCHAIN_SERVICE" \
+          -w "$blob" -T /usr/bin/security 2>&1)
+  rc=$?
+  if (( rc != 0 )); then
+    print -u2 "opsync: failed writing to the login keychain (security exit $rc): $err"
+    (( rc == 36 )) && print -u2 \
+      "opsync: keychain is locked in this (remote/background) session — run: security unlock-keychain ~/Library/Keychains/login.keychain-db"
     return 1
   fi
 
