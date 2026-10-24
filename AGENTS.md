@@ -70,8 +70,8 @@ tmux-assistant-resurrect and Paseo have both done it.
   loaded, and that string is the only difference from what moshi writes.
   Still true in 0.4.37: only the literal absolute path passes (`$HOME`,
   `${HOME}` and dropping the key all fail too), and install appends the
-  absolute path after the `~` entry instead of recognizing it. Reported to
-  support@getmoshi.app on 2026-10-24 (no public tracker); drop this note
+  absolute path after the `~` entry instead of recognizing it. Report goes to
+  support@getmoshi.app (no public tracker; drafted 2026-10-24); drop this note
   once doctor accepts `~`.
 - `tessl install` (global plugins such as `gamussa/coding-policy`) did the same
   on Oct 6, adding hooks with `/Users/<name>/.tessl/...` paths and breaking the
