@@ -222,3 +222,6 @@ karabiner/automatic_backups/
 # Previous keyboard bundles kept locally when a snapshot replaces a copy.
 keyboard-layouts/.birman-backup.*/
 keyboard-layouts/.snapshot.*/
+
+# Temporary Moshi pairing token (stored in 1Password).
+/.moshi-hook
