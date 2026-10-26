@@ -1,7 +1,7 @@
 {
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "CLAUDE_CODE_PLUGIN_DIRS": "/Users/vikgamov/.claude/moshi-plugin"
+    "CLAUDE_CODE_PLUGIN_DIRS": "~/.claude/moshi-plugin"
   },
   "includeCoAuthoredBy": false,
   "permissions": {
