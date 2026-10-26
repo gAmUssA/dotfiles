@@ -118,7 +118,7 @@
     "rec": {
       "baseUrl": "http://127.0.0.1:11500/v1",
       "api": "openai-completions",
-      "apiKey": "$REC_API_KEY",
+      "apiKey": "!rec auth token",
       "models": [
         {
           "id": "flint",

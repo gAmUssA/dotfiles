@@ -26,5 +26,5 @@ flint-serve() {
 # pi on Flint. Extra arguments go to pi (e.g. `flint -p "fix the test"`).
 flint() {
   flint-serve || return
-  REC_API_KEY=$(rec auth token) pi --provider rec --model flint "$@"
+  pi --provider rec --model flint "$@"
 }

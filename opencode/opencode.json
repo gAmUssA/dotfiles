@@ -67,7 +67,7 @@
       "name": "rec (Recursive, local MLX)",
       "options": {
         "baseURL": "http://127.0.0.1:11500/v1",
-        "apiKey": "{env:REC_API_KEY}"
+        "apiKey": "{file:~/.local/share/rec/config/api-key}"
       },
       "models": {
         "flint": {

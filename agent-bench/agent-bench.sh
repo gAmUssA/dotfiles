@@ -59,11 +59,11 @@ case $provider in
     omlx)      pi_prov=omlx;      oc_prov=omlx
                curl -sf --max-time 5 http://localhost:8000/v1/models >/dev/null \
                    || { echo "oMLX unreachable on :8000"; exit 1; } ;;
-    # rec (Recursive's MLX engine) mints a local key; both harnesses read it from env.
+    # rec (Recursive's MLX engine) mints a local key; pi and OpenCode read it
+    # themselves (pi/models.json, opencode/opencode.json), so no env is needed.
     rec)       pi_prov=rec;       oc_prov=rec
-               REC_API_KEY=$(rec auth token) || { echo "rec auth token failed; run rec doctor"; exit 1; }
-               export REC_API_KEY
-               curl -sf --max-time 5 -H "Authorization: Bearer $REC_API_KEY" http://127.0.0.1:11500/v1/models >/dev/null \
+               rec_key=$(rec auth token) || { echo "rec auth token failed; run rec doctor"; exit 1; }
+               curl -sf --max-time 5 -H "Authorization: Bearer $rec_key" http://127.0.0.1:11500/v1/models >/dev/null \
                    || { echo "rec unreachable on :11500; run rec serve"; exit 1; } ;;
     nebius)    pi_prov=nebius;    oc_prov=nebius
                [[ -n "${NEBIUS_API_KEY:-}" ]] || { echo "NEBIUS_API_KEY not set (opsync)"; exit 1; } ;;
