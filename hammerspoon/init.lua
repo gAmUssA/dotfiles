@@ -70,9 +70,7 @@ local function safeRequire(name)
     end
 end
 
-safeRequire("caffeine")
-safeRequire("ollama")
-safeRequire("claude_sessions")
+safeRequire("agents")
 safeRequire("aerospace_hud")
 safeRequire("aerospace_windows")
 
