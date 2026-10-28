@@ -52,8 +52,8 @@ key-mapping.preset = 'qwerty'
 gaps.inner.horizontal = 0
 gaps.inner.vertical   = 0
 gaps.outer.left       = 0
-# SketchyBar's workspace pill: 30 pt tall, 6 pt above the bottom edge.
-gaps.outer.bottom     = 36
+# 0, not room for SketchyBar: its pill auto-hides and shows over windows.
+gaps.outer.bottom     = 0
 gaps.outer.top        = 0
 gaps.outer.right      = 0
 

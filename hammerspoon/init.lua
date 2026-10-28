@@ -73,6 +73,7 @@ end
 safeRequire("agents")
 safeRequire("aerospace_hud")
 safeRequire("aerospace_windows")
+safeRequire("sketchybar_reveal")
 
 logLine("=== init.lua done ===")
 hs.alert.show("Hammerspoon config loaded", 0.6)

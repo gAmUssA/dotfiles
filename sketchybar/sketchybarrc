@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# SketchyBar: AeroSpace workspaces only, as a small pill at the bottom edge.
+# SketchyBar: AeroSpace workspaces only, as a small pill at the bottom edge
+# that appears when the pointer touches the edge.
 # Linked to ~/.config/sketchybar by linkall.sh; `sketchybar --reload` applies.
 #
 # The macOS menu bar stays as it is, with Bartender managing its icons. Taking
@@ -14,11 +15,19 @@ source "$CONFIG_DIR/colors.sh"
 FONT="JetBrainsMono Nerd Font"
 APP_FONT="sketchybar-app-font:Regular:15.0"
 
-# margin narrows the bar window itself to a centered pill (1728 - 2*480 = 768
-# pt on the built-in display), so it covers only that strip, not the full edge.
+# The bar window is transparent and only bounds the strip SketchyBar may draw
+# in (1728 - 2*480 = 768 pt on the built-in display). What you see is the
+# `pill` bracket below, which sizes itself to the four workspaces, so the bar
+# is as wide as its content rather than a fixed 768 pt.
+#
+# hidden=on: Hammerspoon (hammerspoon/sketchybar_reveal.lua) shows it while
+# the pointer is at the bottom edge and hides it again when the pointer
+# leaves. Always-on, it sat over the last lines of whatever terminal reached
+# the bottom edge, and reserving a gap for it cost those lines everywhere.
 # topmost=window keeps it above windows that reach the bottom edge.
-sketchybar --bar position=bottom height=30 margin=480 y_offset=6 corner_radius=10 \
-  color=$BAR_COLOR blur_radius=30 padding_left=6 padding_right=6 topmost=window sticky=on display=all
+sketchybar --bar position=bottom height=30 margin=480 y_offset=6 \
+  color=0x00000000 border_width=0 padding_left=0 padding_right=0 \
+  topmost=window sticky=on display=all hidden=on
 
 sketchybar --default \
   icon.font="$FONT:Bold:14.0" label.font="$APP_FONT" \
@@ -40,5 +49,9 @@ done
 sketchybar --add item spaces center \
   --set spaces drawing=off updates=on script="$PLUGINS/spaces.sh" \
   --subscribe spaces aerospace_workspace_change front_app_switched system_woke
+
+sketchybar --add bracket pill '/space\..*/' \
+  --set pill background.color=$BAR_COLOR background.corner_radius=10 \
+    background.height=30 blur_radius=30
 
 sketchybar --update

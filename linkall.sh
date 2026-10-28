@@ -232,11 +232,12 @@ ln -s ~/projects/dotfiles/sketchybar ~/.config/sketchybar
 # File-level symlinks so anything else in ~/.hammerspoon (Spoons/, scratch
 # files, Hammerspoon's own state) is left alone.
 mkdir -p ~/.hammerspoon
-rm -f ~/.hammerspoon/init.lua ~/.hammerspoon/caffeine.lua ~/.hammerspoon/ollama.lua ~/.hammerspoon/claude_sessions.lua ~/.hammerspoon/agents.lua ~/.hammerspoon/aerospace_hud.lua ~/.hammerspoon/aerospace_windows.lua
+rm -f ~/.hammerspoon/init.lua ~/.hammerspoon/caffeine.lua ~/.hammerspoon/ollama.lua ~/.hammerspoon/claude_sessions.lua ~/.hammerspoon/agents.lua ~/.hammerspoon/aerospace_hud.lua ~/.hammerspoon/aerospace_windows.lua ~/.hammerspoon/sketchybar_reveal.lua
 ln -s ~/projects/dotfiles/hammerspoon/init.lua ~/.hammerspoon/init.lua
 ln -s ~/projects/dotfiles/hammerspoon/agents.lua ~/.hammerspoon/agents.lua
 ln -s ~/projects/dotfiles/hammerspoon/aerospace_hud.lua ~/.hammerspoon/aerospace_hud.lua
 ln -s ~/projects/dotfiles/hammerspoon/aerospace_windows.lua ~/.hammerspoon/aerospace_windows.lua
+ln -s ~/projects/dotfiles/hammerspoon/sketchybar_reveal.lua ~/.hammerspoon/sketchybar_reveal.lua
 
 ls -lah ~/.zshrc
 ls -lah ~/.gitconfig
@@ -252,7 +253,7 @@ ls -lah ~/.p10k.zsh
 ls -lah "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
 ls -lah ~/.config/cmux/settings.json
 ls -lah ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh
-ls -lah ~/.hammerspoon/init.lua ~/.hammerspoon/agents.lua ~/.hammerspoon/aerospace_hud.lua ~/.hammerspoon/aerospace_windows.lua
+ls -lah ~/.hammerspoon/init.lua ~/.hammerspoon/agents.lua ~/.hammerspoon/aerospace_hud.lua ~/.hammerspoon/aerospace_windows.lua ~/.hammerspoon/sketchybar_reveal.lua
 ls -lah ~/.config/opencode/opencode.json ~/.pi/agent/models.json ~/.copilot/mcp-config.json ~/.agents/skills/tavily-search
 ls -lah ~/.config/op/agents.refs
 ls -lah ~/.config/1Password/ssh/agent.toml
