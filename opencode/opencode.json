@@ -43,6 +43,13 @@
             "context": 65536,
             "output": 32768
           }
+        },
+        "flint:40b-a2b-ctx256k": {
+          "name": "Flint 40b-a2b GGUF (256k)",
+          "limit": {
+            "context": 262144,
+            "output": 32768
+          }
         }
       }
     },

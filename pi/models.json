@@ -24,6 +24,10 @@
         {
           "id": "flint:40b-a2b-ctx64k",
           "contextWindow": 65536
+        },
+        {
+          "id": "flint:40b-a2b-ctx256k",
+          "contextWindow": 262144
         }
       ]
     },
