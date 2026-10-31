@@ -126,6 +126,14 @@
         "hooks": [
           {
             "type": "command",
+            "command": "f=\"$HOME/.tessl/plugins/gamussa/coding-policy/hooks/session-start.sh\"; if [ -f \"$f\" ]; then bash \"$f\"; fi"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
             "command": "'/opt/homebrew/opt/moshi-hook/bin/moshi-hook' claude-hook",
             "async": true
           }
@@ -462,6 +470,17 @@
     },
     "native": {
       "gamussa/coding-policy": [
+        {
+          "hookEntry": {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "f=\"$HOME/.tessl/plugins/gamussa/coding-policy/hooks/session-start.sh\"; if [ -f \"$f\" ]; then bash \"$f\"; fi"
+              }
+            ]
+          },
+          "nativeEvent": "SessionStart"
+        },
         {
           "hookEntry": {
             "hooks": [
