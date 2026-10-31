@@ -1,8 +1,8 @@
 # Flint (Recursive's 40B-A2.5B MoE) in your own pi, served by rec.
 # rec beat Ollama ~1.5x on the agent bench with identical scores, and pi
 # beat OpenCode (no malformed edit calls) — see bench-results/.
-# The context must match pi/models.json (provider "rec", 65536).
-FLINT_CONTEXT=65536
+# The context must match pi/models.json (provider "rec", 262144, the model max).
+FLINT_CONTEXT=262144
 
 # OpenCode's rec provider reads this ({env:REC_API_KEY}). Its {file:...} form
 # was tried and fails the WHOLE config on any machine without rec, so export

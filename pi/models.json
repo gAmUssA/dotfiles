@@ -127,7 +127,7 @@
         {
           "id": "flint",
           "name": "Flint (rec)",
-          "contextWindow": 65536,
+          "contextWindow": 262144,
           "maxTokens": 32768
         }
       ]

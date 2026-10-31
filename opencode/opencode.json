@@ -81,7 +81,7 @@
         "flint": {
           "name": "Flint (rec)",
           "limit": {
-            "context": 65536,
+            "context": 262144,
             "output": 32768
           }
         }
