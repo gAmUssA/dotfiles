@@ -59,6 +59,12 @@ case $provider in
     omlx)      pi_prov=omlx;      oc_prov=omlx
                curl -sf --max-time 5 http://localhost:8000/v1/models >/dev/null \
                    || { echo "oMLX unreachable on :8000"; exit 1; } ;;
+    # rec (Recursive's MLX engine) mints a local key; pi and OpenCode read it
+    # themselves (pi/models.json, opencode/opencode.json), so no env is needed.
+    rec)       pi_prov=rec;       oc_prov=rec
+               rec_key=$(rec auth token) || { echo "rec auth token failed; run rec doctor"; exit 1; }
+               curl -sf --max-time 5 -H "Authorization: Bearer $rec_key" http://127.0.0.1:11500/v1/models >/dev/null \
+                   || { echo "rec unreachable on :11500; run rec serve"; exit 1; } ;;
     nebius)    pi_prov=nebius;    oc_prov=nebius
                [[ -n "${NEBIUS_API_KEY:-}" ]] || { echo "NEBIUS_API_KEY not set (opsync)"; exit 1; } ;;
     fireworks) pi_prov=fireworks; oc_prov=fireworks-ai
@@ -124,9 +130,11 @@ run_agent() {  # harness model workdir prompt -> JSON events on stdout
         pi) (cd "$w" && timeout "$TIMEOUT" pi -p --mode json --no-session \
                 --no-extensions --no-skills --no-context-files --offline \
                 --provider "$pi_prov" --model "$m" "$p" </dev/null) ;;
-        # --pure drops plugins but not MCP servers from the global config;
-        # disable those too, so OpenCode gets no tools pi does not have.
-        opencode) (cd "$w" && OPENCODE_CONFIG_CONTENT="$OC_NO_MCP" timeout "$TIMEOUT" opencode run --pure --auto \
+        # MCP servers from the global config are disabled, so OpenCode gets no
+        # tools pi does not have. v2 removed --pure (and rejects it, so every
+        # run died at 0s); --standalone keeps runs off the shared background
+        # server, whose config and sessions belong to interactive use.
+        opencode) (cd "$w" && OPENCODE_CONFIG_CONTENT="$OC_NO_MCP" timeout "$TIMEOUT" opencode run --standalone --auto \
                 --format json -m "$oc_prov/$m" "$p" </dev/null) ;;
         *) echo "unknown harness $h" >&2; return 2 ;;
     esac
@@ -159,7 +167,7 @@ for h in ${harnesses//,/ }; do
         read -r turns tools failed malformed <<<"$(count_events "$h" "$dir/events.jsonl")"
         cp -R "$work" "$dir/work"; rm -rf "$work"
 
-        status=done; [[ $rc -eq 124 ]] && status=TIMEOUT; [[ $rc -ne 0 && $rc -ne 124 ]] && status="exit $rc"
+        status="done"; [[ $rc -eq 124 ]] && status=TIMEOUT; [[ $rc -ne 0 && $rc -ne 124 ]] && status="exit $rc"
         printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$h" "$t" "$provider/$m" \
             "$vis_ok" "$vis_n" "$hid_ok" "$hid_n" "$tampered" "$secs" "$turns" "$tools" \
             "$failed" "$malformed" "$status" >> "$results"
@@ -173,6 +181,13 @@ chip=$(sysctl -n machdep.cpu.brand_string 2>/dev/null || echo unknown)
 ram=$(( $(sysctl -n hw.memsize) / 1024 / 1024 / 1024 ))
 slugchip=$(echo "$chip" | sed 's/Apple //' | tr 'A-Z ' 'a-z-')
 dest="$REPO/bench-results/agent-${slugchip}-${ram}gb.md"
+# Digests come from the live daemon; a row whose model it can't list (daemon
+# stopped, model removed) keeps the digest the previous report recorded.
+if ! ollama_list=$(ollama list 2>/dev/null); then
+    echo "warning: ollama unreachable; keeping previously recorded digests" >&2
+    ollama_list=""
+fi
+prev=""; [[ -f "$dest" ]] && prev=$(<"$dest")
 {
     echo "# Agent bench — $chip, $ram GB"
     echo
@@ -187,7 +202,9 @@ dest="$REPO/bench-results/agent-${slugchip}-${ram}gb.md"
     echo "|---|---|"
     echo "| pi | $(pi --version 2>/dev/null) |"
     echo "| opencode | $(opencode --version 2>/dev/null) |"
-    echo "| ollama | $(ollama --version 2>/dev/null | awk '{print $NF}') |"
+    # With the daemon down, ollama prints a warning line before the client version.
+    echo "| ollama | $(ollama --version 2>&1 | tail -1 | awk '{print $NF}') |"
+    command -v rec >/dev/null && echo "| rec | $(rec --version | awk '{print $NF}') |"
     echo "| python | $(python3 --version 2>&1 | awk '{print $2}') |"
     echo "| timeout | ${TIMEOUT}s per run |"
     echo "| recorded | $(date +%Y-%m-%d) |"
@@ -195,7 +212,13 @@ dest="$REPO/bench-results/agent-${slugchip}-${ram}gb.md"
     echo "| harness | task | model | digest | visible | hidden | tests untouched | time | turns | tool calls | failed | malformed | end |"
     echo "|---|---|---|---|---|---|---|---|---|---|---|---|---|"
     while IFS=$'\t' read -r h t m vok vn hok hn tam secs turns tools failed bad st; do
-        digest=$( [[ $m == ollama/* ]] && ollama list | awk -v m="${m#ollama/}" '$1==m{print $2}' || echo hosted)
+        case $m in
+            ollama/*) digest=$(awk -v m="${m#ollama/}" '$1==m{print $2; exit}' <<<"$ollama_list")
+                      [[ -n "$digest" ]] || digest=$(awk -F'|' -v h=" $h " -v t=" $t " -v m=" \`$m\` " \
+                          '$2==h && $3==t && $4==m {d=$5; gsub(/[ `]/, "", d); print d; exit}' <<<"$prev") ;;
+            omlx/*|rec/*) digest=local ;;
+            *) digest=hosted ;;
+        esac
         full=$([[ "$vok" == "$vn" && "$hok" == "$hn" && "$tam" == no ]] && echo "**$vok/$vn**" || echo "$vok/$vn")
         echo "| $h | $t | \`$m\` | \`$digest\` | $full | $hok/$hn | $([[ $tam == no ]] && echo ✅ || echo "❌ edited") | ${secs}s | $turns | $tools | $failed | $bad | $st |"
     done < "$results"

@@ -34,7 +34,7 @@
     "deny": [],
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5-1",
+  "model": "opus",
   "hooks": {
     "PreToolUse": [
       {
@@ -277,8 +277,8 @@
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh",
-    "refreshInterval": 30,
-    "padding": 1
+    "padding": 1,
+    "refreshInterval": 30
   },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
@@ -295,7 +295,11 @@
     "code-simplifier@claude-plugins-official": false,
     "ui-ux-pro-max@ui-ux-pro-max-skill": true,
     "composio@composio": false,
-    "i-have-adhd@i-have-adhd": true
+    "i-have-adhd@i-have-adhd": true,
+    "cc-plugin-you-should-know@builtin": true,
+    "filetree@claude-code-filetree": true,
+    "supabase@claude-plugins-official": true,
+    "watch@watch-skill": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
@@ -351,12 +355,41 @@
         "source": "github",
         "repo": "ayghri/i-have-adhd"
       }
+    },
+    "claude-code-filetree": {
+      "source": {
+        "source": "github",
+        "repo": "data-goblin/claude-code-filetree"
+      }
+    },
+    "watch-skill": {
+      "source": {
+        "source": "github",
+        "repo": "gAmUssA/watch-skill"
+      }
     }
   },
   "outputStyle": "Concise",
   "modelSettings": {
     "claude-opus-5": {
       "effortLevel": "medium"
+    },
+    "claude-opus-5-5": {
+      "effortLevel": "high"
+    }
+  },
+  "pluginConfigs": {
+    "filetree@claude-code-filetree": {
+      "options": {
+        "activity": "reads and writes",
+        "glyphs": "auto",
+        "follow": "on",
+        "start": "on",
+        "column": "date",
+        "hints": "on",
+        "open": "code",
+        "edit": "code"
+      }
     }
   },
   "tui": "fullscreen",

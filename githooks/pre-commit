@@ -44,7 +44,7 @@ PATTERNS = {
     # NAME = "literal" where the literal is long and is not a reference/placeholder.
     "assigned-secret":
         r"(?i)(?:api[_-]?key|secret|token|password|passwd|credential)"
-        r"\s*[\"']?\s*[:=]\s*[\"'](?!\$\{|\$\(|op://|%s|\{\{|<|\*)[^\"'\s]{16,}[\"']",
+        r"\s*[\"']?\s*[:=]\s*[\"'](?!\$\{|\$\(|\{env:|\{file:|op://|%s|\{\{|<|\*)[^\"'\s]{16,}[\"']",
 }
 
 # Constructs that look secret-shaped but are references or examples. Matched
@@ -53,6 +53,7 @@ PATTERNS = {
 ALLOW = re.compile(
     r"\$\{[A-Za-z_][A-Za-z0-9_]*\}"   # ${VAR} indirection
     r"|op://"                          # 1Password secret reference
+    r"|\{(?:env|file):[^}]+\}"          # OpenCode {env:VAR} / {file:path}
     r"|\$\([^)]+\)"                    # $(command) substitution
     r"|EXAMPLE|PLACEHOLDER|REDACTED|CHANGEME|YOUR[_-]?[A-Z]+[_-]?(KEY|TOKEN)"
     r"|xxxx+|<[a-z-]+>"                # <your-key> style

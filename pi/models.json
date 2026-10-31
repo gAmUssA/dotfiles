@@ -16,6 +16,14 @@
         {
           "id": "qwen3.8:27b-mlx-ctx64k",
           "contextWindow": 65536
+        },
+        {
+          "id": "flint:40b-a2b-mlx-nvfp4-ctx64k",
+          "contextWindow": 65536
+        },
+        {
+          "id": "flint:40b-a2b-ctx64k",
+          "contextWindow": 65536
         }
       ]
     },
@@ -102,6 +110,19 @@
         {
           "id": "Qwen3.8-27B-oQ4e-mtp",
           "reasoning": true,
+          "contextWindow": 65536,
+          "maxTokens": 32768
+        }
+      ]
+    },
+    "rec": {
+      "baseUrl": "http://127.0.0.1:11500/v1",
+      "api": "openai-completions",
+      "apiKey": "!rec auth token",
+      "models": [
+        {
+          "id": "flint",
+          "name": "Flint (rec)",
           "contextWindow": 65536,
           "maxTokens": 32768
         }
