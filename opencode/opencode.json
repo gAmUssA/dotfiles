@@ -1,6 +1,7 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "model": "ollama/muse-glimmer:30b-mlx-ctx64k",
+  "disabled_providers": ["openai", "anthropic"],
   "provider": {
     "ollama": {
       "npm": "@ai-sdk/openai-compatible",
