@@ -4,6 +4,11 @@
 # The context must match pi/models.json (provider "rec", 65536).
 FLINT_CONTEXT=65536
 
+# OpenCode's rec provider reads this ({env:REC_API_KEY}). Its {file:...} form
+# was tried and fails the WHOLE config on any machine without rec, so export
+# it here, only where rec has minted a key. pi runs `rec auth token` itself.
+[[ -r ~/.local/share/rec/config/api-key ]] && export REC_API_KEY=$(<~/.local/share/rec/config/api-key)
+
 # Start rec in the background unless it is already serving; wait until ready.
 flint-serve() {
   command -v rec >/dev/null || {
