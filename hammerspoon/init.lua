@@ -73,6 +73,7 @@ end
 safeRequire("agents")
 safeRequire("aerospace_hud")
 safeRequire("aerospace_windows")
+safeRequire("keynote_aerospace")
 safeRequire("sketchybar_reveal")
 
 logLine("=== init.lua done ===")

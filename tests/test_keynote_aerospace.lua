@@ -1,0 +1,37 @@
+local module = dofile("hammerspoon/keynote_aerospace.lua")
+local count = 0
+local function scenario(name, replies, exercise, expected, expectedErrors, owned)
+    local calls, errors = {}, {}
+    local controller = module.newController(function(value, failIfNoop)
+        calls[#calls + 1] = value .. (failIfNoop and "!" or "")
+        local code = assert(replies[#calls], "unexpected command")
+        return code, "process output"
+    end, function(action) errors[#errors + 1] = action end)
+    exercise(controller)
+    assert(table.concat(calls, ",") == expected, name .. ": commands")
+    assert(table.concat(errors, ",") == expectedErrors, name .. ": failures")
+    assert(controller.ownsPause == owned, name .. ": ownership")
+    count = count + 1
+end
+
+scenario("launch, activation, quit, shutdown", {0, 0}, function(c)
+    c:pause(); c:pause(); c:resume(); c:resume()
+end, "off!,on", "", false)
+scenario("manual pause stays paused", {2}, function(c)
+    c:pause(); c:resume()
+end, "off!", "", false)
+scenario("failed pause never enables", {1}, function(c)
+    c:pause(); c:resume()
+end, "off!", "pause", false)
+scenario("missing binary never enables", {127}, function(c)
+    c:pause(); c:resume()
+end, "off!", "pause", false)
+scenario("failed restore retains ownership for retry", {0, 1, 0}, function(c)
+    c:pause(); c:resume()
+    assert(c.ownsPause)
+    c:resume()
+end, "off!,on,on", "resume", false)
+scenario("reload restores then reacquires", {0, 0, 0}, function(c)
+    c:pause(); c:resume(); c:pause()
+end, "off!,on,off!", "", true)
+print("PASS: " .. count .. " Keynote/AeroSpace controller scenarios")
