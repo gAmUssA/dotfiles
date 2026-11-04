@@ -237,6 +237,8 @@ ln -s ~/projects/dotfiles/hammerspoon/init.lua ~/.hammerspoon/init.lua
 ln -s ~/projects/dotfiles/hammerspoon/agents.lua ~/.hammerspoon/agents.lua
 ln -s ~/projects/dotfiles/hammerspoon/aerospace_hud.lua ~/.hammerspoon/aerospace_hud.lua
 ln -s ~/projects/dotfiles/hammerspoon/aerospace_windows.lua ~/.hammerspoon/aerospace_windows.lua
+rm -f ~/.hammerspoon/keynote_aerospace.lua
+ln -s ~/projects/dotfiles/hammerspoon/keynote_aerospace.lua ~/.hammerspoon/keynote_aerospace.lua
 ln -s ~/projects/dotfiles/hammerspoon/sketchybar_reveal.lua ~/.hammerspoon/sketchybar_reveal.lua
 
 ls -lah ~/.zshrc
@@ -253,7 +255,7 @@ ls -lah ~/.p10k.zsh
 ls -lah "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
 ls -lah ~/.config/cmux/settings.json
 ls -lah ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh
-ls -lah ~/.hammerspoon/init.lua ~/.hammerspoon/agents.lua ~/.hammerspoon/aerospace_hud.lua ~/.hammerspoon/aerospace_windows.lua ~/.hammerspoon/sketchybar_reveal.lua
+ls -lah ~/.hammerspoon/init.lua ~/.hammerspoon/agents.lua ~/.hammerspoon/aerospace_hud.lua ~/.hammerspoon/aerospace_windows.lua ~/.hammerspoon/keynote_aerospace.lua ~/.hammerspoon/sketchybar_reveal.lua
 ls -lah ~/.config/opencode/opencode.json ~/.pi/agent/models.json ~/.copilot/mcp-config.json ~/.agents/skills/tavily-search
 ls -lah ~/.config/op/agents.refs
 ls -lah ~/.config/1Password/ssh/agent.toml

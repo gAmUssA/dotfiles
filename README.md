@@ -21,6 +21,12 @@ These are the configs I run on my Mac every day: zsh, tmux, iTerm2, Ghostty, and
 - `clean_projects.sh` — preview or interactively remove project artifacts with Kondo; also linked at `~/projects/clean_projects.sh`.
 - `keyboard-layouts/` + `keyboard-layouts.sh` — the customized Birman EN/RU layouts, with explicit backup, comparison and restore commands.
 
+## Keynote presentations
+
+Hammerspoon pauses AeroSpace automatically while Keynote is running and
+restores it when Keynote quits. See [behavior and validation](hammerspoon/README.md)
+for manual-pause handling and the platform-bound GUI testing procedure.
+
 ## Install
 
 ```bash
