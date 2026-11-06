@@ -657,6 +657,31 @@ Pick the path deliberately — they are not interchangeable:
 Mosh needs UDP 60000–61000, which hotel/café NAT routinely blocks — connecting
 over the tailnet address sidesteps that and survives DS9 changing networks.
 
+### osewa (Moshi's experimental transport)
+
+[osewa](https://osewa.dev) is a persistent remote terminal from the Moshi
+developer: TLS 1.3 with Ed25519 device keys, QUIC with a WebSocket fallback,
+all on port 7322 (TCP required, UDP for speed). A host Moshi should reach this
+way needs the binary and a server that survives reboots:
+
+```bash
+curl -fsSL https://osewa.dev/install.sh | sh   # → ~/.local/bin/osewa; no rc edits
+osewa service install                          # launchd user service on :7322
+moshi-hook osewa status                        # installed + running: true
+```
+
+`--listen` takes one address, so the choice is all interfaces or one. A desktop
+that only ever sits on the home LAN (Daystrom, a Mac Studio) keeps the default `:7322`:
+LAN plus tailnet. A laptop binds to the tailnet alone —
+`osewa service install --listen "$(tailscale ip -4):7322"` — since osewa only
+admits enrolled device keys but is new and unaudited, unlike sshd, and has no
+business on café Wi-Fi.
+
+There is no pairing step on the host. Picking osewa for the host in the Moshi
+app makes the phone enroll its own key over SSH (`moshi-hook osewa enroll`).
+From a Mac, `osewa login --service <ssh-host>` does the same for another host,
+then `osewa attach <host>`.
+
 ### SSH keys, and the iOS exception
 
 On any Mac, keys come from the **1Password SSH agent** — `.ssh/config` points
