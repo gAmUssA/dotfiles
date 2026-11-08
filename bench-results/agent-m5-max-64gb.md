@@ -9,13 +9,14 @@ arguments — the number that says whether a model drives tools reliably.
 
 | field | value |
 |---|---|
-| pi | 0.99.2 |
+| pi | 1.4.0 |
 | opencode | opencode v2.0.25 |
 | ollama | 0.40.10 |
 | rec | 0.1.0 |
+| splash | 1.6.0 |
 | python | 3.15.0 |
 | timeout | 1200s per run |
-| recorded | 2026-10-24 |
+| recorded | 2026-11-08 |
 
 | harness | task | model | digest | visible | hidden | tests untouched | time | turns | tool calls | failed | malformed | end |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -90,3 +91,9 @@ arguments — the number that says whether a model drives tools reliably.
 | pi | ledger | `ollama/flint:40b-a2b-ctx64k` | `62234c77ad1d` | **8/8** | 5/5 | ✅ | 40s | 8 | 13 | 2 | 0 | done |
 | pi | shop | `ollama/flint:40b-a2b-ctx64k` | `62234c77ad1d` | **8/8** | 6/6 | ✅ | 118s | 8 | 14 | 0 | 0 | done |
 | pi | planner | `ollama/flint:40b-a2b-ctx64k` | `62234c77ad1d` | **8/8** | 7/7 | ✅ | 94s | 6 | 12 | 1 | 0 | done |
+| pi | ledger | `splash/mlx-community/Qwen3.8-27B-4bit` | `local` | **8/8** | 5/5 | ✅ | 19s | 6 | 7 | 0 | 0 | done |
+| pi | shop | `splash/mlx-community/Qwen3.8-27B-4bit` | `local` | **8/8** | 6/6 | ✅ | 40s | 5 | 11 | 0 | 0 | done |
+| pi | planner | `splash/mlx-community/Qwen3.8-27B-4bit` | `local` | **8/8** | 7/7 | ✅ | 61s | 11 | 11 | 0 | 0 | done |
+| opencode | ledger | `splash/mlx-community/Qwen3.8-27B-4bit` | `local` | **8/8** | 5/5 | ✅ | 65s | 7 | 10 | 0 | 0 | done |
+| opencode | shop | `splash/mlx-community/Qwen3.8-27B-4bit` | `local` | **8/8** | 6/6 | ✅ | 117s | 11 | 17 | 0 | 0 | done |
+| opencode | planner | `splash/mlx-community/Qwen3.8-27B-4bit` | `local` | **8/8** | 7/7 | ✅ | 205s | 17 | 21 | 0 | 0 | done |

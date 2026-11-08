@@ -26,7 +26,7 @@
 #   "failed" also counts e.g. a test run exiting non-zero, which is normal)
 #
 # Usage: agent-bench/agent-bench.sh [-h pi,opencode] [-t ledger,shop,planner] [-p provider] <model> [...]
-#   -p ollama (default) | omlx | nebius | fireworks — hosted runs need NEBIUS_API_KEY /
+#   -p ollama (default) | omlx | rec | splash | nebius | fireworks — hosted runs need NEBIUS_API_KEY /
 #   FIREWORKS_API_KEY in the env (opsync/opload) and cost real money.
 #   models are Ollama tags, registered in BOTH pi/models.json and
 #   opencode/opencode.json — use the -ctx64k variants (Ollama's default context
@@ -66,6 +66,11 @@ case $provider in
                export REC_API_KEY="$rec_key"  # opencode.json reads {env:REC_API_KEY}
                curl -sf --max-time 5 -H "Authorization: Bearer $rec_key" http://127.0.0.1:11500/v1/models >/dev/null \
                    || { echo "rec unreachable on :11500; run rec serve"; exit 1; } ;;
+    # Splash (Inco) sits on :8100 because oMLX holds :8000; serve with
+    # `splash serve --model <repo> --port 8100`. No key unless --api-key.
+    splash)    pi_prov=splash;    oc_prov=splash
+               curl -sf --max-time 5 http://127.0.0.1:8100/v1/models >/dev/null \
+                   || { echo "Splash unreachable on :8100; run splash serve --port 8100"; exit 1; } ;;
     nebius)    pi_prov=nebius;    oc_prov=nebius
                [[ -n "${NEBIUS_API_KEY:-}" ]] || { echo "NEBIUS_API_KEY not set (opsync)"; exit 1; } ;;
     fireworks) pi_prov=fireworks; oc_prov=fireworks-ai
@@ -206,6 +211,7 @@ prev=""; [[ -f "$dest" ]] && prev=$(<"$dest")
     # With the daemon down, ollama prints a warning line before the client version.
     echo "| ollama | $(ollama --version 2>&1 | tail -1 | awk '{print $NF}') |"
     command -v rec >/dev/null && echo "| rec | $(rec --version | awk '{print $NF}') |"
+    command -v splash >/dev/null && echo "| splash | $(splash --version | awk '{print $NF}') |"
     echo "| python | $(python3 --version 2>&1 | awk '{print $2}') |"
     echo "| timeout | ${TIMEOUT}s per run |"
     echo "| recorded | $(date +%Y-%m-%d) |"
@@ -217,7 +223,7 @@ prev=""; [[ -f "$dest" ]] && prev=$(<"$dest")
             ollama/*) digest=$(awk -v m="${m#ollama/}" '$1==m{print $2; exit}' <<<"$ollama_list")
                       [[ -n "$digest" ]] || digest=$(awk -F'|' -v h=" $h " -v t=" $t " -v m=" \`$m\` " \
                           '$2==h && $3==t && $4==m {d=$5; gsub(/[ `]/, "", d); print d; exit}' <<<"$prev") ;;
-            omlx/*|rec/*) digest=local ;;
+            omlx/*|rec/*|splash/*) digest=local ;;
             *) digest=hosted ;;
         esac
         full=$([[ "$vok" == "$vn" && "$hok" == "$hn" && "$tam" == no ]] && echo "**$vok/$vn**" || echo "$vok/$vn")
