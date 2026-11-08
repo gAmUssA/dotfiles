@@ -53,6 +53,22 @@ mkdir -p ~/.config/cmux
 rm -f ~/.config/cmux/settings.json
 ln -s ~/projects/dotfiles/cmux/settings.json ~/.config/cmux/settings.json
 
+# Rex terminal — whole-directory link: init.lua plus the themes/ it reads.
+# Rex keeps its state under ~/Library/Application Support, not here, and a
+# theme imported later lands in the repo where `git status` shows it.
+#
+# A real directory is never removed or nested into. rm -f cannot remove one,
+# and `ln -s` onto a directory creates the link INSIDE it. It holds the live
+# config, so it is reconciled by hand (reconcile-check.sh reports it), moved
+# aside, and this is re-run.
+if [ -d ~/.config/rex ] && [ ! -L ~/.config/rex ]; then
+  echo "skip: ~/.config/rex is a real directory — reconcile it with dotfiles/rex, move it aside, re-run" >&2
+else
+  mkdir -p ~/.config
+  rm -f ~/.config/rex
+  ln -s ~/projects/dotfiles/rex ~/.config/rex
+fi
+
 # herdr — terminal workspace manager for AI agents (tmux-alike)
 mkdir -p ~/.config/herdr
 rm -f ~/.config/herdr/config.toml
@@ -260,6 +276,7 @@ ls -lah ~/.tmux.conf
 ls -lah ~/.p10k.zsh
 ls -lah "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
 ls -lah ~/.config/cmux/settings.json
+ls -lah ~/.config/rex
 ls -lah ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh
 ls -lah ~/.hammerspoon/init.lua ~/.hammerspoon/agents.lua ~/.hammerspoon/aerospace_hud.lua ~/.hammerspoon/aerospace_windows.lua ~/.hammerspoon/keynote_aerospace.lua ~/.hammerspoon/sketchybar_reveal.lua
 ls -lah ~/.config/opencode/opencode.json ~/.pi/agent/models.json ~/.copilot/mcp-config.json ~/.agents/skills/tavily-search

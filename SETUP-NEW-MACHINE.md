@@ -12,7 +12,7 @@ travel (`Voyager`), small craft attach to a parent (the iPad). Pick the name
 The repo's model, so the steps make sense:
 
 - **`linkall.sh`** — symlinks every config file from the repo into `$HOME`
-  (`.zshrc`, `.gitconfig`, `.ssh/config`, ghostty, cmux, **herdr**, sesh,
+  (`.zshrc`, `.gitconfig`, `.ssh/config`, ghostty, cmux, Rex, **herdr**, sesh,
   Claude Code settings, …).
 - **`Brewfile`** — every package/app, installed by `brew bundle`.
 - **`prefs-restore.sh`** — GUI app preferences (Bartender, PopClip, iStat, …).
@@ -38,6 +38,7 @@ several need a human physically at the machine:
 | Apple ID / iCloud sign-in | Interactive, 2FA |
 | 1Password sign-in + *Settings → Developer → Use the SSH agent* | Nothing else creates the agent socket that `~/.1password/agent.sock` (linked by `linkall.sh`) points at, and the tracked `.ssh/config` points every host there |
 | `gh auth login` | Browser + device code |
+| Installing Rex (step 2) | A beta app downloaded by hand; there is no Homebrew cask |
 | TCC grants (Accessibility, Input Monitoring, Full Disk Access) | macOS refuses programmatic grants by design |
 | `sudo tailscale up` | Prints an auth URL to open |
 | Keyboard layout activation after restore | Log out and back in, then verify EN/RU sources and real typing; the customized bundle itself is restored by script |
@@ -88,9 +89,10 @@ cd ~/projects/dotfiles && git pull --ff-only
 ```
 
 It reports repo state (behind/ahead/dirty), every expected link as
-`OK / REGULAR FILE / WRONG TARGET / missing`, Brewfile gaps, and whether the
-herdr notify plugin is installed. A `REGULAR FILE` line is the dangerous case:
-that file holds changes the repo has never seen.
+`OK / REGULAR FILE / REAL DIRECTORY / WRONG TARGET / missing`, Brewfile gaps,
+and whether the herdr notify plugin is installed. A `REGULAR FILE` or
+`REAL DIRECTORY` line is the dangerous case: it holds changes the repo has
+never seen.
 
 This is not hypothetical. Run on the laptop the day it was written, it found
 `~/.config/opencode/opencode.json` carrying a `railway` MCP server that existed
@@ -106,6 +108,20 @@ diff ~/.config/<path> ~/projects/dotfiles/<path>
 # fold anything the live file has and the repo lacks INTO the repo, commit it,
 # then relink just that one file:
 rm -f ~/.config/<path> && ln -s ~/projects/dotfiles/<path> ~/.config/<path>
+```
+
+A `REAL DIRECTORY` (`~/.config/rex`, `~/.config/karabiner`,
+`~/.config/sketchybar`) is the same job for a whole tree. For Rex, `linkall.sh`
+refuses to touch one and says `skip:`, so move it aside yourself once its
+content is in the repo:
+
+```bash
+diff -r -x .DS_Store ~/.config/rex ~/projects/dotfiles/rex
+# fold the differences into the repo and commit them, then:
+mv ~/.config/rex ~/.config/rex.pre-symlink-backup
+ln -s ~/projects/dotfiles/rex ~/.config/rex
+# in a terminal opened by Rex — only those have `rex` on PATH:
+rex config check && rex config reload
 ```
 
 Overwriting the live file loses local work; overwriting the repo copy loses
@@ -302,6 +318,30 @@ herdr plugin list                   # expect gamussa.notify, enabled
 For plugin development, clone the repo and `herdr plugin link <checkout>`
 instead. Edit it there, never a second copy in this repo.
 
+**Rex is NOT in the Brewfile either**, and it is a manual step. It is a beta
+terminal and multiplexer from Superlogical
+([installation](https://www.superlogical.com/rex/docs/installation)). The Mac
+app comes from the tester download and updates itself after that. There is no
+cask. **`brew install rex` installs Rexify, an unrelated Perl deployment
+tool**, so do not add a `rex` formula to the Brewfile. The app carries its own
+server and the `rex` CLI, so nothing else needs installing.
+
+Its config is tracked in `rex/` (`init.lua` and the `themes/` imported from
+iTerm2), and `linkall.sh` links the whole directory in step 3. **Install the
+app now, but do not launch it until after step 3.** Rex's first-run setup
+can write its own `~/.config/rex`; this machine's `init.lua` opens with "Rex
+config migrated from tmux, Herdr, Ghostty and iTerm2". A real directory there
+makes `linkall.sh` print `skip:` and leave it alone. If that has already
+happened, follow the `REAL DIRECTORY` steps under
+[Reconciling a machine that is already set up](#reconciling-a-machine-that-is-already-set-up),
+then re-run `linkall.sh`.
+
+The `rex` CLI is **not on PATH in an ordinary shell**. Rex puts it at the
+front of `PATH`, and sets `REX_BIN_DIR`, only in terminals that Rex itself opens
+([docs](https://www.superlogical.com/rex/docs/automate/cli#path)). Neither
+`.zshrc` nor `.zshenv` adds it, so every `rex` command in this file runs in a
+terminal opened by Rex.
+
 ---
 
 ## 3. Symlink the config files
@@ -313,10 +353,41 @@ sh linkall.sh
 
 Safe to re-run — it `rm -f`s each target before re-linking, so no "file exists"
 spam and no accidental no-ops. Brings over `.zshrc`, `.gitconfig`, **`.ssh/config`**
-(including the `unifi` and `qnap` host blocks), ghostty, cmux, herdr, sesh, and
-Claude Code `settings.json`.
+(including the `unifi` and `qnap` host blocks), ghostty, cmux, Rex, herdr, sesh,
+and Claude Code `settings.json`.
 
 Then start a fresh shell (or `exec zsh`) so p10k + plugins load.
+
+If Rex is installed, check the link from any shell, then launch Rex for the
+first time:
+
+```bash
+ls -l ~/.config/rex            # -> ~/projects/dotfiles/rex, not a directory
+open -a "Rex Beta"             # the beta's app name in /Applications
+```
+
+In a terminal **opened by Rex** (the only kind with `rex` on PATH), check that
+it reads the linked config:
+
+```bash
+command -v rex                 # empty means this terminal is not Rex's
+rex config check               # path, binding count, no errors
+rex config reload
+```
+
+Agent integration is optional: **Install Rex for Agents** in the command
+palette, or `rex skill setup` in that same Rex terminal. It **adds a hook to
+`~/.claude/settings.json`**, which is a symlink into this public repo, so run
+`rex skill setup --dry-run` first. Afterwards, check
+`git -C ~/projects/dotfiles diff claude/settings.json` and
+`ls -l ~/.claude/settings.json`, and follow `AGENTS.md`: a portable command
+gets tracked, and a `/Users/<name>/...` path does not.
+
+Rex keeps some settings in the app, not in `init.lua`, so set these by hand.
+In *Settings → Terminal → Selection*, turn on **Copy on selection** and **Play
+animation on copy**, which flashes the selection to confirm each copy. That
+covers copy-on-select, which herdr shows with a small "copied" notice.
+`init.lua` cannot set either one.
 
 ---
 
