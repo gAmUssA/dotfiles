@@ -47,6 +47,8 @@ domains=(
   "com.googlecode.iterm2"                # iTerm2 — profiles, colours, keymaps, hotkey window
   "com.robinebers.openusage"             # OpenUsage — menu-bar pins, layout, enabled providers.
                                          #   Heavily filtered: see domain_strip_keys below.
+  "com.superlogical.rex"                 # Rex — font, size, theme choice, imported themes, tab/sidebar layout.
+                                         #   Filtered: see domain_strip_keys below.
 )
 
 # Per-domain top-level keys to drop, beyond the global strip_keys. Echoes one
@@ -69,6 +71,15 @@ domains=(
 # — silently ending Bartender backups. The token was never committed; dropping
 # the single key here restores the useful part (menu-bar layout). It re-auths on
 # the restored machine.
+#
+# Rex: ~/.config/rex (linked by linkall.sh) holds init.lua and the theme files,
+# but the font, the light/dark theme choice and the imported themes themselves
+# (Workspace.customThemes, which the theme IDs point into) live only in this
+# domain. Dropped: window frames, open-panel state and Sparkle bookkeeping
+# (machine state); the focused session, activity flags, cached server route and
+# a migration flag (volatile); RexSync.servers (embeds a hostname); and the
+# remote-access switches (tailnet, remote control, web-client origins), which
+# expose a machine and stay a per-machine opt-in rather than riding a restore.
 domain_strip_keys() {
   case "$1" in
     com.surteesstudios.Bartender-setapp)
@@ -88,6 +99,27 @@ domain_strip_keys() {
         "SUHasLaunchedBefore" \
         "SULastCheckTime" \
         "SUUpdateGroupIdentifier"
+      ;;
+    com.superlogical.rex)
+      printf '%s\n' \
+        "NSNavPanelExpandedSizeForOpenMode" \
+        "NSOSPLastRootDirectory" \
+        "NSWindow Frame GoToSheet" \
+        "NSWindow Frame Workspace" \
+        "NSWindow Frame com_apple_SwiftUI_Settings_window" \
+        "NSWindow Frame session-AppWindow-1" \
+        "Onboarding.firstRun" \
+        "RexSync.servers" \
+        "SUHasLaunchedBefore" \
+        "SULastCheckTime" \
+        "SUUpdateGroupIdentifier" \
+        "Workspace.lastFocusedSession" \
+        "Workspace.programActivitySeen" \
+        "rex.local-server.cached-route.v1" \
+        "rex.sync.hosts-migrated.v1" \
+        "rex.server.tailnet-enabled" \
+        "rex.client.remoteControl" \
+        "rex.server.web-client-origin-patterns"
       ;;
   esac
 }
@@ -134,7 +166,7 @@ for d in "${domains[@]}"; do
   # OpenUsage key does — it reports "No value to remove at key path" and exits
   # 1). PlistBuddy nests with ":", so dots in a key name are literal. The key is
   # quoted inside the command: PlistBuddy splits an unquoted path at spaces, so
-  # `Delete :NSWindow Frame X` silently no-ops (window-frame keys are named that way).
+  # `Delete :NSWindow Frame X` silently no-ops (Rex has four such keys).
   # A missing key is fine (an app may not have written it yet), so the delete
   # itself may fail; a listed key that is still present afterwards is not.
   survivors=()
