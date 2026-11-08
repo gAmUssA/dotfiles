@@ -66,6 +66,34 @@ STUB
     [[ "$status" -eq 0 ]] || fail "tilde: expected exit 0, got $status"
     has 'missing       ~/.config/cmux/settings.json' || fail "tilde: cmux target not listed as ~/..."
     if has '\~'; then fail "tilde: a path printed as \\~"; fi
+
+    # Rejected: a real directory at ~/.config/rex — this machine's state today.
+    fresh_home realdir
+    mkdir -p "$fake_home/.config/rex/themes"
+    printf 'rex.bind("cmd+k", "session.switch")\n' >"$fake_home/.config/rex/init.lua"
+    run_check
+    [[ "$status" -eq 1 ]] || fail "real dir: expected exit 1, got $status"
+    has 'REAL DIRECTORY  ~/.config/rex' || fail "real dir: not reported"
+
+    # Rejected: a link to somewhere other than the repo.
+    fresh_home wrong
+    ln -s "$sandbox/elsewhere" "$fake_home/.config/rex"
+    run_check
+    [[ "$status" -eq 1 ]] || fail "wrong link: expected exit 1, got $status"
+    has 'WRONG TARGET  ~/.config/rex' || fail "wrong link: not reported"
+
+    # Accepted: the link linkall.sh makes.
+    fresh_home linked
+    ln -s "$fake_home/projects/dotfiles/rex" "$fake_home/.config/rex"
+    run_check
+    [[ "$status" -eq 0 ]] || fail "linked: expected exit 0, got $status"
+    if has 'config/rex'; then fail "linked: ~/.config/rex reported"; fi
+
+    # Accepted: nothing there yet; linkall.sh will create it.
+    fresh_home missing
+    run_check
+    [[ "$status" -eq 0 ]] || fail "missing: expected exit 0, got $status"
+    has 'missing       ~/.config/rex' || fail "missing: not listed"
   }
 
   for shell in /bin/bash "$BASH"; do

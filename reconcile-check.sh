@@ -54,6 +54,12 @@ while IFS= read -r line; do
       "$REPO"/*|"$HOME/projects/dotfiles/"*) : ;;
       *) note "WRONG TARGET  ${target/#$HOME/$tilde}  ->  $dest"; drift=1 ;;
     esac
+  elif [ -d "$target" ]; then
+    # Directory targets (rex, karabiner, sketchybar) are linked whole; a real
+    # directory there is the live config, and linkall.sh skips, moves or
+    # deletes it depending on the app.
+    note "REAL DIRECTORY  ${target/#$HOME/$tilde}  <- union it into the repo, then move it aside"
+    drift=1
   elif [ -e "$target" ]; then
     note "REGULAR FILE  ${target/#$HOME/$tilde}  <- linkall.sh would DELETE this"
     drift=1
