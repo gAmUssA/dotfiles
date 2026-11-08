@@ -42,7 +42,7 @@ set -uo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 REPO="$(dirname "$HERE")"
-OUT="$REPO/bench-out/agent"
+OUT="${AGENT_BENCH_OUT:-$REPO/bench-out/agent}"   # the repro kits redirect both
 TIMEOUT="${AGENT_BENCH_TIMEOUT:-1200}"   # seconds per run
 harnesses="pi"; tasks="ledger,shop,planner"; provider="ollama"
 
@@ -69,8 +69,8 @@ case $provider in
     # Splash (Inco) sits on :8100 because oMLX holds :8000; serve with
     # `splash serve --model <repo> --port 8100`. No key unless --api-key.
     splash)    pi_prov=splash;    oc_prov=splash
-               curl -sf --max-time 5 http://127.0.0.1:8100/v1/models >/dev/null \
-                   || { echo "Splash unreachable on :8100; run splash serve --port 8100"; exit 1; } ;;
+               curl -sf --max-time 5 "http://127.0.0.1:${SPLASH_PORT:-8100}/v1/models" >/dev/null \
+                   || { echo "Splash unreachable on :${SPLASH_PORT:-8100}; run splash serve --port ${SPLASH_PORT:-8100}"; exit 1; } ;;
     nebius)    pi_prov=nebius;    oc_prov=nebius
                [[ -n "${NEBIUS_API_KEY:-}" ]] || { echo "NEBIUS_API_KEY not set (opsync)"; exit 1; } ;;
     fireworks) pi_prov=fireworks; oc_prov=fireworks-ai
@@ -146,6 +146,21 @@ run_agent() {  # harness model workdir prompt -> JSON events on stdout
     esac
 }
 
+# One untimed request per model first. oMLX and rec load or page in weights
+# on the first request after idle, which cost their first timed run (always
+# pi ledger) 30-60s it never cost again; Splash loads at start-up and did
+# not. AGENT_BENCH_WARMUP=0 skips it.
+if [[ "${AGENT_BENCH_WARMUP:-1}" != 0 && -n "${harnesses//,/}" ]]; then
+    for h in ${harnesses//,/ }; do command -v "$h" >/dev/null && break; done
+    for m in "$@"; do
+        warm=$(mktemp -d "${TMPDIR:-/tmp}/agent-bench-warm.XXXXXX")
+        echo "warm-up: $h $provider/$m"
+        run_agent "$h" "$m" "$warm" "Reply with the word ready." >/dev/null 2>&1 \
+            || echo "warning: warm-up failed for $provider/$m; the first timed run may include load time" >&2
+        rm -rf "$warm"
+    done
+fi
+
 for h in ${harnesses//,/ }; do
   command -v "$h" >/dev/null || { echo "skip harness $h: not installed"; continue; }
   for t in ${tasks//,/ }; do
@@ -186,7 +201,7 @@ done
 chip=$(sysctl -n machdep.cpu.brand_string 2>/dev/null || echo unknown)
 ram=$(( $(sysctl -n hw.memsize) / 1024 / 1024 / 1024 ))
 slugchip=$(echo "$chip" | sed 's/Apple //' | tr 'A-Z ' 'a-z-')
-dest="$REPO/bench-results/agent-${slugchip}-${ram}gb.md"
+dest="${AGENT_BENCH_REPORT:-$REPO/bench-results/agent-${slugchip}-${ram}gb.md}"
 # Digests come from the live daemon; a row whose model it can't list (daemon
 # stopped, model removed) keeps the digest the previous report recorded.
 if ! ollama_list=$(ollama list 2>/dev/null); then
@@ -209,7 +224,7 @@ prev=""; [[ -f "$dest" ]] && prev=$(<"$dest")
     echo "| pi | $(pi --version 2>/dev/null) |"
     echo "| opencode | $(opencode --version 2>/dev/null) |"
     # With the daemon down, ollama prints a warning line before the client version.
-    echo "| ollama | $(ollama --version 2>&1 | tail -1 | awk '{print $NF}') |"
+    command -v ollama >/dev/null && echo "| ollama | $(ollama --version 2>&1 | tail -1 | awk '{print $NF}') |"
     command -v rec >/dev/null && echo "| rec | $(rec --version | awk '{print $NF}') |"
     command -v splash >/dev/null && echo "| splash | $(splash --version | awk '{print $NF}') |"
     echo "| python | $(python3 --version 2>&1 | awk '{print $2}') |"
