@@ -98,6 +98,7 @@ command = "claude"
 description = "claude here"
 
 [ui]
+sidebar_collapsed_mode = "compact"
 # Small status area on the tab bar: zoom pill + military time (Dracula habit).
 tab_bar_right = [
   { type = "zoom" },
