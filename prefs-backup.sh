@@ -132,11 +132,23 @@ for d in "${domains[@]}"; do
   # Per-domain drops. PlistBuddy, NOT plutil: `plutil -remove` treats "." as a
   # keypath separator, so it silently no-ops on keys that contain dots (every
   # OpenUsage key does — it reports "No value to remove at key path" and exits
-  # 1). PlistBuddy nests with ":", so dots in a key name are literal.
+  # 1). PlistBuddy nests with ":", so dots in a key name are literal. The key is
+  # quoted inside the command: PlistBuddy splits an unquoted path at spaces, so
+  # `Delete :NSWindow Frame X` silently no-ops (window-frame keys are named that way).
+  # A missing key is fine (an app may not have written it yet), so the delete
+  # itself may fail; a listed key that is still present afterwards is not.
+  survivors=()
   while IFS= read -r k; do
     [[ -z "$k" ]] && continue
-    /usr/libexec/PlistBuddy -c "Delete :$k" "$f" >/dev/null 2>&1 || true
+    /usr/libexec/PlistBuddy -c "Delete \":$k\"" "$f" >/dev/null 2>&1 || true
+    if /usr/libexec/PlistBuddy -c "Print \":$k\"" "$f" >/dev/null 2>&1; then survivors+=("$k"); fi
   done < <(domain_strip_keys "$d")
+  if (( ${#survivors[@]} )); then
+    rm -f "$f"; warned=1
+    printf '[FAIL] %s — could not strip, DELETED, not committing:\n' "$d"
+    printf '         %s\n' "${survivors[@]}"
+    continue
+  fi
   plutil -convert xml1 "$f"   # PlistBuddy may rewrite as binary; force XML back
   if grep -oE '<key>[^<]*</key>' "$f" | grep -qiE "$SECRET_KEY_RE"; then
     rm -f "$f"; warned=1
