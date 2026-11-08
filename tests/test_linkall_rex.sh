@@ -29,15 +29,31 @@ main() (
     cp "$repo/linkall.sh" "$dotfiles/linkall.sh"
   }
 
-  run_linkall() {
-    HOME="$fake_home" PATH="$sandbox/bin:/usr/bin:/bin" \
-      sh "$dotfiles/linkall.sh" >"$sandbox/stdout" 2>"$sandbox/stderr" || true
-  }
-
   fail() {
     printf 'FAIL: %s\n' "$*" >&2
+    printf -- '--- linkall.sh stdout\n' >&2
+    cat "$sandbox/stdout" >&2
+    printf -- '--- linkall.sh stderr\n' >&2
     cat "$sandbox/stderr" >&2
     exit 1
+  }
+
+  # linkall.sh has no `set -e` and exits 0 on a machine without the optional
+  # tools, so any nonzero exit is a real failure, not sandbox noise.
+  run_linkall() {
+    HOME="$fake_home" PATH="$sandbox/bin:/usr/bin:/bin" \
+      sh "$dotfiles/linkall.sh" >"$sandbox/stdout" 2>"$sandbox/stderr" \
+      || fail "linkall.sh returned nonzero (exit $?)"
+  }
+
+  # grep exits 1 on no match and 2 on error; only the first means "absent".
+  stderr_has() {
+    local rc=0
+    grep -qF -- "$1" "$sandbox/stderr" || rc=$?
+    case "$rc" in
+      0 | 1) return "$rc" ;;
+      *) fail "grep exited $rc reading linkall.sh's stderr" ;;
+    esac
   }
 
   expect_linked() {
@@ -80,7 +96,7 @@ main() (
   [[ -f "$fake_home/.config/rex/themes/Live.itermcolors" ]] || fail "real dir: theme removed"
   [[ ! -e "$fake_home/.config/rex/rex" && ! -L "$fake_home/.config/rex/rex" ]] \
     || fail "real dir: a link was nested inside it"
-  grep -q 'skip: ~/.config/rex is a real directory' "$sandbox/stderr" \
+  stderr_has 'skip: ~/.config/rex is a real directory' \
     || fail "real dir: no skip message on stderr"
 
   echo "ok: linkall.sh links ~/.config/rex (4 cases)"

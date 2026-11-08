@@ -57,7 +57,16 @@ STUB
     exit 1
   }
 
-  has() { grep -qF -- "$1" "$sandbox/out"; }
+  # grep exits 1 on no match and 2 on error; only the first means "absent",
+  # or an unreadable output file would pass every `if has ...; then fail` case.
+  has() {
+    local rc=0
+    grep -qF -- "$1" "$sandbox/out" || rc=$?
+    case "$rc" in
+      0 | 1) return "$rc" ;;
+      *) fail "grep exited $rc reading reconcile-check.sh's output" ;;
+    esac
+  }
 
   cases() {
     # Paths print with a bare ~, never \~.
