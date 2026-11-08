@@ -36,6 +36,9 @@ note "branch $branch — $behind behind, $ahead ahead, $dirty uncommitted"
 # Expected targets come from linkall.sh itself, so the two cannot diverge.
 head2 "Config links (expected vs actual)"
 ghostty_dir="$HOME/Library/Application Support/com.mitchellh.ghostty"
+# A variable, not a literal: bash 3.2 (the /bin/bash `env bash` finds before
+# Homebrew is on PATH) keeps the backslash of `\~` in a replacement.
+tilde="~"
 
 while IFS= read -r line; do
   target=${line#*ln -s *dotfiles/}      # strip indentation and the source path
@@ -49,13 +52,13 @@ while IFS= read -r line; do
     dest=$(readlink "$target")
     case "$dest" in
       "$REPO"/*|"$HOME/projects/dotfiles/"*) : ;;
-      *) note "WRONG TARGET  ${target/#$HOME/\~}  ->  $dest"; drift=1 ;;
+      *) note "WRONG TARGET  ${target/#$HOME/$tilde}  ->  $dest"; drift=1 ;;
     esac
   elif [ -e "$target" ]; then
-    note "REGULAR FILE  ${target/#$HOME/\~}  <- linkall.sh would DELETE this"
+    note "REGULAR FILE  ${target/#$HOME/$tilde}  <- linkall.sh would DELETE this"
     drift=1
   else
-    note "missing       ${target/#$HOME/\~}  (linkall.sh will create it)"
+    note "missing       ${target/#$HOME/$tilde}  (linkall.sh will create it)"
   fi
 done < <(grep -E '^[[:space:]]*ln -s ' linkall.sh)
 
