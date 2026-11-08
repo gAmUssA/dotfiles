@@ -383,11 +383,20 @@ palette, or `rex skill setup` in that same Rex terminal. It **adds a hook to
 `ls -l ~/.claude/settings.json`, and follow `AGENTS.md`: a portable command
 gets tracked, and a `/Users/<name>/...` path does not.
 
-Rex keeps some settings in the app, not in `init.lua`, so set these by hand.
-In *Settings → Terminal → Selection*, turn on **Copy on selection** and **Play
-animation on copy**, which flashes the selection to confirm each copy. That
-covers copy-on-select, which herdr shows with a small "copied" notice.
-`init.lua` cannot set either one.
+Rex keeps its appearance in the app's preferences, not in `init.lua`: the
+font (IosevkaTerm Nerd Font Mono, from the Brewfile's
+`font-iosevka-term-nerd-font`), size, light/dark theme choice, the imported
+themes, and tab and sidebar layout. Those travel as
+`prefs/com.superlogical.rex.plist`, restored by `prefs-restore.sh` in step 4;
+**quit Rex before restoring**, or it writes its old values back on quit.
+Remote access (tailnet, remote control) is deliberately not in that snapshot:
+turn it on per machine in Rex's settings.
+
+Set these by hand if the snapshot does not already carry them. In *Settings →
+Terminal → Selection*, turn on **Copy on selection** and **Play animation on
+copy**, which flashes the selection to confirm each copy. That covers
+copy-on-select, which herdr shows with a small "copied" notice. `init.lua`
+cannot set either one.
 
 ---
 
@@ -395,7 +404,7 @@ covers copy-on-select, which herdr shows with a small "copied" notice.
 
 ```bash
 sh macos-defaults.sh      # Dock, Finder, keyboard, mouse, hot corners — 64 settings
-sh prefs-restore.sh       # Bartender, PopClip, iStat Menus, etc.
+sh prefs-restore.sh       # Bartender, PopClip, iStat Menus, Rex (quit it first), etc.
 ```
 
 Some Dock/Finder changes need a logout or `killall Dock Finder` to show.
