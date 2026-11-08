@@ -10,7 +10,9 @@ rm -f ~/.inputrc
 rm -f ~/.tigrc
 rm -f ~/.ssh/config
 rm -f ~/.dircolors
-rm -f ~/.mackup.cfg
+# Mackup is retired. App prefs are snapshotted by prefs-backup.sh, and this
+# script no longer owns ~/.mackup.cfg — an unconditional rm here is how a
+# leftover local config disappears.
 rm -f ~/.tmux.conf
 rm -f ~/.vimrc
 rm -f ~/.p10k.zsh
@@ -122,8 +124,12 @@ mkdir -p ~/.config/sesh
 rm -f ~/.config/sesh/sesh.toml
 ln -s ~/projects/dotfiles/sesh/sesh.toml ~/.config/sesh/sesh.toml
 
-# Claude Code config (settings + custom statusline + stop hook script)
-# Skips settings.local.json — that's meant to stay per-machine.
+# Claude Code config (settings + custom statusline + stop hook script).
+# Do not add ~/.claude/settings.local.json. Claude Code reads that file only
+# when its cwd is $HOME, so a hook parked there fires in ~ and nowhere else.
+# Portable commands go in the tracked file ($HOME-relative, PATH-resolved, or
+# a Homebrew opt path). The only global per-machine scope is managed settings
+# under /Library/Application Support/ClaudeCode/. See AGENTS.md.
 mkdir -p ~/.claude
 rm -f ~/.claude/settings.json ~/.claude/statusline.sh ~/.claude/stop-hook.sh ~/.claude/block-secrets.py ~/.claude/settings-link-guard.sh
 ln -s ~/projects/dotfiles/claude/settings.json ~/.claude/settings.json

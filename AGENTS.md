@@ -20,10 +20,12 @@ Do not reach for Migration Assistant. This repo exists so a machine is rebuilt
 rather than copied.
 
 On a machine that is **already** set up, run `./reconcile-check.sh` first and
-resolve everything it reports before `linkall.sh`. linkall `rm -f`s all 35
-targets before relinking, so a config that drifted from a symlink into a regular
-file is deleted with no backup — which is how local-only edits die. Union the
-two copies; never pick a side.
+resolve everything it reports before `linkall.sh`. linkall `rm -f`s every path
+it is about to relink, and it also deletes a few retired Hammerspoon modules
+(`caffeine.lua`, `ollama.lua`, `claude_sessions.lua`) so an old copy cannot
+keep loading. A config that drifted from a symlink into a regular file is
+deleted with no backup — which is how local-only edits die. Union the two
+copies; never pick a side.
 
 ## It is a PUBLIC repo
 
@@ -34,8 +36,15 @@ that a tool generated or that came from a live config:
   Connect Key IDs and Issuer IDs, account IDs and similar are not credentials,
   yet they cannot be rotated, and the repo buys nothing by holding them. Derive
   them at runtime instead; `SETUP-SIGNING-KEYS.md` shows the pattern.
-- `githooks/pre-commit` scans **key names**, not values, and cannot see PII
-  inside a base64 `<data>` blob. Do not treat a clean hook run as proof.
+- Two scanners, and neither covers the other:
+  - `githooks/pre-commit` reads staged file **content**. It matches
+    secret-shaped patterns and, when the opsync keychain cache is available,
+    the live secret values themselves. It does not understand plist structure.
+  - `prefs-backup.sh` scans exported plist **key names** and refuses the
+    snapshot on a hit. It cannot see PII inside a base64 `<data>` blob —
+    those domains need an entry in `domain_strip_keys`.
+  A clean hook run does not mean a plist snapshot is safe, and a clean
+  prefs-backup run does not mean a source file has no secret value.
 - Machine-specific absolute paths (`/Users/vikgamov/Library/...`) break every
   other machine. They belong in a per-machine file, not here.
 

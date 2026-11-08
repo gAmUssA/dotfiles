@@ -72,9 +72,11 @@ still exits 0.
 DS9 was configured months ago and the repo has moved since. This is **not** the
 fresh-install path: on a machine in use, `linkall.sh` is destructive.
 
-It `rm -f`s all 35 targets before relinking. Anything that drifted from a
-symlink into a **regular file** is deleted with no backup and no diff — and
-tools do convert them: tmux-assistant-resurrect and Paseo have each done it to
+It `rm -f`s every path it is about to relink, and it also deletes a few retired
+Hammerspoon modules (`caffeine.lua`, `ollama.lua`, `claude_sessions.lua`) so an
+old copy cannot keep loading. Anything that drifted from a symlink into a
+**regular file** is deleted with no backup and no diff — and tools do convert
+them: tmux-assistant-resurrect and Paseo have each done it to
 `claude/settings.json`. The local edits in that file are the ones that exist
 nowhere else.
 

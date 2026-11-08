@@ -16,9 +16,10 @@
 #        (2) focus the HOST terminal — AppleScript to the exact iTerm
 #            window/tab/pane via $ITERM_SESSION_ID
 #
-# No banner at all inside herdr — herdr-plugins/notify raises its own there,
-# for every agent rather than only Claude. iTerm is the only terminal this
-# routes to; see the host block below.
+# No banner at all inside herdr — gamussa.notify (gAmUssA/herdr-notify,
+# installed by linkall.sh, not vendored here) raises its own there, for every
+# agent rather than only Claude. iTerm is the only terminal this routes to;
+# see the host block below.
 #
 # Terminal BEL is emitted by tmux-agentbar's `done` report (runs as a sibling
 # hook in settings.json), so this script deliberately does NOT write \a — that
@@ -61,9 +62,9 @@ if [[ -n "${HERDR_ENV:-}" ]]; then
   # always-on host, blanket suppression here means a finished turn announces
   # itself to nobody. That is worse than a duplicate banner.
   #
-  # herdr-plugins/notify runs server-side and has no such gate, so it is the
-  # one thing that makes suppression safe. If it is unlinked or disabled, fall
-  # through and notify from here.
+  # gamussa.notify (gAmUssA/herdr-notify) runs server-side and has no such
+  # gate, so it is the one thing that makes suppression safe. If it is
+  # not installed or not enabled, fall through and notify from here.
   _herdr="${HERDR_BIN_PATH:-$HOME/.local/bin/herdr}"
   if [[ -x "$_herdr" ]] && "$_herdr" plugin list --plugin gamussa.notify --json 2>/dev/null \
        | grep -q '"enabled": *true'; then

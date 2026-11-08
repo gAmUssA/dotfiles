@@ -1,34 +1,25 @@
 # dotfiles
 
-These are the configs I run on my Mac every day: zsh, tmux, iTerm2, Ghostty, and an opinionated Claude Code setup. macOS only.
+Configs for the Macs I actually use (DS9, Daystrom, and the laptop). macOS only.
+This repo is public. A new machine is rebuilt from here, not copied with
+Migration Assistant — the runbook is [SETUP-NEW-MACHINE.md](SETUP-NEW-MACHINE.md).
+Rules an agent has to follow while working in here are in [AGENTS.md](AGENTS.md).
 
-## What's in here
+Three mechanisms, because three different things store state:
 
-- `.zshrc` + `zsh_custom/` — zinit plugin manager, lazy-loaded SDKMAN/NVM, a single authoritative `compinit`, and the p10k prompt.
-- `.tmux.conf` — `Ctrl-Space` prefix, visual bell wired to Claude Code's Stop hook, and `prefix + y` to pop up a per-directory Claude session.
-- `claude/` — `settings.json`, a custom status line, and the Stop-hook shell script that fires a macOS banner when a turn finishes.
-- `junie/` — opt-in Junie lifecycle status in Rex; see [how to enable and verify it](junie/README.md).
-- `hammerspoon/` — Lua modules: an agents menu (🤖) listing every coding agent running in herdr (`herdr agent list` on each live session socket) or tmux (`ps` matched against known agent binaries, ppid-walked to a pane), click to jump to it; the AeroSpace mode HUD; and the AeroSpace window finder. Keep-awake is Vorssaint's job, not Hammerspoon's. Init writes a debug trace to `/tmp/hammerspoon.log`.
-- `ghostty/config` — Dracula-ish palette, IosevkaTerm Nerd Font with ligatures on.
-- `cmux/settings.json` — tmux-style keybindings for [manaflow-ai/cmux](https://github.com/manaflow-ai/cmux).
-- `iterm2-icons/` — custom `.icns` files from [jasonlong/iterm2-icons](https://github.com/jasonlong/iterm2-icons) plus extracted PNGs that the Stop-hook banner uses.
-- `fix-iterm-ligatures.sh` — rewrites iTerm2 profiles from ligature-stripping Nerd Font "Complete" builds to v3+ `IosevkaTermNF`.
-- `claude-dev.sh` — project-scoped tmux launcher: one window for `claude`, one shell, one for tests when a test runner is detected.
-- `cloud-tabs-to-notes.sh` — snapshot Safari iCloud tabs from a given device. Default sink is a new Notes.app note (alphabetized clickable list); pass `--open` to open them all in a fresh Safari window instead. Run with no args to list devices and tab counts. Reads `~/Library/Safari/CloudTabs.db` directly.
-- `tmux-paste-image.sh` — clipboard image to `/image <path>` helper.
-  Not currently bound (Claude Code handles clipboard paste natively), but kept in case that changes.
-- `Brewfile` — everything above, plus my usual CLI kit.
-- `install-completions.sh` — background job that keeps `~/.zfunc` fresh for kubectl, terraform, gh, and friends.
-- `clean_projects.sh` — preview or interactively remove project artifacts with Kondo; also linked at `~/projects/clean_projects.sh`.
-- `keyboard-layouts/` + `keyboard-layouts.sh` — the customized Birman EN/RU layouts, with explicit backup, comparison and restore commands.
+| What | How |
+|---|---|
+| Text configs (zsh, tmux, herdr, Ghostty, Claude, AeroSpace, Karabiner, …) | symlinks from `linkall.sh` |
+| GUI app plists (Bartender, PopClip, iStat, iTerm2, …) | `prefs-backup.sh` / `prefs-restore.sh` |
+| macOS itself (Dock, Finder, keyboard, trackpad, …) | `macos-defaults.sh` |
 
-## Keynote presentations
-
-Hammerspoon pauses AeroSpace automatically while Keynote is running and
-restores it when Keynote quits. See [behavior and validation](hammerspoon/README.md)
-for manual-pause handling and the platform-bound GUI testing procedure.
+`cfprefsd` rewrites files under `~/Library/Preferences` and replaces symlinks,
+which is why the old Mackup setup died. App prefs are snapshots. Mackup is
+not part of this machine anymore.
 
 ## Install
+
+A fresh machine:
 
 ```bash
 git clone https://github.com/gAmUssA/dotfiles ~/projects/dotfiles
@@ -37,16 +28,77 @@ brew bundle
 ./linkall.sh
 ```
 
-`linkall.sh` removes the target symlinks first, then re-creates them.
-If you already have config at any of those paths, back it up before running — it will not ask.
+That is the sketch. The runbook says which steps an agent may run and which
+need a person at the keyboard (`sudo`, 1Password, TCC grants, `gh auth`,
+Tailscale, accepting a host key). Skipping those leaves a machine that looks
+finished while every keybinding is dead.
 
-Claude Code settings live at `claude/settings.json`, symlinked to `~/.claude/settings.json`.
-The per-machine file `~/.claude/settings.local.json` stays local and is gitignored.
+On a machine that is **already** in use, run `./reconcile-check.sh` first and
+resolve what it reports. `linkall.sh` `rm -f`s every path it is about to
+relink, then creates the symlink. A config that drifted from a symlink into a
+regular file is deleted with no backup and no prompt. Union the two copies.
+
+### Claude Code settings
+
+`claude/settings.json` is symlinked to `~/.claude/settings.json`, so a write
+there lands in this public repo. `claude/settings-link-guard.sh` warns at
+SessionStart when a tool has replaced the symlink with a regular file.
+
+There is no per-machine, all-projects settings file. Claude Code reads
+`settings.local.json` only from a project's `.claude/`, so
+`~/.claude/settings.local.json` applies only when `claude` is run in `$HOME`.
+A hook moved there silently stops firing everywhere else. Put the command in
+the tracked file, portable: `$HOME`-relative, on `PATH`, or a Homebrew opt
+path (`/opt/homebrew/opt/<formula>/bin/...`). The only global per-machine
+scope is managed settings (`/Library/Application Support/ClaudeCode/`), and
+that needs `sudo`.
+
+## What's in here
+
+Daily shell and terminal:
+
+- `.zshrc` + `zsh_custom/` — zinit, lazy-loaded SDKMAN/NVM, one `compinit`, p10k. Non-interactive tools (`ssh host <cmd>`, `herdr --remote`, `mosh-server`) read `.zshenv` only; anything they need on `PATH` goes there.
+- `.tmux.conf` — `Ctrl-Space` prefix. `prefix + y` pops a per-directory Claude session named `claude-<md5-of-cwd>`. Windows auto-name to the directory basename; the robot glyph comes from tmux-agentbar, not from `automatic-rename-format`.
+- `ghostty/config` — Dracula-ish palette, IosevkaTerm Nerd Font with ligatures on. Linked into Ghostty's macOS Application Support path, which wins over the XDG one.
+- `cmux/settings.json` — tmux-style keybindings for [manaflow-ai/cmux](https://github.com/manaflow-ai/cmux).
+- `iterm2-icons/` — `.icns` files from [jasonlong/iterm2-icons](https://github.com/jasonlong/iterm2-icons) plus the PNGs the Stop-hook banner uses.
+- `claude-dev.sh` — project-scoped tmux launcher: one window for `claude`, one shell, one for tests when a test runner is detected.
+- `Brewfile` — the package set `brew bundle` installs. It adds; it does not uninstall.
+- `install-completions.sh` — keeps `~/.zfunc` fresh for kubectl, terraform, gh, and friends.
+
+Window management and keys. One owner per modifier family; the table and the
+Karabiner traps are in `AGENTS.md`.
+
+- `aerospace/` — float-by-default workspaces. Leader is `f18`, which Karabiner emits on a *tap* of right Command (hold stays Control). Tiling is opt-in per window.
+- `karabiner/` — the complex modification that produces that tap, plus the simple mods (`caps_lock` → `f19` for the EN/RU switch, `right_control` → `right_option`).
+- `hammerspoon/` — agents menu (every coding agent in herdr or tmux, click to jump), the AeroSpace mode HUD, the window finder, and the Keynote pause below. Keep-awake is Vorssaint's job.
+- `sketchybar/` — workspace pill. Hammerspoon reveals it.
+- `keyboard-layouts/` + `keyboard-layouts.sh` — the customized Birman EN/RU layouts, with backup, compare, and restore.
+- `herdr/config.toml` — terminal workspace manager for agents. Desktop banners inside herdr come from `gAmUssA/herdr-notify`, which `linkall.sh` installs by id. The plugin is not in this repo.
+
+Agents:
+
+- `claude/` — shared status line, Stop hook, secret-blocking PreToolUse hook, and the settings-link guard.
+- `junie/` — opt-in Junie lifecycle status in Rex; see [how to enable and verify it](junie/README.md).
+- `agents/statusline-install.sh` — points grok, agy, copilot, pi, and opencode at that same status line. Their own configs stay per-machine.
+- `op/` — `op://` pointers (`agents.refs`) and the 1Password SSH agent allowlist (`ssh-agent.toml`). No secret values.
+- `opencode/`, `pi/`, `copilot/` — the config files safe to share. Generated hook files with absolute paths are not linked; `linkall.sh` re-runs the installers.
+
+Other:
+
+- `clean_projects.sh` — preview or interactively remove project artifacts with Kondo. Also linked at `~/projects/clean_projects.sh` when that path is free.
+- `cloud-tabs-to-notes.sh` — snapshot Safari iCloud tabs from a given device into Notes, or `--open` them. Reads `~/Library/Safari/CloudTabs.db` directly.
+- `tmux-paste-image.sh` — clipboard image to `/image <path>`. Not bound; Claude Code pastes images itself.
+- `ollama-restore.sh` and the `ollama-*-bench.sh` / `agent-bench/` tree — local-model restore and the eval harness. `bench-out/` is gitignored.
+- `capture4k.sh`, `obs4k.sh` — capture helpers for this desk, not part of machine setup.
+
+## Keynote presentations
+
+Hammerspoon pauses AeroSpace automatically while Keynote is running and
+restores it when Keynote quits. See [behavior and validation](hammerspoon/README.md)
+for manual-pause handling and the platform-bound GUI testing procedure.
 
 ### App preferences (Bartender, iStat Menus, PopClip, Marked, TaskPaper, Cyberduck, iTerm2)
-
-GUI app plists can't be symlinked — cfprefsd caches and rewrites them, which is
-why the old Mackup setup silently died. Instead, snapshots:
 
 ```bash
 ./prefs-backup.sh    # after changing settings worth keeping; review diff, commit
@@ -54,11 +106,13 @@ why the old Mackup setup silently died. Instead, snapshots:
 ```
 
 Snapshots live in `prefs/` as XML plists. The backup script scans every export
-for license/serial/credential key names and refuses to write ones that match
-(this repo is public). That scan reads key *names* only, so domains that bury
-PII in a `<data>` blob also get a per-domain drop list — see
-`domain_strip_keys` in `prefs-backup.sh`, which is what keeps OpenUsage's
-account email and its ~40 KB of churning usage snapshots out of the repo.
+for license/serial/credential key names and refuses to write ones that match.
+That scan reads key *names* only, so domains that bury PII in a `<data>` blob
+also get a per-domain drop list — see `domain_strip_keys` in `prefs-backup.sh`,
+which is what keeps OpenUsage's account email and its ~40 KB of churning usage
+snapshots out of the repo. `githooks/pre-commit` is a different check: it
+scans staged file content for secret shapes and for live values in the opsync
+keychain cache. A clean run of one says nothing about the other.
 
 The modified Birman English/Russian keyboard bundle lives in
 [`keyboard-layouts/`](keyboard-layouts/README.md). `prefs-backup.sh` snapshots
@@ -81,24 +135,25 @@ preferences from a custom folder" option — that writes on every quit with no
 review step, and this repo is public.
 
 PopClip needs two things, not one. Its settings live in `com.pilotmoon.popclip`
-(98 keys); the `-setapp` domain holds only the menu-bar position. Its 53
+(98 keys); the `-setapp` domain holds only the menu-bar position. Its
 extensions are `.popclipext` bundles on disk, not plist entries, so they are
 rsynced to `popclip/Extensions/` and restored alongside the domain — without
 them you get settings pointing at extensions that aren't installed.
 
 ### macOS system settings
 
-The layer the three mechanisms above don't cover: Dock, Finder, keyboard, hot
-corners, trackpad, screenshots.
+Dock, Finder, keyboard, hot corners, trackpad, screenshots. These are
+`defaults write`s, not symlinks and not plist snapshots.
 
 ```bash
 ./macos-defaults.sh --dry-run   # show current vs intended, change nothing
 ./macos-defaults.sh             # apply, then restart Dock/Finder/SystemUIServer
 ```
 
-55 settings, all read off this machine rather than copied from a generic
-"awesome macOS defaults" list — if it's not customised here, it's not in there.
-Idempotent. Tap-to-click and key-repeat rates need a logout to take effect.
+56 settings across 10 domains, all read off this machine rather than copied
+from a generic "awesome macOS defaults" list — if it's not customised here,
+it's not in there. Idempotent. Tap-to-click and key-repeat rates need a logout
+to take effect.
 
 ### Ollama models
 
@@ -146,22 +201,27 @@ Maintain those separately with Gradle's retention settings, `npm cache verify`,
 Run the cleanup checks with `bash scripts/run-tests.sh`. The real Kondo
 integration checks use temporary fixtures and require Kondo on PATH.
 
-## The Claude Code bits
+## The agent bits
 
-I wrote a long blog post on why and how this is wired up, including every macOS 26 notification rabbit hole I fell into on the way.
-If you want the full story with screenshots, grab the `.adoc` from my writing repo.
+`claude/statusline.sh` is one status line for Claude Code, grok, agy, copilot,
+pi, and opencode. A segment is dropped when its field is absent, so a CLI that
+sends less than Claude does not render zeros. What it shows, when the payload
+has it: model, directory, git branch with a dirty marker, agent and worktree
+badges, context-window percentage (green/yellow/red), lines added/removed,
+session duration, plan limits (Claude's `rate_limits`, or agy's tightest
+`quota` bucket) with a burn-rate warning, dollar cost only when there is no
+plan limit, and Copilot premium requests. Claude's prompt cache gets a second
+line. Tests pin the clock with `STATUSLINE_NOW`.
 
-Short version of what lives in `claude/`:
+`claude/stop-hook.sh` runs on every Claude Code `Stop` event and raises one
+macOS banner via `alerter` (iTerm icon on the left, Claude icon on the right).
+It does not write a terminal BEL. tmux-agentbar does that, once per window,
+when the aggregate status becomes `waiting` or `done`, and tmux marks that
+tab with `window-status-bell-style` (`visual-bell` is off, so the whole bar
+does not flash). Inside herdr the hook stays quiet while `gamussa.notify` is
+enabled, because that plugin already raises the banner for every agent.
 
-**`statusline.sh`** — one line at the bottom of the Claude TUI showing model, project dir, git branch with a dirty marker, context window percentage (color-coded green/yellow/red), lines added/removed, and turn time.
-
-**`stop-hook.sh`** — runs on every `Stop` event.
-Two signals fire:
-
-1. A terminal BEL written straight to `/dev/tty` so tmux's `visual-bell` flashes the status bar.
-2. A macOS banner via `alerter`, with the iTerm icon on the left and the Claude icon on the right.
-
-Two things worth knowing if you're copying this hook onto macOS 26 (Tahoe):
+Two things worth knowing if you're copying the banner onto macOS 26 (Tahoe):
 
 1. **`terminal-notifier` is dead on Tahoe.** It uses the deprecated `NSUserNotification` API and errors with "Unable to post a notification."
    Install `alerter` instead (`brew install alerter`).
@@ -170,13 +230,16 @@ Two things worth knowing if you're copying this hook onto macOS 26 (Tahoe):
    I tested both `com.googlecode.iterm2` and `com.mitchellh.ghostty`; both hang.
    Drop the flag and customize the banner's appearance with `--app-icon` instead.
 
+I wrote a long blog post on the notification rabbit holes, with screenshots.
+The `.adoc` is in my writing repo.
+
 ## The tmux bits
 
 - `prefix + y` opens a floating popup tied to the current directory.
   Session name is `claude-<md5-of-cwd>`, so the same directory always reattaches to the same Claude session.
-- `automatic-rename-format` injects a small robot glyph at the start of the window name when the pane is running Claude.
-  The match is `[0-9]*.[0-9]*` against `pane_current_command`, which is how Claude's version string shows up in the process title.
+- Window names stay the directory basename. The robot glyph on a window that is running an agent is drawn by tmux-agentbar's window-status script, which walks the process tree (claude, copilot, aider, codex, gemini, and others).
 - `extended-keys always` plus `terminal-features 'xterm*:extkeys'` makes Shift+Enter work inside tmux, so Claude's "newline in prompt" behavior survives the multiplexer.
+- Prefix-free pane and workspace chords are Ctrl+Alt, shared with herdr. Alt belongs to the program in the pane. Change a binding in one, change it in the other, then update `tmux-help.md` and `tmux-shortcuts.md`.
 
 ## The ligature trap
 
@@ -202,10 +265,10 @@ alias top='htop'             # htop on macOS does not need sudo
 
 - **oh-my-zsh as a framework.** Migrated to zinit for load time.
   A couple of OMZ snippets (`git`, `docker-compose`, `brew`) still come in lazily via `zinit snippet OMZP::*`.
-- **Dropbox-based Mackup.** Switched to iCloud.
-  Mackup has not seen a real release in a while, but it still moves app prefs around fine.
-- **Terminal.app.** iTerm2 is my daily driver.
-  I installed Ghostty out of curiosity, then kept it around because having a second terminal on hand made it easier to diagnose ligature rendering without reinstalling fonts or restarting iTerm2.
+- **Mackup.** cfprefsd on Sonoma and later replaces symlinked plists, so the snapshot scripts above own app prefs. `linkall.sh` does not install or delete `~/.mackup.cfg`.
+- **`~/.claude/settings.local.json` as a global config.** See the Claude Code settings section.
+- **Terminal.app.** iTerm2 is the daily driver. Ghostty stays installed because a second terminal made the ligature problem diagnosable without restarting iTerm2.
+- **Migration Assistant.** A clean install plus the runbook reproduces the environment without the accumulated cruft.
 
 ## License
 
