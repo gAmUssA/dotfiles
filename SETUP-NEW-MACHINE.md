@@ -118,6 +118,7 @@ diff -r -x .DS_Store ~/.config/rex ~/projects/dotfiles/rex
 # fold the differences into the repo and commit them, then:
 mv ~/.config/rex ~/.config/rex.pre-symlink-backup
 ln -s ~/projects/dotfiles/rex ~/.config/rex
+# in a terminal opened by Rex — only those have `rex` on PATH:
 rex config check && rex config reload
 ```
 
@@ -324,14 +325,20 @@ tool**, so do not add a `rex` formula to the Brewfile. The app carries its own
 server and the `rex` CLI, so nothing else needs installing.
 
 Its config is tracked in `rex/` (`init.lua` and the `themes/` imported from
-iTerm2), and `linkall.sh` links the whole directory in step 3.
+iTerm2), and `linkall.sh` links the whole directory in step 3. **Install the
+app now, but do not launch it until after step 3.** Rex's first-run setup
+can write its own `~/.config/rex`; this machine's `init.lua` opens with "Rex
+config migrated from tmux, Herdr, Ghostty and iTerm2". A real directory there
+makes `linkall.sh` print `skip:` and leave it alone. If that has already
+happened, follow the `REAL DIRECTORY` steps under
+[Reconciling a machine that is already set up](#reconciling-a-machine-that-is-already-set-up),
+then re-run `linkall.sh`.
 
-Agent integration is optional: **Install Rex for Agents** in the command
-palette, or `rex skill setup`. It **adds a hook to `~/.claude/settings.json`**,
-which is a symlink into this public repo, so run `rex skill setup --dry-run`
-first. Afterwards, check `git -C ~/projects/dotfiles diff claude/settings.json`
-and `ls -l ~/.claude/settings.json`, and follow `AGENTS.md`: a portable command
-gets tracked, and a `/Users/<name>/...` path does not.
+The `rex` CLI is **not on PATH in an ordinary shell**. Rex puts it at the
+front of `PATH`, and sets `REX_BIN_DIR`, only in terminals that Rex itself opens
+([docs](https://www.superlogical.com/rex/docs/automate/cli#path)). Neither
+`.zshrc` nor `.zshenv` adds it, so every `rex` command in this file runs in a
+terminal opened by Rex.
 
 ---
 
@@ -349,13 +356,30 @@ and Claude Code `settings.json`.
 
 Then start a fresh shell (or `exec zsh`) so p10k + plugins load.
 
-If Rex is installed, check that it reads the linked config:
+If Rex is installed, check the link from any shell, then launch Rex for the
+first time:
 
 ```bash
-ls -l ~/.config/rex            # -> ~/projects/dotfiles/rex
+ls -l ~/.config/rex            # -> ~/projects/dotfiles/rex, not a directory
+open -a "Rex Beta"             # the beta's app name in /Applications
+```
+
+In a terminal **opened by Rex** (the only kind with `rex` on PATH), check that
+it reads the linked config:
+
+```bash
+command -v rex                 # empty means this terminal is not Rex's
 rex config check               # path, binding count, no errors
 rex config reload
 ```
+
+Agent integration is optional: **Install Rex for Agents** in the command
+palette, or `rex skill setup` in that same Rex terminal. It **adds a hook to
+`~/.claude/settings.json`**, which is a symlink into this public repo, so run
+`rex skill setup --dry-run` first. Afterwards, check
+`git -C ~/projects/dotfiles diff claude/settings.json` and
+`ls -l ~/.claude/settings.json`, and follow `AGENTS.md`: a portable command
+gets tracked, and a `/Users/<name>/...` path does not.
 
 Rex keeps some settings in the app, not in `init.lua`, so set these by hand.
 In *Settings → Terminal → Selection*, turn on **Copy on selection** and **Play
