@@ -1,7 +1,10 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "model": "ollama/muse-glimmer:30b-mlx-ctx64k",
-  "disabled_providers": ["openai", "anthropic"],
+  "disabled_providers": [
+    "openai",
+    "anthropic"
+  ],
   "provider": {
     "ollama": {
       "npm": "@ai-sdk/openai-compatible",
@@ -10,13 +13,6 @@
         "baseURL": "http://localhost:11434/v1"
       },
       "models": {
-        "qwen3-coder:30b-ctx64k": {
-          "name": "qwen3-coder 30b (64k, agentic default)",
-          "limit": {
-            "context": 65536,
-            "output": 8192
-          }
-        },
         "muse-glimmer:30b-mlx-ctx64k": {
           "name": "muse-glimmer 30b MLX (64k)",
           "limit": {
@@ -28,6 +24,20 @@
           "name": "qwen3.8 27b MLX (64k)",
           "limit": {
             "context": 65536,
+            "output": 32768
+          }
+        },
+        "inkling-2-mini-ctx64k": {
+          "name": "Inkling 2 mini (64k)",
+          "limit": {
+            "context": 65536,
+            "output": 32768
+          }
+        },
+        "inkling-2-mini-ctx256k": {
+          "name": "Inkling 2 mini (256k)",
+          "limit": {
+            "context": 262144,
             "output": 32768
           }
         },
@@ -47,6 +57,20 @@
         },
         "flint:40b-a2b-ctx256k": {
           "name": "Flint 40b-a2b GGUF (256k)",
+          "limit": {
+            "context": 262144,
+            "output": 32768
+          }
+        },
+        "muse-glimmer:30b-mlx-ctx256k": {
+          "name": "muse-glimmer 30b MLX (256k)",
+          "limit": {
+            "context": 262144,
+            "output": 32768
+          }
+        },
+        "qwen3.8:27b-mlx-ctx256k": {
+          "name": "qwen3.8 27b MLX (256k)",
           "limit": {
             "context": 262144,
             "output": 32768
