@@ -62,11 +62,15 @@ case $provider in
                    || { echo "oMLX unreachable on :8000"; exit 1; } ;;
     # rec (Recursive's MLX engine) mints a local key. pi fetches it itself
     # (pi/models.json); OpenCode reads REC_API_KEY (opencode/opencode.json).
+    # REC_BASE_URL points the probe at another serve address (a loopback stub
+    # in tests). Unset, the probe is still rec's port and the diagnostic
+    # stays ":11500".
     rec)       pi_prov=rec;       oc_prov=rec
+               rec_base=${REC_BASE_URL:-http://127.0.0.1:11500}
                rec_key=$(rec auth token) || { echo "rec auth token failed; run rec doctor"; exit 1; }
                export REC_API_KEY="$rec_key"  # opencode.json reads {env:REC_API_KEY}
-               curl -sf --max-time 5 -H "Authorization: Bearer $rec_key" http://127.0.0.1:11500/v1/models >/dev/null \
-                   || { echo "rec unreachable on :11500; run rec serve"; exit 1; } ;;
+               curl -sf --max-time 5 -H "Authorization: Bearer $rec_key" "$rec_base/v1/models" >/dev/null \
+                   || { echo "rec unreachable on ${REC_BASE_URL:-:11500}; run rec serve"; exit 1; } ;;
     # Splash (Inco) sits on :8100 because oMLX holds :8000; serve with
     # `splash serve --model <repo> --port 8100`. No key unless --api-key.
     splash)    pi_prov=splash;    oc_prov=splash
