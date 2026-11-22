@@ -2,6 +2,11 @@
 
 ## 2026-11-21
 
+- `agent-bench`'s `rec` provider preflight honours `REC_BASE_URL` (default
+  `http://127.0.0.1:11500`), and `tests/test_agent_bench_rec.sh` smoke-tests it
+  against a loopback stub: closed port and failing `rec auth token` are
+  rejected, a stub that requires the bearer key is accepted.
+
 - `agent-bench` gains a `claude` harness (`-h claude -p anthropic opus`) that
   runs `claude -p` on the CLI login and never on an API key, and its report
   keeps earlier rows instead of rebuilding from the last invocation alone.
