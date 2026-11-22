@@ -26,7 +26,8 @@
 #   "failed" also counts e.g. a test run exiting non-zero, which is normal)
 #
 # Usage: agent-bench/agent-bench.sh [-h pi,opencode] [-t ledger,shop,planner] [-p provider] <model> [...]
-#   -p ollama (default) | omlx | rec | splash | nebius | fireworks — hosted runs need NEBIUS_API_KEY /
+#   -p ollama (default) | omlx | rec | splash | nebius | fireworks | anthropic (claude harness only:
+#   `-h claude -p anthropic opus`; uses the CLI's own login and ignores ANTHROPIC_API_KEY, so it spends plan usage, never API money)  — hosted runs need NEBIUS_API_KEY /
 #   FIREWORKS_API_KEY in the env (opsync/opload) and cost real money.
 #   models are Ollama tags, registered in BOTH pi/models.json and
 #   opencode/opencode.json — use the -ctx64k variants (Ollama's default context
@@ -71,6 +72,10 @@ case $provider in
     splash)    pi_prov=splash;    oc_prov=splash
                curl -sf --max-time 5 "http://127.0.0.1:${SPLASH_PORT:-8100}/v1/models" >/dev/null \
                    || { echo "Splash unreachable on :${SPLASH_PORT:-8100}; run splash serve --port ${SPLASH_PORT:-8100}"; exit 1; } ;;
+    # anthropic: only the claude harness speaks it (claude -p, subscription or
+    # API auth from the CLI itself). Model is an alias or id: opus, sonnet.
+    anthropic) pi_prov=anthropic; oc_prov=anthropic
+               command -v claude >/dev/null || { echo "claude CLI not installed"; exit 1; } ;;
     nebius)    pi_prov=nebius;    oc_prov=nebius
                [[ -n "${NEBIUS_API_KEY:-}" ]] || { echo "NEBIUS_API_KEY not set (opsync)"; exit 1; } ;;
     fireworks) pi_prov=fireworks; oc_prov=fireworks-ai
@@ -118,6 +123,16 @@ for line in open(path, errors="replace"):
         if t == "tool_execution_end" and e.get("isError"):
             failed += 1
             malformed += bool(bad_args.search(json.dumps(e.get("result"))))
+    elif harness == "claude":
+        if t == "assistant":
+            turns += 1
+            for b in e.get("message", {}).get("content", []):
+                tools += b.get("type") == "tool_use"
+        elif t == "user":
+            for b in e.get("message", {}).get("content", []):
+                if isinstance(b, dict) and b.get("type") == "tool_result" and b.get("is_error"):
+                    failed += 1
+                    malformed += bool(bad_args.search(json.dumps(b.get("content"))))
     else:  # opencode
         turns += t == "step_start"
         if t == "tool_use":
@@ -142,6 +157,16 @@ run_agent() {  # harness model workdir prompt -> JSON events on stdout
         # server, whose config and sessions belong to interactive use.
         opencode) (cd "$w" && OPENCODE_CONFIG_CONTENT="$OC_NO_MCP" timeout "$TIMEOUT" opencode run --standalone --auto \
                 --format json -m "$oc_prov/$m" "$p" </dev/null) ;;
+        # Isolated like the others: user settings (hooks, plugins, global
+        # CLAUDE.md-style config) are skipped, MCP and skills are off, and the
+        # workdir is a bare tempdir. No --bare: it demands an API key and
+        # skips the keychain login this machine uses.
+        # env -u: an API key in the environment would bill API money; the run
+        # must use the CLI's own login (plan usage) or not run at all.
+        claude) (cd "$w" && timeout "$TIMEOUT" env -u ANTHROPIC_API_KEY -u ANTHROPIC_AUTH_TOKEN claude -p --output-format stream-json --verbose \
+                --setting-sources project --strict-mcp-config --disable-slash-commands \
+                --no-session-persistence --permission-mode bypassPermissions \
+                --model "$m" "$p" </dev/null) ;;
         *) echo "unknown harness $h" >&2; return 2 ;;
     esac
 }
@@ -223,6 +248,7 @@ prev=""; [[ -f "$dest" ]] && prev=$(<"$dest")
     echo "|---|---|"
     echo "| pi | $(pi --version 2>/dev/null) |"
     echo "| opencode | $(opencode --version 2>/dev/null) |"
+    command -v claude >/dev/null && echo "| claude | $(claude --version 2>/dev/null | awk '{print $1}') |"
     # With the daemon down, ollama prints a warning line before the client version.
     command -v ollama >/dev/null && echo "| ollama | $(ollama --version 2>&1 | tail -1 | awk '{print $NF}') |"
     command -v rec >/dev/null && echo "| rec | $(rec --version | awk '{print $NF}') |"
@@ -233,6 +259,9 @@ prev=""; [[ -f "$dest" ]] && prev=$(<"$dest")
     echo
     echo "| harness | task | model | digest | visible | hidden | tests untouched | time | turns | tool calls | failed | malformed | end |"
     echo "|---|---|---|---|---|---|---|---|---|---|---|---|---|"
+    # The report is rebuilt from this invocation's results.tsv, so rows from
+    # earlier invocations are carried over verbatim from the previous report.
+    grep -E '^\| (pi|opencode|claude) \| [a-z0-9_-]+ \| `' <<<"$prev" || [[ $? -eq 1 ]] || echo "warning: could not read previous rows from $dest" >&2
     while IFS=$'\t' read -r h t m vok vn hok hn tam secs turns tools failed bad st; do
         case $m in
             ollama/*) digest=$(awk -v m="${m#ollama/}" '$1==m{print $2; exit}' <<<"$ollama_list")

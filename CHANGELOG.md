@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-21
+
+- `agent-bench` gains a `claude` harness (`-h claude -p anthropic opus`) that
+  runs `claude -p` on the CLI login and never on an API key, and its report
+  keeps earlier rows instead of rebuilding from the last invocation alone.
+  Inkling 2 mini, 256k-context variants and an Opus run are recorded in
+  `bench-results/agent-m5-max-64gb.md`; `qwen3-coder` is dropped from the pi
+  and OpenCode configs.
+
 ## 2026-11-06
 
 - The README, `AGENTS.md`, and Claude's auto-mode notes now match the

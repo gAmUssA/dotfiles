@@ -6,10 +6,6 @@
       "apiKey": "ollama",
       "models": [
         {
-          "id": "qwen3-coder:30b-ctx64k",
-          "contextWindow": 65536
-        },
-        {
           "id": "muse-glimmer:30b-mlx-ctx64k",
           "contextWindow": 65536
         },
@@ -26,7 +22,23 @@
           "contextWindow": 65536
         },
         {
+          "id": "inkling-2-mini-ctx64k",
+          "contextWindow": 65536
+        },
+        {
+          "id": "inkling-2-mini-ctx256k",
+          "contextWindow": 262144
+        },
+        {
           "id": "flint:40b-a2b-ctx256k",
+          "contextWindow": 262144
+        },
+        {
+          "id": "muse-glimmer:30b-mlx-ctx256k",
+          "contextWindow": 262144
+        },
+        {
+          "id": "qwen3.8:27b-mlx-ctx256k",
           "contextWindow": 262144
         }
       ]

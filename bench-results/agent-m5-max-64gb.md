@@ -9,14 +9,15 @@ arguments — the number that says whether a model drives tools reliably.
 
 | field | value |
 |---|---|
-| pi | 1.4.0 |
+| pi | 1.6.0 |
 | opencode | opencode v2.0.25 |
-| ollama | 0.40.10 |
-| rec | 0.1.0 |
+| claude | 2.1.330 |
+| ollama | 0.40.17 |
+| rec | 0.1.2 |
 | splash | 1.6.0 |
-| python | 3.15.0 |
+| python | 3.15.2 |
 | timeout | 1200s per run |
-| recorded | 2026-11-08 |
+| recorded | 2026-11-21 |
 
 | harness | task | model | digest | visible | hidden | tests untouched | time | turns | tool calls | failed | malformed | end |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -97,3 +98,21 @@ arguments — the number that says whether a model drives tools reliably.
 | opencode | planner | `rec/flint` | `local` | **8/8** | 7/7 | ✅ | 70s | 12 | 15 | 1 | 0 | done |
 | pi | ledger | `omlx/Qwen3.8-27B-oQ4e-mtp` | `local` | **8/8** | 5/5 | ✅ | 26s | 5 | 6 | 0 | 0 | done |
 | pi | ledger | `rec/flint` | `local` | **8/8** | 5/5 | ✅ | 19s | 7 | 12 | 2 | 0 | done |
+| pi | ledger | `ollama/inkling-2-mini-ctx64k` | `` | **8/8** | 5/5 | ✅ | 38s | 6 | 5 | 0 | 0 | done |
+| pi | shop | `ollama/inkling-2-mini-ctx64k` | `` | **8/8** | 6/6 | ✅ | 178s | 10 | 12 | 0 | 0 | done |
+| pi | planner | `ollama/inkling-2-mini-ctx64k` | `` | **8/8** | 7/7 | ✅ | 261s | 14 | 13 | 0 | 0 | done |
+| pi | ledger | `ollama/inkling-2-mini-ctx256k` | `` | **8/8** | 5/5 | ✅ | 55s | 7 | 9 | 0 | 0 | done |
+| pi | ledger | `ollama/flint:40b-a2b-ctx256k` | `919b5fe283ef` | **8/8** | 5/5 | ✅ | 38s | 6 | 9 | 1 | 0 | done |
+| pi | ledger | `ollama/muse-glimmer:30b-mlx-ctx256k` | `d1f1be116b68` | **8/8** | 5/5 | ✅ | 108s | 16 | 15 | 3 | 0 | done |
+| pi | ledger | `ollama/qwen3.8:27b-mlx-ctx256k` | `0e30841114d1` | **8/8** | 5/5 | ✅ | 47s | 8 | 11 | 0 | 0 | done |
+| pi | shop | `ollama/inkling-2-mini-ctx256k` | `` | **8/8** | 6/6 | ✅ | 186s | 8 | 7 | 0 | 0 | done |
+| pi | shop | `ollama/flint:40b-a2b-ctx256k` | `919b5fe283ef` | **8/8** | 6/6 | ✅ | 118s | 14 | 22 | 0 | 0 | done |
+| pi | shop | `ollama/muse-glimmer:30b-mlx-ctx256k` | `d1f1be116b68` | **8/8** | 6/6 | ✅ | 232s | 19 | 22 | 3 | 0 | done |
+| pi | shop | `ollama/qwen3.8:27b-mlx-ctx256k` | `0e30841114d1` | 8/8 | 4/6 | ✅ | 63s | 7 | 13 | 0 | 0 | done |
+| pi | planner | `ollama/inkling-2-mini-ctx256k` | `` | **8/8** | 7/7 | ✅ | 227s | 8 | 7 | 1 | 0 | done |
+| pi | planner | `ollama/flint:40b-a2b-ctx256k` | `919b5fe283ef` | **8/8** | 7/7 | ✅ | 108s | 12 | 16 | 2 | 0 | done |
+| pi | planner | `ollama/muse-glimmer:30b-mlx-ctx256k` | `d1f1be116b68` | **8/8** | 7/7 | ✅ | 353s | 29 | 32 | 4 | 0 | done |
+| pi | planner | `ollama/qwen3.8:27b-mlx-ctx256k` | `0e30841114d1` | **8/8** | 7/7 | ✅ | 131s | 12 | 15 | 0 | 0 | done |
+| claude | ledger | `anthropic/opus` | `hosted` | **8/8** | 5/5 | ✅ | 14s | 4 | 2 | 0 | 0 | done |
+| claude | shop | `anthropic/opus` | `hosted` | **8/8** | 6/6 | ✅ | 30s | 5 | 2 | 0 | 0 | done |
+| claude | planner | `anthropic/opus` | `hosted` | **8/8** | 7/7 | ✅ | 35s | 6 | 3 | 0 | 0 | done |
