@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-24
+
+- The benchmark moved to [gAmUssA/agent-bench](https://github.com/gAmUssA/agent-bench), results at
+  [gamov.io/agent-bench](https://gamov.io/agent-bench): `agent-bench/`, `bench-results/`,
+  `bench-record.sh`, `ollama-*bench*.sh`, the gemma4 sweep scripts and their tests are gone from
+  here, and dotfiles keeps only the provider setup. `pi/models.json` gains the `unsloth` 256k
+  alias and the `mtplx` provider, and an Inkling model on `omlx`.
+
 ## 2026-11-21
 
 - `agent-bench`'s `rec` provider preflight honours `REC_BASE_URL` (default

@@ -20,7 +20,7 @@
 set -uo pipefail
 
 # Source of truth: `ollama list` on the primary machine (2026-08-11).
-# Roles (see ollama-bench.sh + ollama-code-bench.sh for the receipts):
+# Roles (receipts in github.com/gAmUssA/agent-bench):
 #   qwen2.5-coder:7b   — tmux popup default (best speed/quality balance)
 #   mistral:7b         — popup: fastest, terse
 #   gemma3:4b          — popup: fast general chat
@@ -29,7 +29,7 @@ set -uo pipefail
 #   devstral:24b       — 3/3 on coding bench, smallest of the big three
 #   muse-glimmer:30b-mlx — agent default for OpenCode/pi (via its -ctx64k
 #                        variant): only model perfect on both agent-bench
-#                        tasks, 0 malformed tool calls (bench-results/agent-*)
+#                        tasks, 0 malformed tool calls (github.com/gAmUssA/agent-bench, bench-results/agent-*)
 #   mxbai-embed-large  — embeddings
 #   gemma-4-12B-coder  — base for the gemma4-coder-fixed variant below
 #
