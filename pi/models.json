@@ -128,6 +128,12 @@
           "reasoning": true,
           "contextWindow": 65536,
           "maxTokens": 32768
+        },
+        {
+          "id": "Inkling-2-Mini-oQ4e-mtp",
+          "reasoning": true,
+          "contextWindow": 262144,
+          "maxTokens": 16384
         }
       ]
     },
@@ -165,6 +171,41 @@
           "compat": {
             "supportsMidConvoSystemMessages": true
           }
+        }
+      ]
+    },
+    "unsloth": {
+      "baseUrl": "http://127.0.0.1:8899/v1",
+      "api": "openai-completions",
+      "apiKey": "none",
+      "models": [
+        {
+          "id": "inkling-2-mini-unsloth",
+          "name": "Inkling 2 Mini (Unsloth llama.cpp, draft)",
+          "contextWindow": 65536,
+          "maxTokens": 16384,
+          "reasoning": true
+        },
+        {
+          "id": "inkling-2-mini-unsloth-256k",
+          "name": "Inkling 2 Mini (Unsloth llama.cpp, draft, 256k)",
+          "contextWindow": 262144,
+          "maxTokens": 16384,
+          "reasoning": true
+        }
+      ]
+    },
+    "mtplx": {
+      "baseUrl": "http://127.0.0.1:8001/v1",
+      "api": "openai-completions",
+      "apiKey": "none",
+      "models": [
+        {
+          "id": "mtplx-inkling-2-mini-bare-speed",
+          "name": "Inkling 2 Mini (MTPLX Bare Speed)",
+          "contextWindow": 262144,
+          "maxTokens": 16384,
+          "reasoning": true
         }
       ]
     }

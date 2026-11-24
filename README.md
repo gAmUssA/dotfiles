@@ -89,7 +89,7 @@ Other:
 - `clean_projects.sh` — preview or interactively remove project artifacts with Kondo. Also linked at `~/projects/clean_projects.sh` when that path is free.
 - `cloud-tabs-to-notes.sh` — snapshot Safari iCloud tabs from a given device into Notes, or `--open` them. Reads `~/Library/Safari/CloudTabs.db` directly.
 - `tmux-paste-image.sh` — clipboard image to `/image <path>`. Not bound; Claude Code pastes images itself.
-- `ollama-restore.sh` and the `ollama-*-bench.sh` / `agent-bench/` tree — local-model restore and the eval harness. `bench-out/` is gitignored.
+- `ollama-restore.sh` — local-model restore. The benchmarks and their results live in [gAmUssA/agent-bench](https://github.com/gAmUssA/agent-bench) ([gamov.io/agent-bench](https://gamov.io/agent-bench)); this repo only carries the provider and model setup they read (`pi/models.json`, `opencode/opencode.json`).
 - `capture4k.sh`, `obs4k.sh` — capture helpers for this desk, not part of machine setup.
 
 ## Keynote presentations

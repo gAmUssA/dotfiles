@@ -16,7 +16,7 @@
 set -u
 
 # Default: gemma4:26b. Changed 2026-08-11 from qwen2.5-coder:7b on the compile-
-# and-run bench (bench-results/m1-max-64gb.md), which grades by actually
+# and-run bench (github.com/gAmUssA/agent-bench, bench-results/m1-max-64gb.md), which grades by actually
 # building and executing the output rather than eyeballing it:
 #
 #   qwen2.5-coder:7b   1/3   49.2 tok/s   fails Kotlin AND Swift

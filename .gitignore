@@ -208,8 +208,6 @@ tessl.json
 .claude
 .zshrc.local
 
-# coding-benchmark generated sources + raw model responses (reproducible via ollama-code-bench.sh)
-bench-out/
 
 # karabiner machine-local state (Karabiner writes backups into the symlinked dir)
 karabiner/automatic_backups/
